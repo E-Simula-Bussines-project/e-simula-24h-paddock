@@ -1,0 +1,1175 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>E-SIMULA 24H Paddock</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Russo+One&display=swap" rel="stylesheet">
+<style>
+/* Mundo único: garaje blanco de resistencia. Blanco luminoso + negro asfalto, rojo racing para la marca,
+   azul eléctrico para el dinero, oro para el podio. Layout: escena a pantalla completa con tarjetas flotantes. */
+:root{
+  --paper:#ffffff; --mist:#f0f2f5; --ink:#0b0c10; --ink2:#5b6270; --line:#e1e4ea;
+  --red:#e10600; --blue:#0a5cff; --gold:#f2b705; --good:#0f9d58; --loss:#d62839;
+  --livery:#e10600;
+  --f-display:"Russo One","Arial Black",sans-serif;
+  --f-label:"Chakra Petch","Arial Narrow",sans-serif;
+  --f-body:"Plus Jakarta Sans",system-ui,sans-serif;
+  color-scheme:light;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{background:var(--paper);color:var(--ink);font:500 15px/1.45 var(--f-body);-webkit-font-smoothing:antialiased}
+button{font:inherit;color:inherit;cursor:pointer;border:0;background:none}
+a{color:inherit;text-decoration:none}
+:focus-visible{outline:3px solid var(--blue);outline-offset:2px;border-radius:6px}
+.num{font-family:var(--f-label);font-variant-numeric:tabular-nums;font-weight:700}
+.disp{font-family:var(--f-display);text-transform:uppercase;letter-spacing:.01em;text-wrap:balance}
+.lbl{font:600 11px/1 var(--f-label);letter-spacing:.14em;text-transform:uppercase;color:var(--ink2)}
+
+/* barra superior */
+.top{position:sticky;top:0;z-index:50;height:64px;background:var(--paper);border-bottom:1px solid var(--line);display:flex;align-items:center;gap:24px;padding:0 28px}
+.logo{display:flex;align-items:center;gap:12px;flex:none}
+.logo b{font:400 17px/1 var(--f-display);letter-spacing:.02em}
+.logo small{display:block;font:600 9px/1 var(--f-label);letter-spacing:.3em;color:var(--ink2);margin-top:4px}
+.flag{width:34px;height:34px;border-radius:9px;background:var(--ink);display:grid;grid-template-columns:repeat(4,1fr);grid-template-rows:repeat(4,1fr);padding:6px;gap:0}
+.flag i{background:#fff}.flag i:nth-child(4n+1):nth-child(odd),.flag i.k{background:transparent}
+nav{display:flex;gap:4px;margin:0 auto;overflow-x:auto;scrollbar-width:none}
+nav a{position:relative;padding:22px 16px;font:700 13px/1 var(--f-label);letter-spacing:.12em;text-transform:uppercase;color:var(--ink2);white-space:nowrap;transition:color .15s}
+nav a:hover{color:var(--ink)}
+nav a[aria-current="page"]{color:var(--ink)}
+nav a[aria-current="page"]::after{content:"";position:absolute;left:10px;right:10px;bottom:0;height:4px;background:var(--red);transform:skewX(-30deg)}
+.status{display:flex;align-items:center;gap:14px;flex:none}
+.pill{display:inline-flex;align-items:center;gap:8px;padding:8px 14px;border-radius:99px;background:var(--ink);color:#fff;font:700 12px/1 var(--f-label);letter-spacing:.1em;text-transform:uppercase}
+.pill i{width:8px;height:8px;border-radius:50%;background:#2ee66b;box-shadow:0 0 0 3px rgba(46,230,107,.25)}
+.who{font:600 13px var(--f-label);letter-spacing:.06em;color:var(--ink2);text-align:right;line-height:1.2}
+.who b{display:block;color:var(--ink)}
+
+/* escena (garaje) */
+main{display:block}
+.scene{position:relative;overflow:hidden;background:#eef0f4}
+.scene>svg.bd{position:absolute;inset:0;width:100%;height:100%;display:block}
+.scene.tall{min-height:calc(100vh - 64px)}
+.fade{position:absolute;left:0;right:0;bottom:0;height:180px;background:linear-gradient(to bottom,rgba(255,255,255,0),#fff)}
+.stage{position:relative;z-index:2}
+
+/* coche + plataforma */
+.carwrap{position:relative}
+.carwrap svg{display:block;width:100%;height:auto;overflow:visible}
+.turn{position:absolute;left:3%;right:3%;top:53%;height:20%;border-radius:50%;
+  background:radial-gradient(ellipse at center,rgba(255,255,255,.95) 0 55%,rgba(11,12,16,.9) 56% 70%,rgba(225,6,0,.95) 71% 74%,rgba(11,12,16,.0) 75%);
+  filter:drop-shadow(0 10px 14px rgba(11,12,16,.28));z-index:0}
+.carwrap .car{position:relative;z-index:1;animation:roll .9s cubic-bezier(.2,.8,.2,1) both}
+@keyframes roll{from{transform:translateX(-60px)}to{transform:none}}
+.spin{transform-box:fill-box;transform-origin:center;animation:spin 2.6s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+@media (prefers-reduced-motion:reduce){.spin,.carwrap .car{animation:none}}
+
+/* inicio */
+.hero{min-height:calc(100vh - 64px);padding:28px 32px 28px;display:grid;grid-template-columns:minmax(0,1fr) 370px;grid-template-rows:auto 1fr auto;gap:0 28px}
+.hero .head{grid-column:1;grid-row:1}
+.eyebrow{display:inline-flex;gap:10px;align-items:center;font:700 12px/1 var(--f-label);letter-spacing:.16em;text-transform:uppercase;background:#fff;border:1px solid var(--line);padding:9px 14px;border-radius:99px;box-shadow:0 4px 14px rgba(11,12,16,.06)}
+.eyebrow em{font-style:normal;color:var(--red)}
+.hero h1{font-size:clamp(40px,5.6vw,84px);line-height:.95;margin:16px 0 6px;color:var(--ink)}
+.hero h1 span{color:var(--red)}
+.hero .sub{font:600 14px var(--f-label);letter-spacing:.14em;text-transform:uppercase;color:var(--ink2)}
+.hero .cars{grid-column:1;grid-row:2;align-self:end;display:flex;justify-content:center;padding-top:12px}
+.hero .cars .carwrap{width:min(1080px,112%);margin-left:-4%}
+.hero .head{padding-top:30px}
+.hero .cta{grid-column:1;grid-row:3;display:flex;justify-content:center;gap:14px;align-items:center;padding-top:8px;flex-wrap:wrap}
+.hero .side{grid-column:2;grid-row:1/4;display:flex;flex-direction:column;gap:16px;justify-content:center}
+.btn{display:inline-flex;align-items:center;gap:12px;padding:18px 34px;border-radius:14px;background:var(--ink);color:#fff;font:700 15px/1 var(--f-label);letter-spacing:.16em;text-transform:uppercase;clip-path:polygon(14px 0,100% 0,calc(100% - 14px) 100%,0 100%);transition:transform .15s,background .15s}
+.btn:hover{background:var(--red);transform:translateY(-2px)}
+.btn.ghost{background:#fff;color:var(--ink);box-shadow:inset 0 0 0 2px var(--ink)}
+.btn.ghost:hover{background:var(--ink);color:#fff}
+.btn.blue{background:var(--blue)}.btn.blue:hover{background:var(--ink)}
+.btn.sm{padding:12px 22px;font-size:12px}
+
+.card{background:rgba(255,255,255,.92);backdrop-filter:blur(10px);border:1px solid var(--line);border-radius:20px;padding:20px;box-shadow:0 14px 34px rgba(11,12,16,.09)}
+.card.solid{background:#fff;backdrop-filter:none}
+a.card,button.card{display:block;text-align:left;width:100%;transition:transform .15s,box-shadow .15s}
+a.card:hover,button.card:hover{transform:translateY(-3px);box-shadow:0 20px 40px rgba(11,12,16,.14)}
+.card .ct{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+.arrow{font:700 12px var(--f-label);letter-spacing:.12em;color:var(--blue)}
+.bigmoney{font:400 38px/1 var(--f-display);letter-spacing:.01em}
+.duo{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
+.duo>div{border-radius:12px;padding:10px 12px}
+.duo .g{background:#e8f7ee}.duo .l{background:#fdebed}
+.duo b{display:block;font:700 18px var(--f-label)}
+.duo .g b{color:var(--good)}.duo .l b{color:var(--loss)}
+.duo small{font:600 10px var(--f-label);letter-spacing:.12em;text-transform:uppercase;color:var(--ink2)}
+.mini-rank{display:flex;flex-direction:column;gap:6px}
+.mr{display:grid;grid-template-columns:26px 1fr auto;align-items:center;gap:10px;padding:8px 10px;border-radius:10px;font-weight:600}
+.mr .p{font:700 15px var(--f-label)}
+.mr.me{background:var(--ink);color:#fff}
+.mr.gold .p{color:var(--gold)}
+.mr .s{font:700 14px var(--f-label)}
+.avrow{display:flex;gap:0;margin-top:2px}
+.avrow .av{width:52px;height:52px;margin-right:-10px;border-radius:50%;border:3px solid #fff;overflow:hidden;background:var(--mist)}
+.callout{position:absolute;z-index:4;background:var(--ink);color:#fff;padding:10px 14px;border-radius:12px;font:600 12px/1.3 var(--f-label);letter-spacing:.06em;max-width:190px;box-shadow:0 10px 24px rgba(0,0,0,.25)}
+.callout::after{content:"";position:absolute;left:22px;bottom:-8px;border:8px solid transparent;border-top-color:var(--ink);border-bottom:0}
+.callout b{color:#ffb4ae}
+.callout a{display:inline-block;margin-top:4px;color:#8fb5ff;letter-spacing:.1em}
+
+/* páginas con cabecera de escena */
+.pagehead{position:relative;min-height:340px;display:flex;align-items:flex-end}
+.pagehead .stage{width:100%;max-width:1280px;margin:0 auto;padding:60px 32px 66px}
+.pagehead h1{font-size:clamp(36px,5vw,64px);line-height:1;margin:8px 0}
+.pagehead p{max-width:560px;color:var(--ink2);font-weight:500}
+.page{max-width:1280px;margin:0 auto;padding:6px 32px 80px}
+.sec{margin-top:34px}
+.sec>h2{font:400 22px/1 var(--f-display);text-transform:uppercase;margin-bottom:16px;display:flex;align-items:center;gap:12px}
+.sec>h2::before{content:"";width:14px;height:22px;background:var(--red);transform:skewX(-20deg)}
+.grid{display:grid;gap:18px}
+.g2{grid-template-columns:repeat(2,minmax(0,1fr))}.g3{grid-template-columns:repeat(3,minmax(0,1fr))}.g4{grid-template-columns:repeat(4,minmax(0,1fr))}
+.g21{grid-template-columns:minmax(0,1.5fr) minmax(0,1fr)}
+
+/* medidores */
+.meter{background:var(--mist);height:10px;border-radius:99px;overflow:hidden}
+.meter i{display:block;height:100%;border-radius:99px;background:var(--blue);transition:width .4s}
+.meter.red i{background:var(--red)}.meter.gold i{background:var(--gold)}.meter.good i{background:var(--good)}
+.kpi{padding:18px;border-radius:18px;background:#fff;border:1px solid var(--line)}
+.kpi .v{font:400 44px/1 var(--f-display);margin:10px 0 12px}
+.kpi .v small{font:600 14px var(--f-label);color:var(--ink2)}
+.tag{display:inline-block;padding:5px 10px;border-radius:99px;font:700 11px/1 var(--f-label);letter-spacing:.1em;text-transform:uppercase;background:var(--mist);color:var(--ink2)}
+.tag.good{background:#e8f7ee;color:var(--good)}.tag.warn{background:#fff4d6;color:#8a6500}.tag.bad{background:#fdebed;color:var(--loss)}.tag.blue{background:#e6eeff;color:var(--blue)}
+
+/* garaje */
+.gar{padding:20px 32px 10px;max-width:1280px;margin:0 auto;display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:24px;align-items:end}
+.hs{position:absolute;width:44px;height:44px;margin:-22px 0 0 -22px;border-radius:50%;background:#fff;border:3px solid var(--ink);box-shadow:0 6px 16px rgba(0,0,0,.25);display:grid;place-items:center;font:700 13px var(--f-label);z-index:5;transition:transform .15s,background .15s}
+.hs::before{content:"";position:absolute;inset:-9px;border-radius:50%;border:2px solid var(--red);opacity:.0;animation:ping 2s ease-out infinite}
+.hs.warn{border-color:var(--red)}.hs.warn::before{opacity:.8}
+.hs:hover,.hs[aria-pressed="true"]{background:var(--ink);color:#fff;transform:scale(1.12)}
+@keyframes ping{from{transform:scale(.7);opacity:.8}to{transform:scale(1.5);opacity:0}}
+.sw{display:flex;gap:10px}
+.sw button{width:34px;height:34px;border-radius:50%;border:3px solid #fff;box-shadow:0 0 0 2px var(--line)}
+.sw button[aria-pressed="true"]{box-shadow:0 0 0 3px var(--ink)}
+.wear{display:flex;align-items:center;gap:10px;margin:8px 0 14px}
+.wear .meter{flex:1}
+.opt{display:block;width:100%;text-align:left;padding:14px 16px;border-radius:14px;border:2px solid var(--line);background:#fff;transition:border-color .15s,background .15s}
+.opt:hover{border-color:#b9c0cc}
+.opt[aria-pressed="true"]{border-color:var(--blue);background:#f2f6ff}
+.opt b{display:flex;justify-content:space-between;font-weight:700}
+.opt small{display:block;color:var(--ink2);margin-top:3px;font-weight:500}
+.opt .cost{font:700 13px var(--f-label);color:var(--blue)}
+
+/* equipo */
+.pc{position:relative;border-radius:22px;padding:0;overflow:hidden;background:linear-gradient(160deg,#fff 0%,#f3f5f9 60%,#e7ebf2 100%);border:1px solid var(--line);box-shadow:0 14px 30px rgba(11,12,16,.08);transition:transform .2s}
+.pc:hover{transform:translateY(-4px) rotate(-.3deg)}
+.pc .top2{position:relative;height:150px;background:linear-gradient(135deg,var(--ink) 0 58%,var(--cc,var(--red)) 58%);display:flex;justify-content:center;align-items:flex-end}
+.pc .top2 .av{width:128px;height:128px}
+.ovr{position:absolute;left:14px;top:12px;color:#fff;font:400 34px/1 var(--f-display)}
+.ovr small{display:block;font:600 10px var(--f-label);letter-spacing:.2em;margin-top:4px;color:#cfd4de}
+.stars{position:absolute;right:14px;top:14px;color:var(--gold);letter-spacing:2px;font-size:15px}
+.pc .body{padding:14px 18px 18px}
+.pc h3{font:400 18px/1.1 var(--f-display);text-transform:uppercase}
+.pc .role{font:700 11px var(--f-label);letter-spacing:.16em;color:var(--cc,var(--red));text-transform:uppercase;margin:4px 0 12px}
+.at{display:grid;grid-template-columns:96px 1fr 28px;align-items:center;gap:8px;margin:6px 0;font:600 12px var(--f-label);letter-spacing:.04em;color:var(--ink2)}
+.at .meter{height:7px}.at b{color:var(--ink);text-align:right}
+.pc .foot{display:flex;justify-content:space-between;margin-top:12px;padding-top:12px;border-top:1px dashed #cdd3de;font:600 12px var(--f-label);color:var(--ink2)}
+.pc .foot b{color:var(--ink);font-size:14px}
+.av svg{display:block;width:100%;height:100%}
+input[type=range]{width:100%;accent-color:var(--blue);height:28px}
+.hrow{margin:14px 0}
+.hrow .t{display:flex;justify-content:space-between;font-weight:700}
+.hrow .t span:last-child{font:700 18px var(--f-label)}
+.hrow small{color:var(--ink2)}
+.scout{display:flex;gap:14px;align-items:center;padding:14px;border:1px solid var(--line);border-radius:16px;background:#fff}
+.scout .av{width:58px;height:58px;border-radius:50%;overflow:hidden;background:var(--mist);flex:none}
+.scout div.i{flex:1;min-width:0}.scout b{display:block}.scout small{color:var(--ink2)}
+
+/* finanzas */
+.finhero{background:var(--ink);color:#fff;position:relative;overflow:hidden}
+.finhero .stage{max-width:1280px;margin:0 auto;padding:40px 32px 36px;display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:36px;align-items:center}
+.finhero::before{content:"";position:absolute;inset:0;background:repeating-linear-gradient(115deg,transparent 0 46px,rgba(255,255,255,.035) 46px 92px)}
+.finhero .stripe{position:absolute;left:0;right:0;bottom:0;height:10px;background:repeating-linear-gradient(90deg,var(--red) 0 40px,#fff 40px 80px)}
+.finhero h1{font-size:clamp(30px,4vw,48px);margin:10px 0 4px}
+.finhero .lbl{color:#9aa3b3}
+.cash{font:400 clamp(44px,6.4vw,88px)/1 var(--f-display);margin:6px 0 4px}
+.flow{display:grid;gap:14px}
+.fbar{display:grid;grid-template-columns:90px 1fr 110px;gap:12px;align-items:center;font:700 13px var(--f-label);letter-spacing:.05em}
+.fbar .tr{height:16px;border-radius:99px;background:rgba(255,255,255,.12);overflow:hidden}
+.fbar .tr i{display:block;height:100%;border-radius:99px}
+.fbar.g i{background:#34d17b}.fbar.l i{background:#ff5a67}
+.fbar span:last-child{text-align:right}
+.seal{display:flex;align-items:center;gap:18px;margin-top:22px;flex-wrap:wrap}
+.sealbadge{width:84px;height:84px;border-radius:50%;display:grid;place-items:center;background:conic-gradient(var(--gold),#fff3c2,var(--gold));color:var(--ink);font:400 34px var(--f-display);box-shadow:0 0 0 5px rgba(242,183,5,.25)}
+.sealbadge span{display:grid;place-items:center;width:68px;height:68px;border-radius:50%;background:#fff}
+.dark-meter{background:rgba(255,255,255,.14)}
+.listrow{display:grid;grid-template-columns:1fr 100px 96px;gap:12px;align-items:center;padding:10px 0;border-bottom:1px solid var(--line);font-weight:600}
+.listrow:last-child{border:0}
+.listrow .meter{height:8px}
+.listrow .num{text-align:right}
+.dec{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr);gap:22px;align-items:start}
+.chips{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}
+.sticky{position:sticky;top:84px}
+.fc{margin:8px 0;display:grid;grid-template-columns:1fr auto auto;gap:10px;align-items:center;padding:10px 0;border-bottom:1px dashed var(--line)}
+.fc:last-of-type{border:0}
+.delta{font:700 12px var(--f-label)}.delta.up{color:var(--good)}.delta.dn{color:var(--loss)}
+
+/* clasificación */
+.seg{display:inline-flex;background:var(--mist);border-radius:14px;padding:4px;gap:2px}
+.seg button{padding:10px 18px;border-radius:11px;font:700 12px var(--f-label);letter-spacing:.1em;text-transform:uppercase;color:var(--ink2)}
+.seg button[aria-pressed="true"]{background:var(--ink);color:#fff}
+.podium{display:grid;grid-template-columns:1fr 1.15fr 1fr;gap:14px;align-items:end;margin:6px 0 28px}
+.pod{border-radius:20px 20px 0 0;padding:18px 16px;text-align:center;color:#fff;position:relative;overflow:hidden}
+.pod .pos{font:400 60px/1 var(--f-display);opacity:.95}
+.pod h3{font:400 18px var(--f-display);text-transform:uppercase;margin:6px 0 2px}
+.pod .num{font-size:22px}
+.pod small{opacity:.75;font:600 11px var(--f-label);letter-spacing:.12em;text-transform:uppercase}
+.pod.p1{background:linear-gradient(160deg,#f2b705,#b88300);color:var(--ink);min-height:230px}
+.pod.p2{background:linear-gradient(160deg,#2a2e38,#0b0c10);min-height:190px}
+.pod.p3{background:linear-gradient(160deg,#e10600,#8f0400);min-height:160px}
+.row{display:grid;grid-template-columns:44px minmax(0,1.1fr) minmax(0,2fr) 70px;gap:14px;align-items:center;padding:12px 16px;border-radius:14px;background:#fff;border:1px solid var(--line);margin-bottom:8px}
+.row.me{background:var(--ink);color:#fff;border-color:var(--ink)}
+.row .p{font:400 24px var(--f-display)}
+.row small{display:block;font:600 10px var(--f-label);letter-spacing:.14em;text-transform:uppercase;color:var(--ink2)}
+.row.me small{color:#aab2c0}
+.stack{display:flex;height:14px;border-radius:99px;overflow:hidden;background:var(--mist)}
+.stack i{display:block;height:100%}
+.row.me .stack{background:rgba(255,255,255,.18)}.row.me .stack i[style*="var(--ink)"]{background:#9aa3b3!important}
+.legend{display:flex;gap:16px;flex-wrap:wrap;margin:6px 0 16px;font:600 12px var(--f-label);letter-spacing:.06em}
+.legend i{display:inline-block;width:12px;height:12px;border-radius:4px;margin-right:6px;vertical-align:-1px}
+
+/* modal + aviso */
+.modal{position:fixed;inset:0;z-index:100;background:rgba(11,12,16,.55);display:grid;place-items:center;padding:20px}
+.modal[hidden]{display:none}
+.sheet{background:#fff;border-radius:24px;width:min(860px,100%);max-height:90vh;overflow:auto;padding:28px;box-shadow:0 30px 80px rgba(0,0,0,.4)}
+.sheet h2{font:400 26px var(--f-display);text-transform:uppercase}
+.tbl{width:100%;border-collapse:collapse;margin-top:10px}
+.tbl td{padding:9px 0;border-bottom:1px solid var(--line);font-weight:600}
+.tbl td:last-child{text-align:right;font-family:var(--f-label);font-weight:700}
+.tbl tr.h td{font:700 11px var(--f-label);letter-spacing:.14em;text-transform:uppercase;color:var(--ink2);padding-top:18px}
+.tbl tr.t td{border-top:2px solid var(--ink);border-bottom:0;font-weight:700}
+.eq{padding:12px 14px;border-radius:12px;background:#e8f7ee;color:var(--good);font:700 13px var(--f-label);letter-spacing:.06em;margin-top:16px}
+#toast{position:fixed;left:50%;bottom:26px;transform:translate(-50%,40px);opacity:0;background:var(--ink);color:#fff;padding:14px 22px;border-radius:14px;font:700 13px var(--f-label);letter-spacing:.06em;z-index:200;transition:.3s;pointer-events:none;max-width:90vw}
+#toast.on{transform:translate(-50%,0);opacity:1}
+
+@media (max-width:1100px){
+  .hero{grid-template-columns:1fr;grid-template-rows:auto}
+  .hero .head,.hero .cars,.hero .cta,.hero .side{grid-column:1;grid-row:auto}
+  .hero .side{padding-top:8px}
+  .gar,.finhero .stage,.dec,.g21{grid-template-columns:1fr}
+  .g4{grid-template-columns:repeat(2,1fr)}.g3{grid-template-columns:repeat(2,1fr)}
+  .sticky{position:static}
+}
+@media (max-width:700px){
+  .top{padding:0 14px;gap:10px;height:auto;flex-wrap:wrap}
+  .logo small,.who{display:none}
+  nav{order:3;width:100%;margin:0}
+  nav a{padding:12px 12px}
+  .status{margin-left:auto}
+  .hero,.gar,.page,.pagehead .stage,.finhero .stage{padding-left:16px;padding-right:16px}
+  .g2,.g3,.g4{grid-template-columns:1fr}
+  .row{grid-template-columns:34px 1fr 56px}.row .stack-col{grid-column:1/-1}
+  .podium{grid-template-columns:1fr}
+  .podium .pod{min-height:0!important;border-radius:16px}
+  .fbar{grid-template-columns:70px 1fr 90px}
+  .listrow{grid-template-columns:1fr 80px}.listrow .meter{display:none}
+  .callout{display:none}
+  .scene.hero>svg.bd{display:none}
+  .scene.hero{background:linear-gradient(#fff,#e9ecf1 60%,#d9dde5)}
+  .hero .cars .carwrap{width:116%;margin-left:-8%}
+}
+
+/* ampliación */
+.top{gap:16px}
+nav a{padding:22px 9px;font-size:12px;letter-spacing:.07em}
+@media (max-width:1560px){.who{display:none}}
+.btn[disabled]{opacity:.4;pointer-events:none}
+.race{display:grid;grid-template-columns:minmax(0,1fr) 360px;gap:20px;align-items:start}
+.rr{display:grid;gap:18px}
+.trackbox svg{width:100%;height:auto;display:block;border-radius:16px}
+.ctrl{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-top:16px}
+.tower{display:flex;flex-direction:column;gap:6px;margin-top:12px}
+.trow{display:grid;grid-template-columns:28px 8px 1fr auto;gap:10px;align-items:center;padding:9px 12px;border-radius:10px;background:var(--mist);font-weight:600}
+.trow i{display:block;width:6px;height:20px;border-radius:3px}
+.trow .tp{font:700 15px var(--f-label)}
+.trow em{font:700 12px var(--f-label);font-style:normal;color:var(--ink2)}
+.trow.me{background:var(--ink);color:#fff}.trow.me em{color:#cfd4de}
+.log p{padding:8px 0;border-bottom:1px dashed var(--line);font-size:13px;font-weight:500}
+.log p:first-child{font-weight:700}
+.inc{border:2px solid var(--loss)}
+.cd{text-align:center}.cd b{display:block;font:400 42px/1 var(--f-display);color:var(--loss)}
+.cd small{font:600 10px var(--f-label);letter-spacing:.14em;text-transform:uppercase;color:var(--ink2)}
+.pc.vac{background:#fff;border:2px dashed #c3c9d4;box-shadow:none}.pc.vac:hover{transform:none}
+.vacin{padding:34px 22px;text-align:center;display:grid;gap:10px;justify-items:center;align-content:center;height:100%;min-height:360px}
+.vq{width:90px;height:90px;border-radius:50%;background:var(--mist);display:grid;place-items:center;font:400 40px var(--f-display);color:#9aa3b3}
+.chain{display:grid;grid-template-columns:1fr auto 1fr auto 1fr auto 1fr;gap:12px;align-items:stretch}
+.link{background:#fff;border:1px solid var(--line);border-radius:18px;padding:18px}
+.link .n{display:grid;place-items:center;width:34px;height:34px;border-radius:50%;background:var(--ink);color:#fff;font:700 15px var(--f-label)}
+.link h3{font:400 17px var(--f-display);text-transform:uppercase;margin:10px 0 6px}.link p{color:var(--ink2);font-size:14px}
+.arr{align-self:center;font:700 26px var(--f-label);color:var(--red)}
+.pie{width:160px;height:160px;border-radius:50%;background:conic-gradient(var(--blue) 0 40%,var(--ink) 40% 80%,var(--red) 80% 100%);display:grid;place-items:center;flex:none}
+.pie span{display:grid;place-items:center;width:100px;height:100px;border-radius:50%;background:#fff;font:400 32px var(--f-display)}
+.legendp{margin:8px 0;padding-left:22px;position:relative}.legendp i{position:absolute;left:0;top:5px;width:12px;height:12px;border-radius:4px}
+.cal{display:grid;grid-template-columns:repeat(18,1fr);gap:6px}
+.cd2{border:1px solid var(--line);border-radius:10px;padding:10px 4px;text-align:center;background:#fff}
+.cd2 b{font:700 16px var(--f-label);display:block}
+.cd2 small{font:600 9px var(--f-label);letter-spacing:.04em;text-transform:uppercase;color:var(--ink2);display:block;min-height:11px}
+.cd2.now{background:var(--ink);color:#fff;border-color:var(--ink)}.cd2.now small{color:#cfd4de}
+.cd2.jun{background:#fff4d6;border-color:var(--gold)}.cd2.fin{background:var(--red);color:#fff;border-color:var(--red)}.cd2.fin small{color:#fff}
+.faq{background:#fff;border:1px solid var(--line);border-radius:14px;padding:16px 18px;margin-bottom:8px}
+.faq summary{cursor:pointer;font-weight:700;list-style:none;display:flex;justify-content:space-between;gap:12px}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary::after{content:"+";font:700 20px var(--f-label);color:var(--red)}.faq[open] summary::after{content:"–"}
+.faq p{margin-top:10px;color:var(--ink2)}
+.stepper{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.stp{display:flex;align-items:center;gap:10px;padding:12px 14px;border-radius:12px;background:var(--mist);font:700 13px var(--f-label);letter-spacing:.06em;text-transform:uppercase;color:var(--ink2)}
+.stp span{display:grid;place-items:center;width:26px;height:26px;border-radius:50%;background:#fff}
+.stp.cur{background:var(--ink);color:#fff}.stp.ok{background:#e8f7ee;color:var(--good)}
+.phases{display:grid;grid-template-columns:repeat(7,1fr);gap:8px}
+.ph{padding:14px 8px;border-radius:14px;background:var(--mist);text-align:center;font:700 11px var(--f-label);letter-spacing:.05em;text-transform:uppercase;color:var(--ink2);transition:background .3s}
+.ph b{display:block;font:400 22px var(--f-display);margin-bottom:6px}
+.ph.cur{background:var(--blue);color:#fff}.ph.ok{background:#e8f7ee;color:var(--good)}
+.aud{grid-template-columns:130px 190px 1fr 110px}
+.prow{grid-template-columns:44px minmax(0,1fr) minmax(0,1.6fr) 150px}
+@media (max-width:1100px){.race{grid-template-columns:1fr}.chain{grid-template-columns:1fr}.arr{display:none}.cal{grid-template-columns:repeat(6,1fr)}.phases{grid-template-columns:repeat(4,1fr)}.stepper{grid-template-columns:1fr 1fr}}
+@media (max-width:700px){.aud{grid-template-columns:1fr!important}.prow{grid-template-columns:34px 1fr}.prow .stack-col{grid-column:1/-1}.prow .tag{grid-column:1/-1;justify-self:start!important}.phases{grid-template-columns:repeat(2,1fr)}}
+#mercado,#patrocinio{scroll-margin-top:84px}
+</style>
+</head>
+<body>
+<header class="top">
+  <a class="logo" href="#inicio" aria-label="E-SIMULA 24H Paddock, ir al inicio">
+    <span class="flag" aria-hidden="true"><i></i><i class="k"></i><i></i><i class="k"></i><i class="k"></i><i></i><i class="k"></i><i></i><i></i><i class="k"></i><i></i><i class="k"></i><i class="k"></i><i></i><i class="k"></i><i></i></span>
+    <span><b>E-SIMULA</b><small>24H PADDOCK</small></span>
+  </a>
+  <nav id="nav" aria-label="Secciones"></nav>
+  <div class="status">
+    <button class="btn sm" id="closeBtn" data-close-round>Cerrar ronda</button>
+    <span class="pill" id="pill"><i></i>Ronda 5 / 18 · Abierta</span>
+    <span class="who"><b>Escudería Velox</b>Equipo 07 · Juníper Serra</span>
+  </div>
+</header>
+<main id="app"></main>
+<div class="modal" id="modal" hidden role="dialog" aria-modal="true" aria-label="Libros contables"></div>
+<div id="toast" role="status" aria-live="polite"></div>
+
+<script>
+"use strict";
+/* ============ utilidades ============ */
+const $ = (s, r=document) => r.querySelector(s);
+const eur = n => (n<0?"−":"") + Math.abs(Math.round(n)).toString().replace(/\B(?=(\d{3})+(?!\d))/g,".") + " €";
+const eurSigned = n => (n>=0?"+":"") + eur(n);
+const M = n => (n/1e6).toFixed(2).replace(".",",") + " M€";
+const f1 = n => n.toFixed(1).replace(".",",");
+let toastT;
+function toast(msg){const t=$("#toast");t.textContent=msg;t.classList.add("on");clearTimeout(toastT);toastT=setTimeout(()=>t.classList.remove("on"),2800)}
+
+/* ============ datos ============ */
+const S = {
+  livery:"#e10600",
+  hours:{prep:180,rd:140,mant:80},
+  sim:1, tunel:2,                   // índices de nivel I+D elegidos
+  dec:{loan:false, ins:false, sup:"estandar"},
+  part:"motor"
+};
+const CAJA0 = 10080000;
+const cajaNow = () => CAJA0 + S.adj;
+const HIST = [8.00,8.10,8.60,9.39,10.08];     // M€ al cierre de las rondas 0-4
+const ULT = {ing:2840000, gas:2150000};
+const INC = [["Premios de carrera",1600000],["Patrocinadores",950000],["Merchandising",290000]];
+const EXP = [["Plantilla (pilotos, ingenieros, mecánicos)",1050000],["I+D+i",420000],["Participación en carreras",350000],["Compras y recambios",230000],["Otros gastos",100000]];
+const PARTS = {
+  aleron_d:{n:"Alerón delantero",lv:2,w:12,x:95,y:222,note:"Reparte el aire hacia el suelo del coche."},
+  suspension:{n:"Suspensión",lv:1,w:23,x:175,y:176,note:"Mantiene las ruedas pegadas al asfalto."},
+  frenos:{n:"Frenos",lv:1,w:34,x:215,y:205,note:"El proyecto de frenos termina en 1 ronda.",rd:"Proyecto de frenos · termina en 1 ronda"},
+  motor:{n:"Motor",lv:2,w:43,x:650,y:138,note:"Con calor, un motor muy gastado aumenta el riesgo de avería.",warn:true},
+  cambio:{n:"Caja de cambio",lv:2,w:26,x:745,y:178,note:"Cada cambio de marcha cuenta en 12 horas de carrera."},
+  aleron_t:{n:"Alerón trasero",lv:1,w:8,x:835,y:96,note:"Da estabilidad en las curvas rápidas."},
+  neum:{n:"Neumáticos",lv:null,w:31,x:700,y:232,note:"Compuesto medio. Aguantan toda la carrera."}
+};
+const SIMS = [["Ninguno",0,"Sin simulador de fluidos."],["Simulador básico",200000,"Investigar una mejora tarda un 15% menos."],["Simulador avanzado",300000,"Investigar una mejora tarda un 20% menos."],["Simulador de altas prestaciones",400000,"Investigar una mejora tarda un 25% menos."]];
+const TUN = [["Ninguno",0,"Un 70% de las mejoras investigadas pueden no funcionar."],["Túnel de viento básico",500000,"Menos mejoras fallidas: baja a un 60%."],["Túnel de viento avanzado",750000,"Baja a un 50% la probabilidad de fallo."],["Túnel de alto rendimiento",1000000,"Máxima fiabilidad en cada investigación."]];
+const TEAM = [
+  {id:"p",n:"Luke Morrison",r:"Piloto",ovr:61,st:3,cc:"#e10600",sk:"#f1c9a5",hair:"#5a3a22",kind:"helmet",age:24,pay:754000,left:10,at:[["Talento",62],["Concentración",57],["Experiencia",55],["Stamina",60],["Moral",70]]},
+  {id:"e1",n:"Montserrat Newman",r:"Ingeniera",ovr:85,st:5,cc:"#0a5cff",sk:"#f1c9a5",hair:"#1a1a1f",kind:"headset",pay:1100000,left:6,at:[["Rapidez",98],["Eficiencia",85],["Nivel máx. Motor",10],["Nivel máx. Alerones",9]]},
+  {id:"e2",n:"Juliana Jensen",r:"Ingeniera",ovr:69,st:4,cc:"#0a5cff",sk:"#f6d7bd",hair:"#b99ae6",kind:"headset",pay:1100000,left:6,at:[["Rapidez",76],["Eficiencia",94],["Nivel máx. Cambio",10],["Nivel máx. Motor",3]]},
+  {id:"e3",n:"Romeo Fleming",r:"Ingeniero",ovr:61,st:3,cc:"#0a5cff",sk:"#e9c39c",hair:"#15151a",kind:"headset",pay:950000,left:8,at:[["Rapidez",70],["Eficiencia",72],["Nivel máx. Alerones",8],["Nivel máx. Frenos",6]]},
+  {id:"d",n:"Carmen Ortiz",r:"Jefe de equipo deportivo",ovr:74,st:4,cc:"#0f9d58",sk:"#d9a67c",hair:"#3a2a20",kind:"cap",pay:2000000,left:4,at:[["Gestión",78],["Fiabilidad",82],["Ritmo",64],["Moral",75]]},
+  {id:"m",n:"Equipo de mecánicos",r:"4 mecánicos",ovr:66,st:3,cc:"#f2b705",sk:"#e9c39c",hair:"#222",kind:"cap",pay:300000,left:9,at:[["Rapidez en box",68],["Calidad",64],["Moral",66]]}
+];
+const MARKET = [
+  {n:"Clara Vidal",r:"Ingeniera aerodinámica · OVR 78",pay:900000,sk:"#f1c9a5",hair:"#7a3b1d",kind:"headset"},
+  {n:"Iván Roca",r:"Mecánico jefe · OVR 64",pay:300000,sk:"#d9a67c",hair:"#111",kind:"cap"},
+  {n:"Pau Serra",r:"Piloto de reserva · OVR 58",pay:420000,sk:"#f6d7bd",hair:"#2e2217",kind:"helmet"}
+];
+const RANK = [
+  {n:"Aurora",c:"CJS",e:80,s:76,d:70,col:"#0a5cff"},{n:"Nimbus",c:"CJS",e:72,s:78,d:74,col:"#0f9d58"},
+  {n:"Titán",c:"CJS",e:70,s:69,d:77,col:"#f2b705"},{n:"Velox",c:"CJS",e:72,s:61,d:55,col:"#e10600",me:true},
+  {n:"Corsa",c:"CJS",e:66,s:63,d:58,col:"#7a42ff"},{n:"Zenit",c:"CJS",e:60,s:58,d:52,col:"#00a3b4"},
+  {n:"Orion",c:"CJS",e:55,s:60,d:48,col:"#ff7a00"},{n:"Vortex",c:"CJS",e:48,s:50,d:61,col:"#555b66"}
+];
+RANK.forEach(t=>t.g=.4*t.e+.4*t.s+.2*t.d);
+const COLORS = ["#e10600","#0a5cff","#f2b705","#0f9d58","#7a42ff","#0b0c10"];
+let rankMode="global";
+
+/* ============ finanzas: modelo ============ */
+const P_COMPRA = 300000, LOAN = 1000000, INS = 120000;
+function fin(){
+  const d=S.dec; let caja=0, idx=0, cal=0, coh=0, expense=0;
+  const base = {caja:cajaNow()+ULT.ing-ULT.gas+ (ULT.ing*0.02), fin:55, cal:48, coh:S.strat?72:45};
+  base.caja = cajaNow() + 700000 + (PAY0 - payroll());                        // previsión: ingresos 2,9 M − gastos 2,2 M
+  let c=base.caja, f=base.fin, q=base.cal, h=base.coh;
+  if(d.loan){c+=LOAN;f-=3;h-=2}
+  if(d.ins){c-=INS;f+=2;h+=3;expense+=INS}
+  if(d.sup==="premium"){c-=P_COMPRA*.96;f-=1;q+=8;h+=6}
+  if(d.sup==="estandar"){f+=2;q+=2}
+  if(d.sup==="lowcost"){c-=210000;f+=3;q-=9;h-=14}
+  const rating = f>=75?"AAA":f>=65?"AA":f>=50?"A":"B";
+  return {base,caja:c,fin:f,cal:q,coh:h,rating,expense};
+}
+function books(){
+  const d=S.dec;
+  let tes=cajaNow(), exi=620000, inm=6200000, cli=500000;
+  let prov=550000, pre=2000000, hac=350000, pn=14500000+S.adj;
+  if(d.loan){tes+=LOAN;pre+=LOAN}
+  if(d.ins){tes-=INS;pn-=INS}
+  if(d.sup==="premium"){tes-=P_COMPRA*.96;exi+=P_COMPRA*.96}
+  if(d.sup==="estandar"){prov+=P_COMPRA;exi+=P_COMPRA}
+  if(d.sup==="lowcost"){tes-=210000;exi+=210000}
+  const act=tes+exi+inm+cli, pas=prov+pre+hac, tot=pas+pn;
+  return {tes,exi,inm,cli,prov,pre,hac,pn,act,pas,tot};
+}
+
+/* ============ gráficos ============ */
+function avatar(o){
+  const sk=o.sk, hair=o.hair, kind=o.kind, col=o.cc||"#0a5cff";
+  let top="";
+  if(kind==="helmet") top=`<path d="M30 52 C30 30 44 20 60 20 C76 20 90 30 90 52 L90 58 L30 58Z" fill="${col}"/><path d="M34 52 H86 V60 H34Z" fill="#101218"/><rect x="30" y="46" width="60" height="4" fill="#fff"/>`;
+  else if(kind==="cap") top=`<path d="M32 50 C32 28 46 22 60 22 C74 22 88 28 88 50Z" fill="${col}"/><path d="M60 48 H98 C98 54 90 56 80 56 H60Z" fill="${col}"/>`;
+  else top=`<path d="M31 56 C27 30 42 18 60 18 C78 18 93 30 89 56 C84 44 74 36 60 36 C46 36 36 44 31 56Z" fill="${hair}"/>`;
+  const head = kind==="headset" ? `<path d="M28 58 C28 26 92 26 92 58" fill="none" stroke="#101218" stroke-width="5" stroke-linecap="round"/><rect x="22" y="52" width="10" height="20" rx="5" fill="#101218"/><rect x="88" y="52" width="10" height="20" rx="5" fill="#101218"/><path d="M92 68 C92 82 78 84 68 82" fill="none" stroke="#101218" stroke-width="3"/><circle cx="66" cy="82" r="4" fill="#101218"/>` : "";
+  return `<svg viewBox="0 0 120 120" aria-hidden="true">
+    <path d="M12 120 C14 94 36 86 60 86 C84 86 106 94 108 120Z" fill="${col}"/>
+    <path d="M44 86 L60 104 L76 86" fill="#fff" opacity=".9"/>
+    <rect x="52" y="70" width="16" height="18" rx="6" fill="${sk}"/>
+    <ellipse cx="60" cy="54" rx="26" ry="29" fill="${sk}"/>
+    ${kind==="headset"?"":""}
+    <ellipse cx="50" cy="56" rx="3" ry="3.6" fill="#1a1a1f"/><ellipse cx="70" cy="56" rx="3" ry="3.6" fill="#1a1a1f"/>
+    <path d="M52 70 C57 75 63 75 68 70" fill="none" stroke="#8a4b3a" stroke-width="2.6" stroke-linecap="round"/>
+    ${top}${head}
+  </svg>`;
+}
+
+function car(p, opts={}){
+  const num = opts.num||"07";
+  return `<svg viewBox="0 0 900 400" role="img" aria-label="Hypercar de la Escudería Velox, número ${num}">
+  <defs>
+    <linearGradient id="${p}b" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff"/><stop offset=".55" stop-color="#eef1f6"/><stop offset="1" stop-color="#bfc6d2"/></linearGradient>
+    <linearGradient id="${p}g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#3a4558"/><stop offset=".5" stop-color="#10141c"/><stop offset="1" stop-color="#05070b"/></linearGradient>
+    <radialGradient id="${p}r" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#f4f6fa"/><stop offset=".75" stop-color="#aab1bf"/><stop offset="1" stop-color="#6c7482"/></radialGradient>
+    <clipPath id="${p}c"><path id="${p}bp" d="M40 228 C38 214 52 204 80 198 L196 176 C232 168 262 160 290 148 C318 120 350 100 392 92 C440 84 500 84 548 96 C600 110 650 140 706 150 L800 144 C826 142 842 140 856 130 L862 172 L850 228Z"/></clipPath>
+    <linearGradient id="${p}f" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff"/><stop offset="1" stop-color="#000"/></linearGradient>
+    <mask id="${p}m" maskUnits="userSpaceOnUse" x="0" y="250" width="900" height="150"><rect x="0" y="250" width="900" height="150" fill="url(#${p}f)"/></mask>
+    <filter id="${p}s" x="-10%" y="-100%" width="120%" height="300%"><feGaussianBlur stdDeviation="7"/></filter>
+    <g id="${p}w"><circle r="44" fill="#101216"/><circle r="38" fill="none" stroke="#2a2e36" stroke-width="3"/><circle r="29" fill="url(#${p}r)"/>
+      <g class="spin"><g stroke="#4a515e" stroke-width="7" stroke-linecap="round"><path d="M0 0V-24"/><path d="M0 0L22.8 -7.4"/><path d="M0 0L14 19.4"/><path d="M0 0L-14 19.4"/><path d="M0 0L-22.8 -7.4"/></g></g>
+      <circle r="8" fill="#101216"/><circle r="4" fill="var(--livery)"/></g>
+    <g id="${p}car">
+      <path d="M40 228 C38 214 52 204 80 198 L196 176 C232 168 262 160 290 148 C318 120 350 100 392 92 C440 84 500 84 548 96 C600 110 650 140 706 150 L800 144 C826 142 842 140 856 130 L862 172 L850 228Z" fill="url(#${p}b)"/>
+      <g clip-path="url(#${p}c)">
+        <path d="M30 232 L30 204 C200 192 360 184 560 150 C650 134 760 142 870 122 L870 162 C770 170 660 168 560 192 C400 218 230 226 160 232Z" style="fill:var(--livery)"/>
+        <path d="M30 206 C200 194 360 186 560 152 C650 136 760 144 870 124 L870 130 C760 150 650 142 560 158 C360 192 200 200 30 212Z" fill="#0b0c10"/>
+        <path d="M120 180 C260 150 330 112 400 96 C470 86 520 92 560 102" fill="none" stroke="#fff" stroke-width="4" opacity=".7"/>
+        <circle cx="${opts.nx||250}" cy="192" r="19" fill="#fff"/><text x="${opts.nx||250}" y="199" text-anchor="middle" font-family="Russo One,sans-serif" font-size="19" fill="#0b0c10">${num}</text>
+        <circle cx="215" cy="205" r="52" fill="#07080b"/><circle cx="700" cy="205" r="52" fill="#07080b"/>
+      </g>
+      <path d="M304 146 C328 124 354 106 392 99 C440 92 490 93 526 102 C546 108 560 120 566 142Z" fill="url(#${p}g)"/>
+      <path d="M330 128 C356 108 392 102 430 100" fill="none" stroke="#fff" stroke-width="3" opacity=".35" stroke-linecap="round"/>
+      <path d="M424 160 L522 154 C542 154 550 168 542 184 L432 190Z" fill="#0b0c10"/><path d="M430 168 L536 162" stroke="var(--livery)" stroke-width="3" fill="none"/>
+      <path d="M60 206 L124 194 L122 200 L66 213Z" fill="#fff" stroke="#0b0c10" stroke-width="2"/><path d="M66 209 L118 199" stroke="#e10600" stroke-width="2.4"/>
+      <path d="M30 232 L236 232 L246 228 L42 228Z" fill="#0b0c10"/>
+      <path d="M764 228 L858 228 L868 240 L776 238Z" fill="#0b0c10"/>
+      <rect x="795" y="110" width="9" height="36" fill="#0b0c10"/>
+      <path d="M748 100 L872 90 L876 104 L756 116Z" fill="#0b0c10"/><path d="M752 101 L871 91" stroke="var(--livery)" stroke-width="3"/>
+      <path d="M864 82 L880 82 L878 134 L864 138Z" fill="#0b0c10"/>
+      <use href="#${p}w" x="215" y="205"/><use href="#${p}w" x="700" y="205"/>
+    </g>
+  </defs>
+  <ellipse cx="450" cy="252" rx="430" ry="9" fill="#0b0c10" opacity=".4" filter="url(#${p}s)"/>
+  <g mask="url(#${p}m)" opacity=".28"><use href="#${p}car" transform="translate(0,502) scale(1,-1)"/></g>
+  <use href="#${p}car"/>
+</svg>`;
+}
+
+function backdrop(variant="hero"){
+  if(variant==="clean"){
+    const seams=[...Array(11)].map((_,i)=>`<path d="M${i*160} 0V500" stroke="#e3e6ec" stroke-width="2"/>`).join("");
+    const rad=[...Array(15)].map((_,i)=>`<path d="M800 500L${-1200+i*230} 900" stroke="#d6dbe3" stroke-width="2"/>`).join("");
+    const hor=[530,565,610,670,750,850].map(y=>`<path d="M0 ${y}H1600" stroke="#dadee6" stroke-width="2"/>`).join("");
+    return `<svg class="bd" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMax slice" aria-hidden="true">
+    <defs>
+      <linearGradient id="cw" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff"/><stop offset="1" stop-color="#eceff4"/></linearGradient>
+      <linearGradient id="cf" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#e6e9ef"/><stop offset=".3" stop-color="#f7f8fa"/><stop offset="1" stop-color="#dde1e8"/></linearGradient>
+      <radialGradient id="cg" cx=".42" cy=".5" r=".5"><stop offset="0" stop-color="#fff"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></radialGradient>
+    </defs>
+    <rect width="1600" height="500" fill="url(#cw)"/>${seams}
+    <rect y="500" width="1600" height="400" fill="url(#cf)"/>${rad}${hor}
+    <ellipse cx="680" cy="560" rx="760" ry="260" fill="url(#cg)"/></svg>`;
+  }
+  if(variant==="head"){
+    const seams=[...Array(11)].map((_,i)=>`<path d="M${i*160} 0V330" stroke="#dde1e8" stroke-width="2"/>`).join("");
+    const lights=[200,560,920,1280].map(x=>`<rect x="${x}" y="14" width="220" height="12" rx="6" fill="#fff"/>`).join("");
+    return `<svg class="bd" viewBox="0 0 1600 380" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+    <defs><linearGradient id="hw" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff"/><stop offset="1" stop-color="#e9ecf1"/></linearGradient></defs>
+    <rect width="1600" height="380" fill="url(#hw)"/>${seams}<rect width="1600" height="40" fill="#0b0c10"/>${lights}
+    </svg>`;
+  }
+  const seams=[...Array(11)].map((_,i)=>`<path d="M${i*160} 0V470" stroke="#dde1e8" stroke-width="2"/>`).join("");
+  const ribs=[...Array(22)].map((_,i)=>`<path d="M1170 ${130+i*14}H1560" stroke="#cfd4dd" stroke-width="2"/>`).join("");
+  const lights=[200,560,920,1280].map(x=>`<rect x="${x}" y="22" width="220" height="14" rx="7" fill="#fff"/><rect x="${x-20}" y="30" width="260" height="60" fill="#fff" opacity=".35" filter="url(#bl)"/>`).join("");
+  const rad=[...Array(15)].map((_,i)=>`<path d="M800 470L${-1200+i*230} 900" stroke="#d3d8e0" stroke-width="2"/>`).join("");
+  const hor=[500,535,580,640,720,830].map(y=>`<path d="M0 ${y}H1600" stroke="#d6dbe3" stroke-width="2"/>`).join("");
+  const tires=[0,1,2].map(i=>`<g transform="translate(${70+i*0},${410-i*46})"><rect x="0" y="0" width="150" height="40" rx="18" fill="#14161b"/><rect x="14" y="12" width="122" height="6" rx="3" fill="#e10600"/></g>`).join("");
+  return `<svg class="bd" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMax slice" aria-hidden="true">
+  <defs>
+    <linearGradient id="wl" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff"/><stop offset="1" stop-color="#e9ecf1"/></linearGradient>
+    <linearGradient id="fl" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#e9ecf1"/><stop offset=".35" stop-color="#f7f8fa"/><stop offset="1" stop-color="#dde1e8"/></linearGradient>
+    <linearGradient id="dr" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f5f6f9"/><stop offset="1" stop-color="#d3d8e0"/></linearGradient>
+    <filter id="bl"><feGaussianBlur stdDeviation="18"/></filter>
+  </defs>
+  <rect width="1600" height="470" fill="url(#wl)"/>${seams}
+  <rect width="1600" height="56" fill="#0b0c10"/>${lights}
+  <rect x="1170" y="120" width="390" height="320" rx="8" fill="url(#dr)"/>${ribs}
+  <rect x="1170" y="120" width="390" height="320" rx="8" fill="none" stroke="#0b0c10" stroke-width="6"/>
+  <g>${tires}</g>
+  <rect x="520" y="330" width="150" height="110" rx="8" fill="#e10600"/><path d="M520 367H670M520 404H670" stroke="#8f0400" stroke-width="3"/><rect x="580" y="344" width="30" height="6" rx="3" fill="#fff"/><rect x="580" y="381" width="30" height="6" rx="3" fill="#fff"/><rect x="580" y="418" width="30" height="6" rx="3" fill="#fff"/>
+  <rect x="690" y="372" width="100" height="68" rx="6" fill="#14161b"/><rect x="700" y="382" width="80" height="12" rx="3" fill="#2a2e36"/>
+  <rect y="440" width="1600" height="30" fill="#c9ced8"/>
+  <rect y="470" width="1600" height="430" fill="url(#fl)"/>${rad}${hor}
+  <rect y="470" width="1600" height="10" fill="#0b0c10"/>
+  </svg>`;
+}
+
+/* ============ vistas ============ */
+function vInicio(){
+  const top3 = [...RANK].sort((a,b)=>b.g-a.g);
+  const pos = top3.findIndex(t=>t.me)+1;
+  const mini = [0,1,2].map(i=>top3[i]).concat(top3[pos-1]).filter((t,i,a)=>a.indexOf(t)===i);
+  return `<section class="scene hero">${backdrop("clean")}
+    <div class="stage head">
+      <span class="eyebrow"><em>Ronda 5</em> · 12 Horas Quantum Race · Calor</span>
+      <h1 class="disp">Escudería <span>Velox</span></h1>
+      <div class="sub">Equipo 07 · Juníper Serra · Nivel 1 · Grupo 1</div>
+    </div>
+    <div class="stage cars"><div class="carwrap">
+      <div class="turn"></div>
+      <div class="car">${car("h")}</div>
+    </div></div>
+    <div class="stage cta">
+      <a class="btn" href="#equipo">Modificar equipo <span aria-hidden="true">→</span></a>
+      <a class="btn ghost" href="#garaje">Ver el garaje</a>
+      <a class="btn blue" href="#carrera">Ir a la carrera</a>
+    </div>
+    <aside class="stage side" aria-label="Resumen de la escudería">
+      <a class="card" href="#finanzas">
+        <div class="ct"><span class="lbl">Dinero en caja</span><span class="arrow">FINANZAS →</span></div>
+        <div class="bigmoney">${eur(cajaNow())}</div>
+        <div class="duo"><div class="g"><small>Ganado última ronda</small><b>${eurSigned(ULT.ing)}</b></div><div class="l"><small>Perdido última ronda</small><b>−${eur(ULT.gas).replace("−","")}</b></div></div>
+      </a>
+      <a class="card" href="#clasificacion">
+        <div class="ct"><span class="lbl">Clasificación</span><span class="arrow">VER TODA →</span></div>
+        <div class="mini-rank">${mini.map(t=>{const p=top3.indexOf(t)+1;return `<div class="mr ${t.me?"me":""} ${p===1?"gold":""}"><span class="p">${p}</span><span>${t.n}${t.me?" · tú":""}</span><span class="s">${f1(t.g)}</span></div>`}).join("")}</div>
+      </a>
+      <a class="card" href="#equipo">
+        <div class="ct"><span class="lbl">Tu equipo</span><span class="arrow">GESTIONAR →</span></div>
+        <div class="avrow">${S.team.map(t=>`<span class="av">${avatar(t)}</span>`).join("")}</div>
+        <p style="margin-top:14px;font-weight:600">${S.team.length} de 6 puestos cubiertos${S.team.length<6?" · hay vacantes":""}</p>
+      </a>
+    </aside>
+  </section>`;
+}
+
+function vGaraje(){
+  const p=PARTS[S.part];
+  const hs = Object.entries(PARTS).map(([k,v])=>`<button class="hs ${v.warn?"warn":""}" data-part="${k}" aria-pressed="${k===S.part}" aria-label="${v.n}, desgaste ${v.w}%" style="left:${v.x/9}%;top:${v.y/4}%">${v.w>=40?"!":v.lv??"●"}</button>`).join("");
+  const wt = p.w>=40?"bad":p.w>=25?"warn":"good";
+  const costLab = S.sim; const costT = S.tunel;
+  const rdCost = SIMS[S.sim][1]+TUN[S.tunel][1];
+  return `<section class="scene pagehead" style="min-height:520px">${backdrop("clean")}
+    <div class="stage" style="padding-bottom:0">
+      <div class="gar" style="padding:0">
+        <div>
+          <div class="carwrap" style="margin-top:10px"><div class="turn"></div><div class="car">${car("g")}</div>${hs}</div>
+        </div>
+        <div class="card solid" style="margin-bottom:34px">
+          <span class="eyebrow" style="box-shadow:none;margin-bottom:14px"><em>Garaje</em> · Toca una pieza</span><br><span class="lbl">Pieza seleccionada</span>
+          <h2 class="disp" style="font-size:28px;margin:10px 0 4px">${p.n}</h2>
+          <p style="color:var(--ink2)">${p.note}</p>
+          <div class="wear"><span class="lbl">Desgaste</span><div class="meter ${p.w>=40?"red":p.w>=25?"gold":"good"}"><i style="width:${p.w}%"></i></div><b class="num">${p.w}%</b></div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap"><span class="tag blue">${p.lv?"Nivel "+p.lv:"Compuesto medio"}</span><span class="tag ${wt}">${p.w>=40?"Riesgo de avería":p.w>=25?"Vigila":"En buen estado"}</span>${p.rd?`<span class="tag">${p.rd}</span>`:""}</div>
+          <p style="margin-top:16px;font-size:13px;color:var(--ink2)">No tocas el coche: lo mantienen tus mecánicos. Tú decides cuánto tiempo y dinero reciben.</p>
+          <a class="btn sm" style="margin-top:14px" href="#equipo">Repartir horas del equipo</a>
+        </div>
+      </div>
+    </div>
+  </section>
+  <div class="page">
+    <div class="sec"><h2>Estado de la escudería</h2>
+      <div class="grid g4">
+        ${[["Tecnológico",62,"+3","blue"],["Capital humano",71,"+1","blue"],["Calidad operativa",48,"−6","red"],["Financiero",55,"+2","blue"]].map(k=>`<div class="kpi"><span class="lbl">${k[0]}</span><div class="v">${k[1]}<small> / 100</small></div><div class="meter ${k[3]==="red"?"gold":""}"><i style="width:${k[1]}%"></i></div><p style="margin-top:10px;font:700 12px var(--f-label);color:${k[2][0]==="−"?"var(--loss)":"var(--good)"}">${k[2]} respecto a la ronda 4</p></div>`).join("")}
+      </div></div>
+    <div class="sec"><h2>Pintura del coche</h2>
+      <div class="card solid" style="display:flex;gap:24px;align-items:center;flex-wrap:wrap"><div class="sw" role="group" aria-label="Color de la pintura">${COLORS.map(c=>`<button data-color="${c}" aria-pressed="${S.livery===c}" aria-label="Color ${c}" style="background:${c}"></button>`).join("")}</div><span style="color:var(--ink2)">Elige los colores de tu escudería. Se aplican a todo el coche.</span></div></div>
+    ${vHoras()}
+    <div class="sec"><h2>Laboratorio de I+D</h2>
+      <div class="grid g2">
+        <div class="card solid"><span class="lbl">Simulador de dinámica de fluidos</span><p style="margin:8px 0 14px;color:var(--ink2)">Hace más rápida la investigación de cada mejora.</p><div style="display:grid;gap:10px">${SIMS.map((s,i)=>`<button class="opt" data-sim="${i}" aria-pressed="${S.sim===i}"><b>${s[0]}<span class="cost">${s[1]?eur(s[1])+" / carrera":"Gratis"}</span></b><small>${s[2]}</small></button>`).join("")}</div></div>
+        <div class="card solid"><span class="lbl">Túnel de viento</span><p style="margin:8px 0 14px;color:var(--ink2)">Hace más fiables las mejoras que desarrollas.</p><div style="display:grid;gap:10px">${TUN.map((s,i)=>`<button class="opt" data-tun="${i}" aria-pressed="${S.tunel===i}"><b>${s[0]}<span class="cost">${s[1]?eur(s[1])+" / carrera":"Gratis"}</span></b><small>${s[2]}</small></button>`).join("")}</div></div>
+      </div>
+      <div class="card solid" style="margin-top:18px;display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap"><div><span class="lbl">Coste de I+D por carrera</span><div class="bigmoney" style="font-size:32px;margin-top:8px">${eur(rdCost)}</div></div><button class="btn blue" data-save="rd">Guardar cambios</button></div>
+    </div>
+  </div>`;
+}
+
+function vHoras(){
+  const h=S.hours, tot=h.prep+h.rd+h.mant;
+  const items=[["prep","Preparación de carrera","#0a5cff","Más ritmo y menos fallos el día de la carrera."],["rd","Laboratorio I+D","#e10600","Tus proyectos terminan antes."],["mant","Mantenimiento preventivo","#0f9d58","Baja el desgaste de las piezas."]];
+  let off=0; const R=62, C=2*Math.PI*R;
+  const arcs=items.map(([k,,col])=>{const len=h[k]/400*C;const s=`<circle data-arc="${k}" r="${R}" cx="80" cy="80" fill="none" stroke="${col}" stroke-width="22" stroke-dasharray="${len} ${C-len}" stroke-dashoffset="${-off}" transform="rotate(-90 80 80)"/>`;off+=len;return s}).join("");
+  return `<div class="sec"><h2>Reparto de horas</h2>
+      <div class="grid g21"><div class="card solid">
+        <p style="color:var(--ink2);margin-bottom:6px">Tu plantilla tiene 400 horas por ronda. Mueve un control y el resto se ajusta solo.</p>
+        ${items.map(([k,n,col,d])=>`<div class="hrow"><div class="t"><span><i style="display:inline-block;width:12px;height:12px;border-radius:4px;background:${col};margin-right:8px"></i>${n}</span><span data-hv="${k}">${h[k]} h</span></div><input type="range" min="0" max="400" step="10" value="${h[k]}" data-h="${k}" aria-label="${n}"><small>${d}</small></div>`).join("")}
+      </div>
+      <div class="card solid" style="display:grid;place-items:center;text-align:center"><div style="position:relative;width:180px;height:180px"><svg viewBox="0 0 160 160" width="180" height="180" role="img" aria-label="Reparto de horas">${arcs}</svg><div style="position:absolute;inset:0;display:grid;place-items:center"><div><div class="bigmoney" style="font-size:34px">${tot}</div><span class="lbl">horas</span></div></div></div></div></div></div>`;
+}
+
+function vEquipo(){
+  return `<section class="scene pagehead">${backdrop("head")}
+    <div class="stage"><span class="eyebrow"><em>Equipo</em> · Tus profesionales</span><h1 class="disp">Los que ganan las carreras</h1><p>Ellos conducen y ajustan el coche. Tú decides a quién fichas, cuánto cobra y a qué dedica su tiempo.</p></div></section>
+  <div class="page">
+    <div class="sec" style="margin-top:8px"><h2>Plantilla titular</h2>
+      <div class="grid g3">${teamCards()}</div></div>
+    <div class="sec" id="mercado"><h2>Mercado de personal</h2>${mercadoBody()}</div>
+  </div>`;
+}
+
+function chart(f){
+  const w=640,h=250,pl=54,pr=24,pt=24,pb=36;
+  const pts=[...HIST, f.caja/1e6];
+  const mn=Math.floor(Math.min(...pts)-0.5), mx=Math.ceil(Math.max(...pts)+0.5);
+  const X=i=>pl+i*(w-pl-pr)/(pts.length-1), Y=v=>pt+(mx-v)*(h-pt-pb)/(mx-mn);
+  const real=HIST.map((v,i)=>`${i?"L":"M"}${X(i)} ${Y(v)}`).join(" ");
+  const area=real+` L${X(HIST.length-1)} ${h-pb} L${X(0)} ${h-pb}Z`;
+  let grid=""; for(let v=mn;v<=mx;v+=1){grid+=`<path d="M${pl} ${Y(v)}H${w-pr}" stroke="#e8ebf0"/><text x="${pl-10}" y="${Y(v)+4}" text-anchor="end" font-size="12" font-family="Chakra Petch" fill="#5b6270">${v} M</text>`}
+  const lab=["Inicio","R1","R2","R3","R4","R5 prev."].map((t,i)=>`<text x="${X(i)}" y="${h-10}" text-anchor="middle" font-size="12" font-family="Chakra Petch" fill="#5b6270">${t}</text>`).join("");
+  const lx=X(HIST.length-1), ly=Y(HIST[HIST.length-1]), px=X(pts.length-1), py=Y(f.caja/1e6);
+  return `<svg viewBox="0 0 ${w} ${h}" width="100%" role="img" aria-label="Evolución de la tesorería en millones de euros"><defs><linearGradient id="ar" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0a5cff" stop-opacity=".28"/><stop offset="1" stop-color="#0a5cff" stop-opacity="0"/></linearGradient></defs>
+    ${grid}<path d="${area}" fill="url(#ar)"/><path d="${real}" fill="none" stroke="#0a5cff" stroke-width="3.5" stroke-linejoin="round" stroke-linecap="round"/>
+    <path d="M${lx} ${ly}L${px} ${py}" stroke="#0a5cff" stroke-width="3" stroke-dasharray="7 6" fill="none"/>
+    ${HIST.map((v,i)=>`<circle cx="${X(i)}" cy="${Y(v)}" r="${i===HIST.length-1?7:4}" fill="#fff" stroke="#0a5cff" stroke-width="3"/>`).join("")}
+    <circle cx="${px}" cy="${py}" r="8" fill="#0a5cff"/><text x="${px}" y="${py-14}" text-anchor="end" font-size="13" font-weight="700" font-family="Chakra Petch" fill="#0b0c10">${M(f.caja)}</text>${lab}</svg>`;
+}
+
+function vFinanzas(){
+  const f=fin(), d=S.dec, maxI=Math.max(ULT.ing,ULT.gas);
+  const chip=(t,k)=>`<span class="tag ${k}">${t}</span>`;
+  const delta=(a,b,suf="")=>{const x=Math.round(a-b);return x===0?`<span class="delta">=</span>`:`<span class="delta ${x>0?"up":"dn"}">${x>0?"▲ +":"▼ −"}${Math.abs(x)}${suf}</span>`};
+  return `<section class="finhero"><div class="stripe"></div>
+    <div class="stage"><div>
+      <span class="lbl">Dinero en caja · cierre de la ronda 4</span>
+      <div class="cash">${eur(cajaNow())}</div>
+      <h1 class="disp" style="font-size:20px;color:#9aa3b3;margin:0">Tu escudería ganó ${M(ULT.ing-ULT.gas)} en la última ronda</h1>
+      <div class="seal"><div class="sealbadge"><span>A</span></div><div><span class="lbl">Rating de solvencia</span><p style="margin:6px 0 0;max-width:260px;color:#cfd4de">Puedes pagar tus deudas. Para llegar a AA, mejora la liquidez sin endeudarte.</p></div></div>
+    </div>
+    <div class="flow" role="group" aria-label="Ingresos frente a gastos de la última ronda">
+      <span class="lbl">Última ronda</span>
+      <div class="fbar g"><span>GANADO</span><div class="tr"><i style="width:${ULT.ing/maxI*100}%"></i></div><span>${eurSigned(ULT.ing)}</span></div>
+      <div class="fbar l"><span>PERDIDO</span><div class="tr"><i style="width:${ULT.gas/maxI*100}%"></i></div><span>−${eur(ULT.gas).replace("−","")}</span></div>
+      <div style="margin-top:10px"><div style="display:flex;justify-content:space-between"><span class="lbl">Coherencia estratégica</span><b class="num">${f.base.coh} / 100</b></div><div class="meter dark-meter" style="margin-top:8px"><i style="width:${f.base.coh}%;background:#34d17b"></i></div><p style="margin-top:8px;color:#9aa3b3;font-size:13px">${S.strat?"Estrategia declarada: "+STRAT.find(x=>x[0]===S.strat)[1]+".":"Aún no has declarado estrategia. Hazlo en la pestaña Estrategia."}</p></div>
+      <button class="btn sm" style="align-self:start;background:#fff;color:var(--ink);margin-top:6px" data-books>Ver libros contables</button>
+    </div></div></section>
+  <div class="page">
+    <div class="sec"><h2>Evolución de la caja</h2>
+      <div class="grid g21"><div class="card solid"><span class="lbl">Tesorería al cierre de cada ronda</span>${chart(f)}</div>
+      <div class="card solid"><span class="lbl">Resumen de la temporada</span>
+        <div class="listrow" style="grid-template-columns:1fr auto"><span>Dinero al empezar</span><span class="num">${eur(8000000)}</span></div>
+        <div class="listrow" style="grid-template-columns:1fr auto"><span>Ganado en 4 rondas</span><span class="num" style="color:var(--good)">${eurSigned(10500000)}</span></div>
+        <div class="listrow" style="grid-template-columns:1fr auto"><span>Perdido en 4 rondas</span><span class="num" style="color:var(--loss)">−${eur(8420000).replace("−","")}</span></div>
+        ${S.adj?`<div class="listrow" style="grid-template-columns:1fr auto"><span>Despidos, carrera y otros movimientos</span><span class="num" style="color:${S.adj>0?"var(--good)":"var(--loss)"}">${eurSigned(S.adj)}</span></div>`:""}
+        <div class="listrow" style="grid-template-columns:1fr auto"><b>Dinero ahora</b><span class="num">${eur(cajaNow())}</span></div></div></div></div>
+    <div class="sec"><h2>¿De dónde viene y a dónde va?</h2>
+      <div class="grid g2">
+        <div class="card solid"><div class="ct"><span class="lbl">Ganado</span><b class="num" style="color:var(--good)">${eurSigned(ULT.ing)}</b></div>${INC.map(r=>`<div class="listrow"><span>${r[0]}</span><div class="meter good"><i style="width:${r[1]/ULT.ing*100}%"></i></div><span class="num">${eur(r[1])}</span></div>`).join("")}</div>
+        <div class="card solid"><div class="ct"><span class="lbl">Perdido</span><b class="num" style="color:var(--loss)">−${eur(ULT.gas).replace("−","")}</b></div>${EXP.map(r=>`<div class="listrow"><span>${r[0]}</span><div class="meter red"><i style="width:${r[1]/ULT.gas*100}%"></i></div><span class="num">${eur(r[1])}</span></div>`).join("")}</div>
+      </div></div>
+    <div class="sec"><h2>Decisiones de esta ronda</h2>
+      <div class="dec"><div style="display:grid;gap:18px">
+        <div class="card solid"><span class="lbl">Financiación</span>
+          <div style="display:grid;gap:10px;margin-top:12px">
+            <button class="opt" data-loan aria-pressed="${d.loan}"><b>Pedir un préstamo de ${eur(LOAN)}<span class="cost">6% anual</span></b><small>Recibes el dinero hoy y lo devuelves con intereses.</small><div class="chips">${chip("+Liquidez","good")}${chip("+Deuda","bad")}${chip("Rating ▼","warn")}</div></button>
+            <button class="opt" data-ins aria-pressed="${d.ins}"><b>Contratar seguro anti-averías<span class="cost">${eur(INS)}</span></b><small>Cubre hasta el 80% del coste de una avería en carrera.</small><div class="chips">${chip("−Riesgo de avería","good")}${chip("+Coherencia","good")}${chip("−Liquidez","warn")}</div></button>
+          </div></div>
+        <div class="card solid"><span class="lbl">Proveedor de recambios · pedido de ${eur(P_COMPRA)}</span>
+          <div style="display:grid;gap:10px;margin-top:12px">
+            <button class="opt" data-sup="premium" aria-pressed="${d.sup==="premium"}"><b>Premium, pago al contado<span class="cost">${eur(P_COMPRA*.96)}</span></b><small>4% de descuento por pagar ya. Piezas de máxima calidad.</small><div class="chips">${chip("+8 Calidad","good")}${chip("−4% descuento","blue")}${chip("−Liquidez","warn")}</div></button>
+            <button class="opt" data-sup="estandar" aria-pressed="${d.sup==="estandar"}"><b>Estándar, pago a 60 días<span class="cost">${eur(0)} hoy</span></b><small>Pagas dentro de dos meses. Calidad correcta.</small><div class="chips">${chip("+Liquidez","good")}${chip("Deuda con proveedores","warn")}</div></button>
+            <button class="opt" data-sup="lowcost" aria-pressed="${d.sup==="lowcost"}"><b>Low-cost, pago al contado<span class="cost">${eur(210000)}</span></b><small>Muy barato, pero rompe tu estrategia de calidad.</small><div class="chips">${chip("−9 Calidad","bad")}${chip("−14 Coherencia","bad")}${chip("+Riesgo avería","bad")}</div></button>
+          </div></div>
+      </div>
+      <aside class="card solid sticky"><span class="lbl">Previsión a fin de ronda</span>
+        <div class="bigmoney" style="margin:10px 0 2px">${eur(f.caja)}</div><small style="color:var(--ink2)">Caja prevista · ${eurSigned(f.caja-f.base.caja)} por tus decisiones</small>
+        <div class="fc"><span>Índice financiero</span><b class="num">${f.fin}</b>${delta(f.fin,f.base.fin)}</div>
+        <div class="fc"><span>Rating de solvencia</span><b class="num">${f.rating}</b><span></span></div>
+        <div class="fc"><span>Calidad operativa</span><b class="num">${f.cal}</b>${delta(f.cal,f.base.cal)}</div>
+        <div class="fc"><span>Coherencia estratégica</span><b class="num">${f.coh}</b>${delta(f.coh,f.base.coh)}</div>
+        <button class="btn blue" style="width:100%;justify-content:center;margin-top:16px" data-save="dec">Confirmar decisiones</button>
+        <button class="btn ghost sm" style="width:100%;justify-content:center;margin-top:10px" data-books>Ver libros contables</button>
+      </aside></div></div>
+    <div class="sec" id="patrocinio"><h2>Comercial y patrocinio</h2><p style="color:var(--ink2);margin:-6px 0 16px">Cada patrocinador paga a cambio de un objetivo deportivo. Si no lo cumples, lo pierdes. Las propuestas se resuelven en la ronda siguiente.</p>${patroBody()}</div>
+  </div>`;
+}
+
+function vClasif(){
+  let list=[...RANK].sort((a,b)=>(rankMode==="global"?b.g-a.g:b.d-a.d));
+  const full=list.map((t,i)=>({...t,p:i+1}));
+  const shown=full.filter(t=>true);
+  const sc=t=>rankMode==="global"?t.g:t.d;
+  const me=full.find(t=>t.me), next=full[me.p-2];
+  const pod=[full[1],full[0],full[2]];
+  return `<section class="scene pagehead">${backdrop("head")}
+    <div class="stage"><span class="eyebrow"><em>Clasificación</em> · Juníper Serra</span><h1 class="disp">Quién va ganando</h1><p>Ganar carreras no basta. El campeón es el que dirige mejor la empresa.</p></div></section>
+  <div class="page">
+    <div style="display:flex;gap:14px;flex-wrap:wrap;align-items:center;justify-content:space-between;margin:0 0 20px">
+      <div class="seg" role="group" aria-label="Tipo de clasificación"><button data-rank="global" aria-pressed="${rankMode==="global"}">General</button><button data-rank="pista" aria-pressed="${rankMode==="pista"}">Solo pista</button></div>
+    </div>
+    <div class="podium">${pod.map((t,i)=>{const k=i===1?1:i===0?2:3;return `<div class="pod p${k}"><div class="pos">${k}</div><h3>${t.n}</h3><div class="num">${f1(sc(t))}</div><small>${t.c==="ITB"?"ITB":"Juníper Serra"}</small></div>`}).join("")}</div>
+    <div class="legend"><span><i style="background:var(--blue)"></i>Resultado empresarial</span><span><i style="background:var(--ink)"></i>Dirección estratégica</span><span><i style="background:var(--red)"></i>Resultado deportivo</span></div>
+    ${shown.map(t=>{const parts=rankMode==="global"?[[.4*t.e,"var(--blue)"],[.4*t.s,"var(--ink)"],[.2*t.d,"var(--red)"]]:[[.2*t.d*5,"var(--red)"]];const tot=rankMode==="global"?100:100;return `<div class="row ${t.me?"me":""}"><span class="p">${t.p}</span><div><b>${t.n}${t.me?" · tú":""}</b><small>${t.c==="ITB"?"ITB":"Juníper Serra"}</small></div><div class="stack-col"><div class="stack">${parts.map(p=>`<i style="width:${p[0]/tot*100}%;background:${p[1]}"></i>`).join("")}</div></div><b class="num" style="text-align:right;font-size:18px">${f1(sc(t))}</b></div>`}).join("")}
+    <div class="card solid" style="margin-top:20px;display:flex;gap:16px;align-items:center"><span class="tag blue">Para subir</span><p style="font-weight:600">${next?`Estás a ${f1(rankMode==="global"?next.g-me.g:next.d-me.d)} puntos de ${next.n}. Tu dirección estratégica (${me.s}) es lo que más te frena.`:"Vas el primero."}</p></div>
+    <p style="margin-top:14px;color:var(--ink2);font-size:13px">Clasificación general: 40% resultado empresarial, 40% dirección estratégica y 20% resultado deportivo. La Gran Final de 24 Horas puntúa doble en pista.</p>
+  </div>`;
+}
+
+/* ============ libros contables ============ */
+function openBooks(tab="bal"){
+  const b=books();
+  const row=(a,v,c="")=>`<tr class="${c}"><td>${a}</td><td>${typeof v==="number"?eur(v):v}</td></tr>`;
+  const bal=`<table class="tbl"><tr class="h"><td colspan="2">Activo</td></tr>${row("Tesorería",b.tes)}${row("Existencias de recambios",b.exi)}${row("Coche y equipamiento",b.inm)}${row("Patrocinadores pendientes de cobro",b.cli)}${row("Total activo",b.act,"t")}
+    <tr class="h"><td colspan="2">Patrimonio neto y pasivo</td></tr>${row("Patrimonio neto",b.pn)}${row("Préstamos bancarios",b.pre)}${row("Proveedores",b.prov)}${row("Hacienda",b.hac)}${row("Total patrimonio neto y pasivo",b.tot,"t")}</table>
+    <div class="eq">${Math.abs(b.act-b.tot)<1?"✓ Cuadra: Activo = Patrimonio neto + Pasivo":"✗ Descuadre"}</div>`;
+  const ing=ULT.ing, gas=ULT.gas+(S.dec.ins?INS:0), int=S.dec.loan?LOAN*.06/4:0;
+  const pyg=`<table class="tbl"><tr class="h"><td colspan="2">Ingresos de la ronda</td></tr>${INC.map(r=>row(r[0],r[1])).join("")}${row("Total ingresos",ing,"t")}
+    <tr class="h"><td colspan="2">Gastos de la ronda</td></tr>${EXP.map(r=>row(r[0],-r[1])).join("")}${S.dec.ins?row("Seguro anti-averías (decisión)",-INS):""}${int?row("Intereses del préstamo (decisión)",-int):""}${row("Total gastos",-(gas+int),"t")}
+    <tr class="h"><td colspan="2">Resultado</td></tr>${row("Beneficio de la ronda",ing-gas-int,"t")}</table>`;
+  $("#modal").innerHTML=`<div class="sheet"><div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap"><h2>Libros contables</h2><button class="btn ghost sm" data-close>Cerrar</button></div>
+    <div class="seg" style="margin-top:14px"><button data-tab="bal" aria-pressed="${tab==="bal"}">Balance de situación</button><button data-tab="pyg" aria-pressed="${tab==="pyg"}">Cuenta de resultados</button></div>${tab==="bal"?bal:pyg}</div>`;
+  $("#modal").hidden=false;
+}
+
+/* ================================================================
+   AMPLIACIÓN: equipo editable, mercado, patrocinio, carrera,
+   normas y profesorado
+   ================================================================ */
+const MAXSLOT={piloto:1,ingeniero:3,jefe:1,mecanico:1};
+const SLOTN={piloto:"Piloto",ingeniero:"Ingeniero/a",jefe:"Jefe de equipo deportivo",mecanico:"Mecánicos"};
+const SLOTCOL={piloto:"#e10600",ingeniero:"#0a5cff",jefe:"#0f9d58",mecanico:"#f2b705"};
+const SLOTID={p:"piloto",e1:"ingeniero",e2:"ingeniero",e3:"ingeniero",d:"jefe",m:"mecanico"};
+TEAM.forEach(t=>t.slot=SLOTID[t.id]);
+S.team=[...TEAM];
+const PAY0=TEAM.reduce((a,t)=>a+t.pay,0);
+const payroll=()=>S.team.reduce((a,t)=>a+t.pay,0);
+const cnt=s=>S.team.filter(t=>t.slot===s).length;
+const pend=s=>S.offers.filter(o=>o.slot===s).length;
+const free=s=>MAXSLOT[s]-cnt(s)-pend(s);
+const indem=t=>Math.round(t.pay*t.left*0.25);
+const avgOvr=()=>S.team.length?S.team.reduce((a,t)=>a+t.ovr,0)/S.team.length:50;
+
+const ATN={piloto:["Talento","Concentración","Experiencia","Stamina","Moral"],ingeniero:["Rapidez","Eficiencia","Nivel máx. Motor"],jefe:["Gestión","Fiabilidad","Ritmo","Moral"],mecanico:["Rapidez en box","Calidad","Moral"]};
+const OFF=[4,-3,1,-2,3];
+function mkCand(id,n,slot,ovr,age,ask,comp,left,sk,hair,kind){
+  const at=ATN[slot].map((a,i)=>[a,a.startsWith("Nivel")?Math.max(2,Math.min(10,Math.round(ovr/10)+(i%2?-1:1))):Math.max(30,Math.min(99,ovr+OFF[i%5]))]);
+  return {id,n,slot,ovr,st:ovr>=85?5:ovr>=72?4:ovr>=60?3:2,age,pay:ask,comp,left,sk,hair,kind,at,r:SLOTN[slot],cc:SLOTCOL[slot]};
+}
+const CAND=[
+  mkCand("c1","Clara Vidal","ingeniero",78,29,900000,2,8,"#f1c9a5","#7a3b1d","headset"),
+  mkCand("c2","Hugo Benet","ingeniero",66,31,700000,1,8,"#e9c39c","#222","headset"),
+  mkCand("c3","Marta Soler","ingeniero",88,35,1500000,3,6,"#f6d7bd","#15151a","headset"),
+  mkCand("c4","Pau Serra","piloto",58,19,420000,1,10,"#f6d7bd","#2e2217","helmet"),
+  mkCand("c5","Álex Duarte","piloto",79,27,1200000,3,8,"#d9a67c","#111","helmet"),
+  mkCand("c6","Nuria Calvet","piloto",68,23,800000,2,10,"#f1c9a5","#8a3b1d","helmet"),
+  mkCand("c7","Iván Roca","mecanico",64,34,300000,1,9,"#d9a67c","#111","cap"),
+  mkCand("c8","Taller Ribas","mecanico",74,40,520000,2,9,"#e9c39c","#333","cap"),
+  mkCand("c9","Elena Ferrer","jefe",82,41,2600000,2,4,"#f1c9a5","#444","cap"),
+  mkCand("c10","Joan Pujol","jefe",70,38,1800000,1,4,"#d9a67c","#222","cap")
+];
+Object.assign(S,{strat:null,obj:[],adj:0,offers:[],report:[],mkt:"todos",engine:"abierta",ph:-1,audit:[{d:"12/11 · 18:40",a:"Ronda 4 publicada",m:"Cierre ordinario de ronda.",u:"Prof. Martí"}],mk:100000,raceResult:null,raceApplied:false,race:null,
+  sp:{s1:"firmado",s2:"firmado",s3:"firmado",s4:"libre",s5:"libre",s6:"libre"}});
+
+/* ---------- tarjetas de persona ---------- */
+function memberCard(t,btn=""){
+  const atts=t.at.map(a=>`<div class="at"><span>${a[0]}</span><div class="meter ${a[1]>=80?"good":""}"><i style="width:${Math.min(100,a[1]*(a[1]<=10?10:1))}%"></i></div><b>${a[1]}</b></div>`).join("");
+  return `<article class="pc" style="--cc:${t.cc}"><div class="top2"><div class="ovr">${t.ovr}<small>OVR</small></div><div class="stars" aria-label="${t.st} estrellas">${"★".repeat(t.st)}${"☆".repeat(5-t.st)}</div><div class="av">${avatar(t)}</div></div>
+  <div class="body"><h3>${t.n}</h3><div class="role">${t.r}</div>${atts}
+  <div class="foot"><span>Coste<br><b>${eur(t.pay)} / carrera</b></span><span style="text-align:right">Contrato<br><b>${t.left} carreras</b></span></div>${btn}</div></article>`;
+}
+function teamCards(){
+  let h=S.team.map(t=>memberCard(t,`<button class="btn ghost sm" style="margin-top:14px;width:100%;justify-content:center" data-fire="${t.id}">Despedir</button>`)).join("");
+  for(const slot in MAXSLOT){
+    const n=MAXSLOT[slot]-cnt(slot);
+    for(let i=0;i<n;i++){
+      const p=pend(slot)>i;
+      h+=`<article class="pc vac" style="--cc:${SLOTCOL[slot]}"><div class="vacin"><div class="vq">?</div><h3>Vacante</h3><div class="role">${SLOTN[slot]}</div>
+      <p>${p?"Tienes una oferta enviada. Responden en la próxima ronda.":"Sin este puesto, tu coche rinde menos."}</p>
+      ${p?`<span class="tag blue">Oferta en curso</span>`:`<a class="btn sm" href="#mercado">Buscar en el mercado</a>`}</div></article>`;
+    }
+  }
+  return h;
+}
+function openFire(id){
+  const t=S.team.find(x=>x.id===id); if(!t) return;
+  const ind=indem(t);
+  $("#modal").innerHTML=`<div class="sheet" style="max-width:560px"><h2>¿Despedir a ${t.n}?</h2>
+    <div style="display:flex;gap:16px;align-items:center;margin:16px 0"><div class="av" style="width:84px;height:84px;border-radius:50%;overflow:hidden;background:var(--mist)">${avatar(t)}</div><div><b>${t.r}</b><br><span style="color:var(--ink2)">Le quedan ${t.left} carreras de contrato.</span></div></div>
+    <table class="tbl"><tr><td>Indemnización a pagar hoy</td><td style="color:var(--loss)">−${eur(ind).replace("−","")}</td></tr><tr><td>Ahorras en cada carrera</td><td style="color:var(--good)">+${eur(t.pay)}</td></tr><tr><td>Recuperas la indemnización en</td><td>${(ind/t.pay).toFixed(1).replace(".",",")} carreras</td></tr></table>
+    ${t.slot==="piloto"?`<div class="eq" style="background:#fdebed;color:var(--loss)">Sin piloto no puedes correr. Tendrás que ficharlo en el mercado, y la oferta tarda una ronda.</div>`:`<p style="margin-top:14px;color:var(--ink2)">Quedará una vacante que podrás cubrir desde el mercado de personal.</p>`}
+    <div style="display:flex;gap:12px;justify-content:flex-end;margin-top:20px"><button class="btn ghost sm" data-close>Cancelar</button><button class="btn sm" style="background:var(--loss)" data-fire-ok="${t.id}">Confirmar despido</button></div></div>`;
+  $("#modal").hidden=false;
+}
+function doFire(id){
+  const t=S.team.find(x=>x.id===id); if(!t) return;
+  S.adj-=indem(t); S.team=S.team.filter(x=>x.id!==id);
+  $("#modal").hidden=true; toast(`${t.n} se va. Indemnización pagada: ${eur(indem(t))}.`); render();
+}
+
+/* ---------- MERCADO ---------- */
+const chanceOf=(c,pct)=>Math.max(5,Math.min(95,Math.round(25+(pct-70)*1.1-c.comp*6)));
+function mercadoBody(){
+  const f=S.mkt;
+  const list=CAND.filter(c=>!S.team.some(t=>t.id===c.id)&&(f==="todos"||c.slot===f));
+  const flt=[["todos","Todos"],["piloto","Pilotos"],["ingeniero","Ingenieros"],["jefe","Jefes de equipo"],["mecanico","Mecánicos"]];
+  return `<p style="color:var(--ink2);margin:-6px 0 6px">Ficha talento nuevo o cubre las vacantes. Las ofertas se resuelven en la ronda siguiente y otras escuderías compiten por los mismos candidatos.</p>
+    ${S.report.length?`<div class="card solid" style="margin:8px 0 6px;border-left:6px solid var(--blue)"><span class="lbl">Informe de la última ronda</span>${S.report.map(r=>`<p style="margin-top:8px;font-weight:600">${r}</p>`).join("")}</div>`:""}
+    <div class="sec" style="margin-top:6px">
+      <div class="grid g3">
+        ${Object.keys(MAXSLOT).map(s=>{const open=free(s);return `<div class="kpi" style="border-top:5px solid ${SLOTCOL[s]}"><span class="lbl">${SLOTN[s]}</span><div class="v">${cnt(s)}<small> / ${MAXSLOT[s]}</small></div><span class="tag ${open>0?"warn":"good"}">${open>0?open+" vacante"+(open>1?"s":""):"Completo"}</span>${pend(s)?` <span class="tag blue">${pend(s)} oferta en curso</span>`:""}</div>`}).join("")}
+        <div class="kpi"><span class="lbl">Coste de plantilla</span><div class="v" style="font-size:30px">${eur(payroll())}</div><span class="tag ${payroll()<=PAY0?"good":"warn"}">${payroll()<=PAY0?"Ahorras ":"Gastas "}${eur(Math.abs(PAY0-payroll()))} por carrera</span></div>
+      </div>
+    </div>
+    ${S.offers.length?`<div class="sec"><h3 class="disp" style="font-size:18px;margin-bottom:14px">Ofertas enviadas</h3><div class="grid g3">${S.offers.map((o,i)=>`<div class="scout"><div class="av">${avatar(o.c)}</div><div class="i"><b>${o.c.n}</b><small>${eur(o.pay)} / carrera · ${o.chance}% de aceptar</small></div><button class="btn ghost sm" data-withdraw="${i}">Retirar</button></div>`).join("")}</div></div>`:""}
+    <div class="sec"><h3 class="disp" style="font-size:18px;margin-bottom:14px">Candidatos</h3>
+      <div class="seg" role="group" aria-label="Filtrar por puesto" style="margin-bottom:18px;flex-wrap:wrap">${flt.map(([k,n])=>`<button data-mkt="${k}" aria-pressed="${f===k}">${n}</button>`).join("")}</div>
+      <div class="grid g3">${list.map(c=>{const o=S.offers.some(x=>x.c.id===c.id);return memberCard(c,`<div style="display:flex;gap:8px;align-items:center;margin-top:14px;flex-wrap:wrap"><span class="tag ${c.comp>=3?"bad":c.comp===2?"warn":"good"}">${c.comp} escudería${c.comp>1?"s":""} interesada${c.comp>1?"s":""}</span></div>${o?`<span class="tag blue" style="margin-top:12px">Oferta enviada</span>`:`<button class="btn sm" style="margin-top:12px;width:100%;justify-content:center" data-neg="${c.id}">Negociar</button>`}`)}).join("")||`<p>No hay candidatos con este filtro.</p>`}</div>
+    </div>
+`;
+}
+function openNeg(id,pct=100){
+  const c=CAND.find(x=>x.id===id); if(!c) return;
+  if(free(c.slot)<=0){toast(`No tienes vacante de ${SLOTN[c.slot].toLowerCase()}. Despide antes a alguien.`);return}
+  const ch=chanceOf(c,pct);
+  $("#modal").innerHTML=`<div class="sheet" style="max-width:560px"><h2>Negociar con ${c.n}</h2>
+    <div style="display:flex;gap:16px;align-items:center;margin:16px 0"><div class="av" style="width:84px;height:84px;border-radius:50%;overflow:hidden;background:var(--mist)">${avatar(c)}</div><div><b>${c.r} · OVR ${c.ovr}</b><br><span style="color:var(--ink2)">Pide ${eur(c.pay)} por carrera. ${c.comp} escudería${c.comp>1?"s":""} más lo quiere${c.comp>1?"n":""}.</span></div></div>
+    <label for="offer" class="lbl">Tu oferta: <b id="offerpct" class="num" style="color:var(--ink)">${pct}%</b> de lo que pide</label>
+    <input id="offer" type="range" min="70" max="140" step="5" value="${pct}" data-offer="${c.id}" style="margin:10px 0">
+    <div class="fc" style="grid-template-columns:1fr auto"><span>Pagarás por carrera</span><b class="num" id="offerpay">${eur(Math.round(c.pay*pct/100))}</b></div>
+    <div class="fc" style="grid-template-columns:1fr auto"><span>Probabilidad de que acepte</span><b class="num" id="offerch">${ch}%</b></div>
+    <div class="meter" style="margin-top:8px"><i id="offerbar" style="width:${ch}%"></i></div>
+    <p style="margin-top:14px;color:var(--ink2);font-size:13px">Ofrecer más sube la probabilidad, pero también tu gasto fijo cada carrera. Sabrás la respuesta cuando se cierre la ronda.</p>
+    <div style="display:flex;gap:12px;justify-content:flex-end;margin-top:18px"><button class="btn ghost sm" data-close>Cancelar</button><button class="btn blue sm" data-offer-send="${c.id}">Enviar oferta</button></div></div>`;
+  $("#modal").hidden=false;
+}
+function sendOffer(id){
+  const c=CAND.find(x=>x.id===id), pct=+$("#offer").value;
+  S.offers.push({c:{...c},slot:c.slot,pay:Math.round(c.pay*pct/100),chance:chanceOf(c,pct),r:Math.random()});
+  $("#modal").hidden=true; toast(`Oferta enviada a ${c.n}. Respuesta en la próxima ronda.`); render();
+}
+
+/* ---------- PATROCINIO ---------- */
+const SP=[
+  {id:"s1",n:"Nexo Energía",sec:"Energía",ap:450000,obj:"Terminar entre los 6 primeros",test:p=>p<=6,diff:0,col:"#0a5cff"},
+  {id:"s2",n:"Banco Meridian",sec:"Banca",ap:300000,obj:"Terminar todas las carreras",test:p=>true,diff:0,col:"#0b0c10"},
+  {id:"s3",n:"Volta Tyres",sec:"Neumáticos",ap:200000,obj:"Terminar las carreras",test:p=>true,diff:0,col:"#0f9d58"},
+  {id:"s4",n:"Hyperion Telecom",sec:"Telecomunicaciones",ap:600000,prima:150000,obj:"Terminar entre los 3 primeros",test:p=>p<=3,diff:65,col:"#7a42ff"},
+  {id:"s5",n:"Kairo Foods",sec:"Alimentación",ap:250000,prima:40000,obj:"Terminar entre los 5 primeros",test:p=>p<=5,diff:40,col:"#ff7a00"},
+  {id:"s6",n:"Lumen Cosmetics",sec:"Cosmética",ap:180000,prima:0,obj:"Terminar entre los 8 primeros",test:p=>p<=8,diff:15,col:"#d6336c"}
+];
+const spChance=s=>Math.max(10,Math.min(95,Math.round(95-s.diff-(RANK.find(r=>r.me)?0:0))));
+function patroBody(){
+  const act=SP.filter(s=>S.sp[s.id]==="firmado"), pen=SP.filter(s=>S.sp[s.id]==="pendiente");
+  const tot=act.reduce((a,s)=>a+s.ap,0), mer=Math.round(290000+S.mk*0.6);
+  const res=S.raceResult;
+  const card=s=>{const st=S.sp[s.id];const ok=res?s.test(res.pos):null;
+    return `<article class="card solid" style="border-top:6px solid ${s.col}"><div class="ct"><div><h3 class="disp" style="font-size:20px">${s.n}</h3><span class="lbl">${s.sec}</span></div>${st==="firmado"?`<span class="tag good">Firmado</span>`:st==="pendiente"?`<span class="tag blue">Propuesta enviada</span>`:st==="rechazado"?`<span class="tag bad">Rechazó</span>`:`<span class="tag">Disponible</span>`}</div>
+    <div class="bigmoney" style="font-size:28px">${eur(s.ap)}<small style="font:600 13px var(--f-label);color:var(--ink2)"> / ronda</small></div>
+    <div style="margin:12px 0"><span class="lbl">Objetivo</span><p style="font-weight:700;margin-top:6px">${s.obj}</p></div>
+    ${s.prima?`<span class="tag">Prima de fichaje ${eur(s.prima)}</span> `:""}${st==="firmado"&&ok!==null?`<span class="tag ${ok?"good":"bad"}">${ok?"Objetivo cumplido":"Objetivo incumplido"}</span>`:""}
+    ${st==="libre"||st==="rechazado"?`<div style="margin-top:14px"><div class="meter"><i style="width:${spChance(s)}%"></i></div><small style="color:var(--ink2)">${spChance(s)}% de que acepte</small><button class="btn sm blue" style="width:100%;justify-content:center;margin-top:12px" data-spon="${s.id}">Enviar propuesta</button></div>`:""}
+    ${st==="pendiente"?`<button class="btn ghost sm" style="width:100%;justify-content:center;margin-top:14px" data-sp-undo="${s.id}">Retirar propuesta</button>`:""}</article>`};
+  return `<div class="grid g3" style="margin-top:10px">
+    <div class="kpi"><span class="lbl">Ingreso por patrocinio</span><div class="v" style="font-size:34px">${eur(tot)}</div><span class="tag good">${act.length} patrocinadores</span></div>
+    <div class="kpi"><span class="lbl">Merchandising previsto</span><div class="v" id="mer" style="font-size:34px">${eur(mer)}</div><span class="tag blue">por ronda</span></div>
+    <div class="kpi"><span class="lbl">Huecos</span><div class="v">${4-act.length-pen.length}<small> / 4</small></div><span class="tag">Máximo 4 activos y pendientes</span></div></div>
+    <div class="sec"><h3 class="disp" style="font-size:18px;margin-bottom:14px">Tus patrocinadores</h3><div class="grid g3">${SP.filter(s=>S.sp[s.id]==="firmado"||S.sp[s.id]==="pendiente").map(card).join("")}</div></div>
+    <div class="sec"><h3 class="disp" style="font-size:18px;margin-bottom:14px">Nuevas propuestas</h3><div class="grid g3">${SP.filter(s=>["libre","rechazado"].includes(S.sp[s.id])).map(card).join("")||"<p>No quedan patrocinadores disponibles.</p>"}</div></div>
+    <div class="sec"><h3 class="disp" style="font-size:18px;margin-bottom:14px">Marketing y merchandising</h3><div class="card solid"><label for="mk" class="lbl">Inversión en marketing: <b class="num" id="mkv" style="color:var(--ink)">${eur(S.mk)}</b></label><input id="mk" type="range" min="0" max="300000" step="25000" value="${S.mk}" data-mk><p style="margin-top:8px;color:var(--ink2)">Cada euro invertido te devuelve unos 60 céntimos extra de merchandising, y mejora el valor de marca que puntúa en la clasificación.</p></div></div>`;
+}
+
+/* ---------- CARRERA ---------- */
+const CARS=[
+  {n:"Aurora",col:"#0a5cff",lap:3.50,ph:.3},{n:"Nimbus",col:"#0f9d58",lap:3.53,ph:1.1},{n:"Titán",col:"#f2b705",lap:3.55,ph:2.0},
+  {n:"Velox",me:true,col:"var(--livery)",lap:3.575,ph:.7},{n:"Corsa",col:"#7a42ff",lap:3.568,ph:1.7},{n:"Zenit",col:"#00a3b4",lap:3.66,ph:2.6},
+  {n:"Orion",col:"#ff7a00",lap:3.70,ph:3.3},{n:"Vortex",col:"#555b66",lap:3.64,ph:4.0}];
+const GRID=[0,1,2,4,3,5,7,6];
+const PTS=[25,18,15,12,10,8,6,4], PRIZE=[900000,700000,550000,420000,330000,250000,180000,120000];
+const RISKS={cons:["Conservador","Menos averías y menos ritmo. Buena opción con calor.",1.025],eq:["Equilibrado","Ritmo normal con un riesgo medio de avería.",1],agr:["Agresivo","Más ritmo, pero más averías y más desgaste.",.975]};
+const TRACK="M120 330 C60 330 40 270 70 220 C100 170 170 190 200 150 C230 105 300 60 380 70 C450 78 470 130 540 120 C620 108 700 60 740 120 C775 172 720 215 660 235 C600 255 600 300 650 330 C700 362 640 400 540 395 C440 390 400 350 330 360 C260 370 190 380 120 330Z";
+const newRace=()=>({t:0,run:false,speed:4,risk:"eq",dist:CARS.map((c,i)=>-GRID.indexOf(i)*.011),inc:null,incDone:false,cost:0,done:false,pits:0,log:["Semáforo verde en Spa-Francorchamps. Empieza el tramo 1 de la 12 Horas Quantum Race."]});
+const hm=m=>`${Math.floor(m/60)}:${String(Math.floor(m%60)).padStart(2,"0")}`;
+let trackL=0,gen=0;
+const order=()=>S.race.dist.map((d,i)=>i).sort((a,b)=>S.race.dist[b]-S.race.dist[a]);
+const hasPilot=()=>cnt("piloto")>0;
+
+function vCarrera(){
+  if(!S.race) S.race=newRace();
+  const R=S.race, ord=order(), pos=ord.indexOf(3)+1;
+  const noPilot=!hasPilot();
+  const res=S.raceResult;
+  const rel=Math.round(Math.max(20,92-(R.t/360)*(R.risk==="agr"?28:R.risk==="cons"?14:20)-(R.inc?0:0)));
+  const tyre=R.t<120?"Nuevo":R.t<240?"Medio":"Gastado";
+  return `<section class="scene pagehead">${backdrop("head")}
+    <div class="stage"><span class="eyebrow"><em>Ronda 5</em> · 12 Horas Quantum Race · Tramo 1 · Horas 0 a 6 de 12</span><h1 class="disp">Carrera en vivo</h1><p>Tú no conduces. Decides el riesgo y reaccionas a lo que pasa en pista.</p></div></section>
+  <div class="page"><div class="race" style="margin-top:14px">
+    <div class="rl">
+      <div class="card solid"><div class="ct"><div><span class="lbl">Circuito</span><h2 class="disp" style="font-size:22px;margin-top:6px">Spa-Francorchamps</h2></div><div style="display:flex;gap:8px;flex-wrap:wrap"><span class="tag warn">Calor 12 °C</span><span class="tag blue">Tramo ${hm(R.t)} / 6:00</span></div></div>
+        <div class="trackbox"><svg viewBox="0 0 800 440" role="img" aria-label="Circuito con los 8 coches en pista">
+          <defs><linearGradient id="gr" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#eef4ea"/><stop offset="1" stop-color="#dfe8da"/></linearGradient></defs>
+          <rect width="800" height="440" rx="16" fill="url(#gr)"/>
+          <path d="${TRACK}" fill="none" stroke="#fff" stroke-width="40" stroke-linejoin="round"/>
+          <path d="${TRACK}" fill="none" stroke="#e10600" stroke-width="34" stroke-linejoin="round" stroke-dasharray="14 14" opacity=".9"/>
+          <path d="${TRACK}" fill="none" stroke="#fff" stroke-width="31" stroke-linejoin="round" opacity=".95"/>
+          <path id="trk" d="${TRACK}" fill="none" stroke="#2b2f38" stroke-width="26" stroke-linejoin="round"/>
+          <path d="${TRACK}" fill="none" stroke="#fff" stroke-width="2" stroke-dasharray="10 12" opacity=".55"/>
+          <g id="sf"><rect x="-4" y="-17" width="8" height="34" fill="#fff"/><rect x="-4" y="-17" width="8" height="8" fill="#0b0c10"/><rect x="-4" y="-1" width="8" height="8" fill="#0b0c10"/></g>
+          <text x="40" y="378" font-family="Chakra Petch" font-weight="700" font-size="14" letter-spacing="3" fill="#5b6270">META</text>
+          ${CARS.map((c,i)=>c.me?"":`<g class="mk" data-i="${i}"><circle r="9" fill="${c.col}" stroke="#fff" stroke-width="3"/></g>`).join("")}
+          <g class="mk" data-i="3"><circle r="20" fill="none" stroke="var(--livery)" stroke-width="3" opacity=".5"><animate attributeName="r" values="14;24;14" dur="1.6s" repeatCount="indefinite"/></circle><circle r="13" fill="var(--livery)" stroke="#fff" stroke-width="3.5"/><text y="4" text-anchor="middle" font-family="Russo One" font-size="10" fill="#fff">07</text></g>
+        </svg></div>
+        <div style="display:flex;justify-content:space-between;margin:14px 0 6px"><span class="lbl">Progreso del tramo</span><b class="num" id="rt">${hm(R.t)} de 6:00</b></div>
+        <div class="meter red"><i id="rbar" style="width:${R.t/360*100}%"></i></div>
+        <div class="ctrl"><button class="btn sm ${R.run?"":"blue"}" data-race="toggle" ${(R.done||R.inc||noPilot)?"disabled":""}>${R.done?"Tramo terminado":R.run?"Pausar":R.t>0?"Continuar":"Empezar carrera"}</button>
+          <div class="seg" role="group" aria-label="Velocidad">${[1,4,10].map(v=>`<button data-race="speed" data-v="${v}" aria-pressed="${R.speed===v}">x${v}</button>`).join("")}</div>
+          ${S.raceApplied?"":`<button class="btn ghost sm" data-race="reset">Reiniciar</button>`}</div>
+        ${noPilot?`<div class="eq" style="background:#fdebed;color:var(--loss)">No tienes piloto. Fíchalo en el <a href="#mercado" style="text-decoration:underline">mercado de personal</a> y espera a la próxima ronda.</div>`:""}</div>
+      <div class="grid g4" style="margin-top:18px">
+        <div class="kpi"><span class="lbl">Posición</span><div class="v" id="rpos">P${pos}</div></div>
+        <div class="kpi"><span class="lbl">Vueltas</span><div class="v" id="rlap">${Math.max(0,Math.floor(R.dist[3]))}</div></div>
+        <div class="kpi"><span class="lbl">Fiabilidad del coche</span><div class="v" id="rrel">${rel}<small> %</small></div></div>
+        <div class="kpi"><span class="lbl">Neumáticos</span><div class="v" id="rtyre" style="font-size:30px">${tyre}</div></div>
+      </div>
+      ${R.inc?incidentCard(R):""}${R.done&&res?resultCard(res):""}
+    </div>
+    <aside class="rr">
+      <div class="card solid"><span class="lbl">Parrilla del tramo</span><div class="tower" id="tower">${CARS.map((c,i)=>`<div class="trow ${c.me?"me":""}" data-i="${i}"><b class="tp">${i+1}</b><i style="background:${c.col}"></i><span>${c.n}${c.me?" · tú":""}</span><em>—</em></div>`).join("")}</div></div>
+      <div class="card solid"><span class="lbl">Nivel de riesgo operativo</span><p style="color:var(--ink2);margin:8px 0 12px;font-size:13px">Es la instrucción que das a tu jefe de equipo deportivo. Él la aplica según su perfil.</p>
+        <div style="display:grid;gap:8px">${Object.entries(RISKS).map(([k,r])=>`<button class="opt" data-race="risk" data-k="${k}" aria-pressed="${R.risk===k}"><b>${r[0]}</b><small>${r[1]}</small></button>`).join("")}</div></div>
+      <div class="card solid"><span class="lbl">Radio del muro</span><div class="log" id="rlog">${R.log.slice(-5).reverse().map(l=>`<p>${l}</p>`).join("")}</div></div>
+    </aside></div></div>`;
+}
+function incidentCard(R){
+  const ins=S.dec.ins;
+  return `<div class="card solid inc" style="margin-top:18px"><div class="ct"><div><span class="tag bad">Incidencia</span><h3 class="disp" style="font-size:22px;margin-top:10px">Frenos con temperatura alta</h3></div><div class="cd"><b class="num" id="cd">20</b><small>segundos</small></div></div>
+  <p style="margin-bottom:12px">Con el calor se recalientan. Elige cómo responder: cada opción tiene un coste. Si no decides, sigues como estás.</p>
+  <div style="display:grid;gap:10px"><button class="opt" data-race="inc" data-k="box"><b>Entrar a boxes a refrigerar<span class="cost" style="color:var(--loss)">−18.000 €</span></b><small>Pierdes una posición, pero los frenos quedan seguros.</small></button>
+  <button class="opt" data-race="inc" data-k="slow"><b>Reducir el ritmo<span class="cost">Sin coste</span></b><small>Pierdes algo de tiempo en pista.</small></button>
+  <button class="opt" data-race="inc" data-k="keep"><b>Seguir como estás<span class="cost" style="color:var(--loss)">Riesgo de avería</span></b><small>Sin coste directo. ${ins?"Tu seguro cubre el 80% si falla.":"No tienes seguro anti-averías."}</small></button></div></div>`;
+}
+function resultCard(r){
+  return `<div class="card solid" style="margin-top:18px;border-top:6px solid var(--gold)"><span class="tag warn">Tramo terminado</span><h3 class="disp" style="font-size:30px;margin:10px 0">Has terminado P${r.pos}</h3>
+  <div class="grid g3"><div class="kpi"><span class="lbl">Puntos</span><div class="v">${r.pts}</div></div><div class="kpi"><span class="lbl">Premio</span><div class="v" style="font-size:26px;color:var(--good)">${eurSigned(r.premio)}</div></div><div class="kpi"><span class="lbl">Costes de carrera</span><div class="v" style="font-size:26px;color:var(--loss)">${r.cost?"−"+eur(r.cost):"0 €"}</div></div></div>
+  <p style="margin-top:12px;color:var(--ink2)">Este dinero entra en tus cuentas cuando el profesorado cierre la ronda.</p></div>`;
+}
+function meLap(lap){
+  const R=S.race, q=1-(avgOvr()-68)*.0012;
+  return lap*q*RISKS[R.risk][2]*(R.pen||1);
+}
+function raceStep(dt){
+  const R=S.race; if(!R.run||R.inc||R.done) return;
+  const sim=Math.min(dt,.1)*R.speed*3;
+  R.t=Math.min(360,R.t+sim);
+  CARS.forEach((c,i)=>{let lap=c.lap*(1+.008*Math.sin(R.t/29+c.ph)); if(c.me) lap=meLap(lap); R.dist[i]+=sim/lap});
+  if(!R.incDone&&R.t>=140){R.incDone=true;R.run=false;R.inc={t0:performance.now()};R.log.push(`${hm(R.t)} · Aviso del muro: frenos con temperatura alta.`);render();return}
+  if(R.t>=360) finishRace();
+}
+function finishRace(){
+  const R=S.race; R.done=true;R.run=false;
+  const ord=order(), pos=ord.indexOf(3)+1;
+  S.raceResult={pos,pts:PTS[pos-1],premio:PRIZE[pos-1],cost:R.cost};
+  R.log.push(`${hm(360)} · Bandera a cuadros. Terminas P${pos}.`); render();
+}
+function resolveInc(k){
+  const R=S.race; if(!R.inc) return; R.inc=null; let m="";
+  if(k==="box"){R.cost+=18000;R.dist[3]-=.12;m="Entras a boxes, enfrías los frenos y sales una posición más atrás. Coste: 18.000 €."}
+  else if(k==="slow"){R.dist[3]-=.05;m="Reduces el ritmo unos minutos. Pierdes algo de tiempo, pero llegas entero."}
+  else{
+    const p={cons:.25,eq:.45,agr:.7}[R.risk]+(48<50?.1:0);
+    if(Math.random()<p){const rep=75000, pay=S.dec.ins?rep*.2:rep;R.cost+=pay;R.dist[3]-=.4;m=`Los frenos fallan. Pierdes vueltas en boxes. Reparación: ${eur(pay)}${S.dec.ins?" (tu seguro cubre el 80%)":""}.`}
+    else m="Has tenido suerte: los frenos aguantan. La próxima vez puede no ser así.";
+  }
+  R.log.push(`${hm(R.t)} · ${m}`); R.run=true; toast(m); render();
+}
+function initTrack(){
+  const p=$("#trk"); if(!p) return; trackL=p.getTotalLength();
+  const a=p.getPointAtLength(0), b=p.getPointAtLength(3);
+  $("#sf").setAttribute("transform",`translate(${a.x} ${a.y}) rotate(${Math.atan2(b.y-a.y,b.x-a.x)*180/Math.PI})`);
+}
+function paintRace(){
+  const R=S.race; if(!R||!trackL||!$("#trk")) return;
+  const ord=order();
+  document.querySelectorAll(".mk").forEach(g=>{const i=+g.dataset.i,f=((R.dist[i]%1)+1)%1,pt=$("#trk").getPointAtLength(f*trackL);g.setAttribute("transform",`translate(${pt.x} ${pt.y})`)});
+  const lead=R.dist[ord[0]];
+  document.querySelectorAll(".trow").forEach(r=>{const i=+r.dataset.i,pos=ord.indexOf(i);r.style.order=pos;r.querySelector(".tp").textContent=pos+1;
+    const gap=(lead-R.dist[i]);r.querySelector("em").textContent=pos===0?"Líder":gap>=1?`+${Math.floor(gap)} vuelta${Math.floor(gap)>1?"s":""}`:`+${(gap*CARS[i].lap*60).toFixed(1).replace(".",",")} s`});
+  const pos=ord.indexOf(3)+1;
+  $("#rt").textContent=`${hm(R.t)} de 6:00`;$("#rbar").style.width=R.t/360*100+"%";$("#rpos").textContent="P"+pos;$("#rlap").textContent=Math.max(0,Math.floor(R.dist[3]));
+  $("#rrel").innerHTML=Math.round(Math.max(20,92-(R.t/360)*(R.risk==="agr"?28:R.risk==="cons"?14:20)))+"<small> %</small>";
+  $("#rtyre").textContent=R.t<120?"Nuevo":R.t<240?"Medio":"Gastado";
+  if(R.inc){const left=Math.max(0,20-(performance.now()-R.inc.t0)/1000);const c=$("#cd");if(c)c.textContent=Math.ceil(left);if(left<=0)resolveInc("keep")}
+}
+function startRace(){
+  const g=++gen; let last=0; initTrack(); paintRace();
+  const loop=ts=>{ if(g!==gen||render.k!=="carrera") return;
+    const dt=last?(ts-last)/1000:0; last=ts; raceStep(dt); if(g!==gen) return; paintRace(); requestAnimationFrame(loop) };
+  requestAnimationFrame(loop);
+}
+
+/* ---------- NORMAS ---------- */
+function vNormas(){
+  const dept=[["Dirección y estrategia","Declaras la estrategia de la escudería y la defiendes con tus decisiones."],["Finanzas","Préstamos, seguros y cómo pagas a los proveedores."],["Comercial y patrocinio","Negocias con patrocinadores y decides el marketing."],["Compras y operaciones","Qué recambios compras y a qué proveedor."],["I+D","Proyectos de mejora del coche, simulador y túnel de viento."],["Recursos humanos","Fichajes, despidos y reparto de las 400 horas."]];
+  const cyc=[["Abierta","Consultas tu dossier y editas decisiones. Se guardan solas."],["Cerrada","Tus decisiones quedan bloqueadas, como en Parc Fermé."],["Calculando","El motor procesa todas las escuderías a la vez."],["Publicada","Ves resultados, cuentas actualizadas y tu nota."]];
+  const faq=[["¿Puedo tocar el coche?","No. Tus profesionales lo ajustan. Rinden mejor o peor según el dinero, el tiempo y la organización que tú les des."],["¿Si gano carreras ya soy campeón?","No. El resultado deportivo vale solo el 20%. Una escudería que arriesga sin control y quiebra no puede proclamarse campeona."],["¿Qué es la coherencia estratégica?","Comprueba cada ronda si lo que haces encaja con la estrategia que declaraste. Si dices que apuestas por calidad y compras recambios low-cost, pierdes puntos."],["¿Puedo despedir a alguien?","Sí, pero pagas una indemnización según los años de contrato que le quedan y el puesto queda vacante hasta que fiches a otra persona."],["¿Cuándo sé si me aceptan una oferta?","Las negociaciones con patrocinadores y los fichajes se resuelven en la ronda siguiente (t+1)."],["¿Cuánto tarda una mejora de I+D?","Dos rondas o más (t+2). El simulador la acorta y el túnel de viento reduce las mejoras que no funcionan."],["¿Qué pasa en la Gran Final de 24 horas?","Es la prueba reina y puntúa doble en la clasificación deportiva."]];
+  return `<section class="scene pagehead">${backdrop("head")}
+    <div class="stage"><span class="eyebrow"><em>Normas</em> · Cómo se juega y cómo se gana</span><h1 class="disp">Dirige la escudería</h1><p>Eres el equipo directivo de una escudería de resistencia. Todo lo que pasa en pista tiene una causa en tus decisiones.</p></div></section>
+  <div class="page">
+    <div class="card solid" style="margin-top:12px;display:flex;gap:16px;align-items:center;flex-wrap:wrap;border-left:6px solid var(--gold)"><span class="tag warn">Prototipo</span><span style="font-weight:600">Los importes y probabilidades de esta maqueta son de ejemplo. El profesorado puede ajustar las reglas reales.</span></div>
+    <div class="sec"><h2>Cómo funciona todo</h2>
+      <div class="chain">${[["1","Tus decisiones","6 departamentos: qué haces cada ronda."],["2","Índices de gestión","4 notas de 0 a 100 que resumen la salud de tu escudería."],["3","Pista e imprevistos","Tu jefe de equipo y tu piloto convierten los índices en ritmo y fiabilidad. Influyen el clima y el riesgo que elijas."],["4","Resultado","Premios, patrocinadores, averías y cuentas actualizadas."]].map((c,i)=>`<div class="link"><span class="n">${c[0]}</span><h3>${c[1]}</h3><p>${c[2]}</p></div>${i<3?`<span class="arr" aria-hidden="true">→</span>`:""}`).join("")}</div></div>
+    <div class="sec"><h2>Cómo se gana</h2>
+      <div class="grid g2"><div class="card solid" style="display:flex;gap:26px;align-items:center;flex-wrap:wrap"><div class="pie" role="img" aria-label="40% empresa, 40% estrategia, 20% pista"><span>100</span></div><div style="flex:1;min-width:200px">
+        <p class="legendp"><i style="background:var(--blue)"></i><b>40% Resultado empresarial.</b> Beneficio, rentabilidad, solvencia, liquidez y valor de marca.</p>
+        <p class="legendp"><i style="background:var(--ink)"></i><b>40% Dirección estratégica.</b> Coherencia entre lo que dices y lo que haces.</p>
+        <p class="legendp"><i style="background:var(--red)"></i><b>20% Resultado deportivo.</b> Puntos del campeonato. La final de 24 horas puntúa doble.</p></div></div>
+      <div class="card solid"><span class="lbl">Un ejemplo</span><p style="margin:12px 0;font-weight:600">Aurora gana 2 carreras pero tiene la caja a cero y recambios low-cost con una estrategia de calidad. Velox gana ninguna, pero tiene beneficios y decisiones coherentes.</p><p style="color:var(--ink2)">Resultado: Velox puede quedar por delante. En esta escudería se gana dirigiendo bien la empresa, no solo corriendo.</p></div></div></div>
+    <div class="sec"><h2>Tus 6 departamentos</h2><div class="grid g3">${dept.map((d,i)=>`<div class="card solid"><span class="lbl">Departamento ${i+1}</span><h3 class="disp" style="font-size:18px;margin:8px 0">${d[0]}</h3><p style="color:var(--ink2)">${d[1]}</p></div>`).join("")}</div></div>
+    <div class="sec"><h2>Los 4 índices de gestión</h2><div class="grid g4">${[["Tecnológico","Tus mejoras de I+D y tu equipamiento."],["Capital humano","Calidad y moral de tu plantilla."],["Calidad operativa","Recambios, mantenimiento y horas de preparación."],["Financiero","Liquidez, deuda y rating de solvencia."]].map(k=>`<div class="kpi"><span class="lbl">${k[0]}</span><p style="margin-top:10px;font-weight:600">${k[1]}</p></div>`).join("")}</div></div>
+    <div class="sec"><h2>Cómo es una ronda</h2><div class="grid g4">${cyc.map((c,i)=>`<div class="card solid" style="border-top:6px solid ${["var(--good)","var(--gold)","var(--blue)","var(--ink)"][i]}"><span class="lbl">Estado ${i+1}</span><h3 class="disp" style="font-size:20px;margin:8px 0">${c[0]}</h3><p style="color:var(--ink2)">${c[1]}</p></div>`).join("")}</div></div>
+    <div class="sec"><h2>La temporada: 18 rondas</h2>
+      <div class="cal">${[...Array(18)].map((_,i)=>{const n=i+1;return `<div class="cd2 ${n===5?"now":""} ${n===9?"jun":""} ${n===18?"fin":""}"><b>${n}</b><small>${n===5?"Estás aquí":n===9?"Junta":n===18?"24 H":""}</small></div>`}).join("")}</div>
+      <p style="margin-top:12px;color:var(--ink2)">En la ronda 9 se celebra la Junta de Accionistas y Patrocinadores para revisar tu plan estratégico. La ronda 18 es la Gran Final de 24 horas.</p></div>
+    <div class="sec"><h2>Las respuestas llegan tarde</h2><div class="grid g2"><div class="card solid"><span class="tag blue">t + 1</span><h3 class="disp" style="font-size:20px;margin:10px 0 6px">Una ronda después</h3><p style="color:var(--ink2)">Negociaciones con patrocinadores y fichajes de personal.</p></div><div class="card solid"><span class="tag blue">t + 2</span><h3 class="disp" style="font-size:20px;margin:10px 0 6px">Dos rondas o más</h3><p style="color:var(--ink2)">Proyectos de I+D en el laboratorio. Planifica con tiempo.</p></div></div></div>
+    <div class="sec"><h2>Consejos para ganar</h2><div class="grid g3">${[["Defiende tu estrategia","Elige una estrategia y que tus decisiones la sigan. Es el 40% de la nota."],["Cuida la caja","Un préstamo da aire hoy pero baja tu rating. Mira siempre la previsión antes de confirmar."],["Mira el desgaste","Con calor, un motor muy gastado falla. Dedica horas a mantenimiento."]].map(t=>`<div class="card solid" style="border-left:6px solid var(--red)"><h3 class="disp" style="font-size:18px;margin-bottom:8px">${t[0]}</h3><p style="color:var(--ink2)">${t[1]}</p></div>`).join("")}</div></div>
+    <div class="sec"><h2>Preguntas frecuentes</h2>${faq.map(f=>`<details class="faq"><summary>${f[0]}</summary><p>${f[1]}</p></details>`).join("")}</div>
+  </div>`;
+}
+
+
+const STRAT=[["costes","Liderazgo en costes","Competir con precios y gastos bajos."],["dif","Diferenciación","Destacar por calidad, fiabilidad y tecnología."],["enfoque","Enfoque","Especializarte en un tipo de patrocinador o carrera."],["diversif","Diversificación","Repartir riesgos entre varias fuentes de ingresos."],["alianzas","Alianzas","Crecer apoyándote en socios y proveedores."]];
+const OBJ=[["rent","Rentabilidad","Beneficio positivo en cada ronda."],["crec","Crecimiento","Ingresos mayores que en la ronda anterior."],["solv","Solvencia","Mantener rating A o mejor."],["podio","Podio","Terminar entre los 3 primeros."]];
+function vEstrategia(){
+  const st=STRAT.find(x=>x[0]===S.strat);
+  return `<section class="scene pagehead">${backdrop("head")}
+    <div class="stage"><span class="eyebrow"><em>Estrategia</em> · Dirección de la escudería</span><h1 class="disp">Qué escudería quieres ser</h1><p>Elige tu estrategia y fija objetivos. Cada ronda se comprueba si tus decisiones encajan con lo que has declarado. Vale el 40% de la nota.</p></div></section>
+  <div class="page">
+    <div class="card solid" style="margin-top:12px;display:flex;gap:14px;align-items:center;flex-wrap:wrap;border-left:6px solid ${st?"var(--good)":"var(--gold)"}"><span class="tag ${st?"good":"warn"}">${st?"Declarada":"Pendiente"}</span><span style="font-weight:600">${st?"Tu estrategia: "+st[1]+" · "+S.obj.length+" objetivo"+(S.obj.length===1?"":"s")+".":"Todavía no has declarado estrategia. Sin ella, tu coherencia estratégica baja."}</span></div>
+    <div class="sec"><h2>Tu estrategia</h2><div class="grid g3">${STRAT.map(x=>`<button class="opt" data-strat="${x[0]}" aria-pressed="${S.strat===x[0]}"><b>${x[1]}</b><small>${x[2]}</small></button>`).join("")}</div></div>
+    <div class="sec"><h2>Objetivos medibles</h2><p style="color:var(--ink2);margin:-6px 0 14px">Elige los que te comprometes a cumplir.</p><div class="grid g4">${OBJ.map(x=>`<button class="opt" data-obj="${x[0]}" aria-pressed="${S.obj.includes(x[0])}"><b>${x[1]}</b><small>${x[2]}</small></button>`).join("")}</div></div>
+  </div>`;
+}
+
+function openCloseRound(){
+  const pend=[];if(!S.strat)pend.push("No has declarado estrategia.");if(!S.obj.length)pend.push("No has fijado objetivos.");if(!hasPilot())pend.push("No tienes piloto.");
+  $("#modal").innerHTML=`<div class="sheet" style="max-width:520px"><h2>¿Cerrar la ronda 5?</h2><p style="margin:12px 0;color:var(--ink2)">Es definitivo: tus decisiones quedarán bloqueadas y no podrás cambiarlas.</p>${pend.length?`<div class="eq" style="background:#fff4d6;color:#8a6500">${pend.join("<br>")}</div>`:""}<div style="display:flex;gap:12px;justify-content:flex-end;margin-top:20px"><button class="btn ghost sm" data-close>Cancelar</button><button class="btn sm" data-close-ok>Cerrar ronda</button></div></div>`;
+  $("#modal").hidden=false;
+}
+/* ============ router y eventos ============ */
+const ROUTES={inicio:["Inicio",vInicio],estrategia:["Estrategia",vEstrategia],garaje:["Garaje",vGaraje],equipo:["Equipo",vEquipo],finanzas:["Finanzas",vFinanzas],carrera:["Carrera",vCarrera],clasificacion:["Clasificación",vClasif],normas:["Normas",vNormas]};
+const ALIAS={mercado:["equipo","mercado"],patrocinio:["finanzas","patrocinio"]};
+let cur=null;
+function render(){
+  let want=(cur||location.hash||"#inicio").replace("#","");
+  if(ALIAS[want]) want=ALIAS[want][0];
+  const k=ROUTES[want]?want:"inicio";
+  $("#nav").innerHTML=Object.entries(ROUTES).map(([id,[n]])=>`<a href="#${id}" ${id===k?'aria-current="page"':""}>${n}</a>`).join("");
+  const y=scrollY; $("#app").innerHTML=ROUTES[k][1](); document.documentElement.style.setProperty("--livery",S.livery);
+  if(render.k===k) scrollTo(0,y); else scrollTo(0,0); render.k=k;
+  $("#pill").innerHTML='<i></i>Ronda 5 / 18 · '+({abierta:"Abierta",cerrada:"Cerrada"}[S.engine]);
+  const cb=$("#closeBtn"); cb.textContent=S.engine==="abierta"?"Cerrar ronda":"Reabrir (demo)"; cb.classList.toggle("ghost",S.engine!=="abierta");
+  if(k==="carrera") startRace();
+}
+function goAnchor(){const al=ALIAS[(cur||location.hash||"").replace("#","")];if(al){const el=document.getElementById(al[1]);if(el)el.scrollIntoView({block:"start"})}}
+addEventListener("hashchange",()=>{cur=null;render();goAnchor()});
+document.addEventListener("click",e=>{
+  const a=e.target.closest('a[href^="#"]'); if(!a||e.defaultPrevented) return;
+  e.preventDefault(); const h=a.getAttribute("href"); cur=h.slice(1);
+  try{history.replaceState(null,"",h)}catch(_){}
+  render();
+  goAnchor();
+});
+document.addEventListener("click",e=>{
+  const t=e.target.closest("button"); if(!t) return;
+  const D=t.dataset;
+  const LOCK=["fire","fireOk","neg","offerSend","withdraw","spon","spUndo","loan","ins","sup","sim","tun","save","strat","obj"];
+  if(S.engine==="cerrada"&&LOCK.some(k=>D[k]!==undefined)){$("#modal").hidden=true;toast("Ronda cerrada: tus decisiones están bloqueadas.");return}
+  if(D.closeRound!==undefined){if(S.engine==="abierta")openCloseRound();else{S.engine="abierta";toast("Ronda reabierta.");render()}return}
+  if(D.closeOk!==undefined){S.engine="cerrada";$("#modal").hidden=true;toast("Ronda cerrada. Tus decisiones están guardadas y bloqueadas.");render();return}
+  if(D.strat){S.strat=D.strat;toast("Estrategia declarada.");render();return}
+  if(D.obj){S.obj=S.obj.includes(D.obj)?S.obj.filter(x=>x!==D.obj):[...S.obj,D.obj];render();return}
+  if(D.fire){openFire(D.fire)}
+  else if(D.fireOk){doFire(D.fireOk)}
+  else if(D.neg){openNeg(D.neg)}
+  else if(D.offerSend){sendOffer(D.offerSend)}
+  else if(D.withdraw!==undefined){S.offers.splice(+D.withdraw,1);toast("Oferta retirada.");render()}
+  else if(D.mkt){S.mkt=D.mkt;render()}
+  else if(D.spon){const n=SP.filter(x=>["firmado","pendiente"].includes(S.sp[x.id])).length;if(n>=4)toast("Ya tienes 4 patrocinadores activos o pendientes.");else{S.sp[D.spon]="pendiente";toast("Propuesta enviada. Respuesta en la próxima ronda.");render()}}
+  else if(D.spUndo){S.sp[D.spUndo]="libre";render()}
+  else if(D.race){const R=S.race||(S.race=newRace());
+    if(D.race==="toggle"){R.run=!R.run;render()}
+    else if(D.race==="speed"){R.speed=+D.v;render()}
+    else if(D.race==="reset"){S.race=newRace();S.raceResult=null;render()}
+    else if(D.race==="risk"){R.risk=D.k;render()}
+    else if(D.race==="inc"){resolveInc(D.k)}}
+  else if(D.part){S.part=D.part;render()}
+  else if(D.color){S.livery=D.color;render()}
+  else if(D.sim!==undefined){S.sim=+D.sim;render()}
+  else if(D.tun!==undefined){S.tunel=+D.tun;render()}
+  else if(D.save==="rd"){toast("I+D guardado. Los proyectos usarán el nuevo equipamiento.")}
+  else if(D.save==="dec"){toast("Decisiones guardadas. Puedes cambiarlas hasta cerrar la ronda.")}
+  else if(D.fich){toast("Oferta enviada a "+D.fich+". Respuesta en la próxima ronda.")}
+  else if(D.loan!==undefined){S.dec.loan=!S.dec.loan;render()}
+  else if(D.ins!==undefined){S.dec.ins=!S.dec.ins;render()}
+  else if(D.sup){S.dec.sup=D.sup;render()}
+  else if(D.rank){rankMode=D.rank;render()}
+  else if(D.books!==undefined){openBooks()}
+  else if(D.tab){openBooks(D.tab)}
+  else if(D.close!==undefined){$("#modal").hidden=true}
+});
+$("#modal").addEventListener("click",e=>{if(e.target.id==="modal")$("#modal").hidden=true});
+addEventListener("keydown",e=>{if(e.key==="Escape")$("#modal").hidden=true});
+document.addEventListener("input",e=>{
+  const dd=e.target.dataset;
+  if(S.engine==="cerrada"&&(dd.h||dd.mk!==undefined||dd.offer)){toast("Ronda cerrada: tus decisiones están bloqueadas.");render();return}
+  if(dd.offer){const c=CAND.find(x=>x.id===dd.offer),p=+e.target.value,ch=chanceOf(c,p);$("#offerpct").textContent=p+"%";$("#offerpay").textContent=eur(Math.round(c.pay*p/100));$("#offerch").textContent=ch+"%";$("#offerbar").style.width=ch+"%";return}
+  if(dd.mk!==undefined){S.mk=+e.target.value;$("#mkv").textContent=eur(S.mk);$("#mer").textContent=eur(Math.round(290000+S.mk*.6));return}
+  const k=dd.h; if(!k) return;
+  const v=+e.target.value, others=Object.keys(S.hours).filter(x=>x!==k), rest=400-v, cur=others.reduce((s,o)=>s+S.hours[o],0);
+  S.hours[k]=v; let used=0;
+  others.forEach((o,i)=>{const val=i===others.length-1?rest-used:Math.round((cur?S.hours[o]/cur:.5)*rest/10)*10;S.hours[o]=val;used+=val});
+  paintHours();
+});
+function paintHours(){
+  const h=S.hours, cols={prep:"#0a5cff",rd:"#e10600",mant:"#0f9d58"}, R=62, C=2*Math.PI*R; let off=0;
+  Object.keys(h).forEach(k=>{
+    const inp=document.querySelector(`[data-h="${k}"]`); if(inp&&+inp.value!==h[k]) inp.value=h[k];
+    const lab=document.querySelector(`[data-hv="${k}"]`); if(lab) lab.textContent=h[k]+" h";
+    const arc=document.querySelector(`[data-arc="${k}"]`);
+    if(arc){const len=h[k]/400*C;arc.setAttribute("stroke-dasharray",`${len} ${C-len}`);arc.setAttribute("stroke-dashoffset",-off);off+=len}
+  });
+}
+render();goAnchor();
+</script>
+</body>
+</html>
