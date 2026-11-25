@@ -1,7 +1,5 @@
-# E-SIMULA 24H Paddock
+# Portal de clase · DAM, DAW y ASIX
 
-Prototipo front-end del simulador de resistencia de 24 h. Es una PWA estática publicada con GitHub Pages.
+PWA estática publicada con GitHub Pages: https://e-simula-bussines-project.github.io/e-simula-24h-paddock/
 
-- **Web:** https://e-simula-bussines-project.github.io/e-simula-24h-paddock/
-- **Instalar:** desde Chrome/Edge/Safari → "Instalar app" / "Añadir a pantalla de inicio".
-- **Actualizar la caché offline:** al cambiar archivos, sube `VERSION` en `sw.js`.
+Al cambiar archivos, sube `VERSION` en `sw.js` para renovar la caché offline.
