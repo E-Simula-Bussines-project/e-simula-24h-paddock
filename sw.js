@@ -1,7 +1,7 @@
 // Service worker de E-SIMULA 24H Paddock. Sube VERSION al publicar cambios para renovar la caché.
-const VERSION = 'v2';
+const VERSION = 'v4';
 const CACHE = 'portal-clase-' + VERSION;
-const CORE = ['./', 'index.html', 'ronda-actual.html', 'manifest.webmanifest', 'icons/icon-192.png', 'icons/icon-512.png', 'icons/apple-touch-icon.png'];
+const CORE = ['./', 'index.html', 'perfil.html', 'theme.css', 'assets/marta.jpg', 'manifest.webmanifest', 'icons/icon-192.png', 'icons/icon-512.png', 'icons/apple-touch-icon.png'];
 
 self.addEventListener('install', e => {
   e.waitUntil(caches.open(CACHE).then(c => c.addAll(CORE)).then(() => self.skipWaiting()));
