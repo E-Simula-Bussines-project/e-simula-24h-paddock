@@ -223,7 +223,10 @@ const FOTOS = {
             (g ? '<p style="margin:0 0 12px"><b>' + esc(g.n) + '</b> · ' + mem.length + ' alumnos</p><ul class="members">' +
                 mem.map(function (m) { return '<li class="' + (m.id === s.id ? 'me' : '') + '"><span class="avatar b-' + m.ciclo + '">' + face(m.id, m.nombre) + '</span><span>' + esc(m.nombre) + (m.id === s.id ? ' (tú)' : '') + '<small>' + esc(m.ciclo) + ' · Clase ' + m.clase + '</small></span></li>'; }).join('') + '</ul>'
                 : '<p class="empty">Todavía no tienes grupo. El profesor te asignará uno.</p>') +
-            '</section></div>';
+            '</section></div>' +
+            '<section class="card" style="margin-top:16px" aria-labelledby="rt"><h2 id="rt">Escudería de Resistencia</h2>' +
+            '<p style="margin:0 0 12px;color:var(--muted)">Consulta la ronda que toca gestionar y los resultados de la anterior.</p>' +
+            '<a class="btn" style="display:inline-flex;align-items:center;text-decoration:none" href="ronda-actual.html">Información ronda actual</a></section>';
     }
     /* ---------- PROFESOR ---------- */
     function alerts() {
