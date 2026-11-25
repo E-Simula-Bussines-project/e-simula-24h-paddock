@@ -1,5 +1,5 @@
 // Service worker de E-SIMULA 24H Paddock. Sube VERSION al publicar cambios para renovar la caché.
-const VERSION = 'v4';
+const VERSION = 'v5';
 const CACHE = 'portal-clase-' + VERSION;
 const CORE = ['./', 'index.html', 'perfil.html', 'theme.css', 'assets/marta.jpg', 'manifest.webmanifest', 'icons/icon-192.png', 'icons/icon-512.png', 'icons/apple-touch-icon.png'];
 
