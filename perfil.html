@@ -3,18 +3,24 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Perfil · E-SIMULA 24H Paddock</title>
+
 <meta name="theme-color" content="#f3f4f8">
 <meta name="color-scheme" content="light">
-<link rel="manifest" href="manifest.webmanifest">
-<link rel="icon" type="image/png" href="icons/icon-192.png">
-<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+
+
+
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="Portal">
 
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@400;600;800&display=swap">
+
+
+
+<title>Perfil · E-SIMULA 24H Paddock</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
 <link rel="stylesheet" href="theme.css">
 <style>
 /* Tokens, cabecera, menú, hero y escena vienen de theme.css */
@@ -86,31 +92,15 @@ label input,label select{color:var(--ink)}
 .card .prof h2{margin:0;font-size:1.4rem;color:var(--ink);letter-spacing:0;text-transform:none;font-weight:600}
 .intro{margin-top:0}
 </style>
+<link rel="stylesheet" href="dashboard.css">
+<link rel="stylesheet" href="menu.css">
 </head>
 <body>
-<header class="bar">
-  <div class="in">
-    <a class="brand" href="./" aria-label="E-SIMULA 24H Paddock, inicio">
-      <svg class="flag" viewBox="0 0 34 34" width="34" height="34" aria-hidden="true"><rect width="34" height="34" rx="9" fill="#0f1530"/><g fill="#fff"><rect x="7" y="7" width="5" height="5"/><rect x="17" y="7" width="5" height="5"/><rect x="12" y="12" width="5" height="5"/><rect x="22" y="12" width="5" height="5"/><rect x="7" y="17" width="5" height="5"/><rect x="17" y="17" width="5" height="5"/><rect x="12" y="22" width="5" height="5"/><rect x="22" y="22" width="5" height="5"/></g></svg>
-      <span><b>E-SIMULA 24H</b><small>Paddock</small></span>
-    </a>
-    <div class="bar-r">
-    <a class="usr" id="usr" href="perfil.html" aria-current="page" hidden></a>
-    <div class="vista" role="group" aria-label="Cambiar de vista">
-      <button id="vAlu" aria-pressed="true">Alumno</button>
-      <button id="vPro" aria-pressed="false">Profesor</button>
-      <button id="vAdm" aria-pressed="false">Admin</button>
-    </div>
-    </div>
-  </div>
-</header>
+
+<header class="bar"><div class="in"><button type="button" class="menu-toggle" id="menu-toggle" aria-controls="main-menu" aria-expanded="true" aria-label="Plegar menú" title="Plegar menú"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button><a class="brand" href="index.html" aria-label="E-SIMULA 24H Paddock"><svg class="race-logo" width="54" height="36" viewBox="0 0 54 36" aria-hidden="true"><g fill="#fff" transform="skewX(-21)"><path d="M12 4h11v9H12zM34 4h11v9H34zM23 13h11v9H23zM12 22h11v9H12zM1 31h11v5H1z"/><path d="M45 13h11v9H45z" fill="#e82235"/></g></svg><span><b>E-SIMULA <em>24H</em></b><small>P A D D O C K</small></span></a><div class="header-right"><a class="bell" href="index.html#alerts" aria-label="Alertas"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 8a6 6 0 0 0-12 0c0 6-2 7-2 8h16c0-1-2-2-2-8M10 20h4"/></svg><i></i></a><a class="usr" id="usr" href="perfil.html" aria-current="page" hidden></a><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 5 7 7-7 7"/></svg></div></div></header>
 <div class="wrap">
-  <nav class="nav" aria-label="Pantallas del equipo">
-    <a href="./">Ronda actual</a>
-    <a href="situacion-financiera.html">Situación financiera</a>
-    <a href="recursos-humanos.html">RR. HH.</a>
-  </nav>
-  <h1 class="sr">Perfil</h1>
+  <nav id="main-menu" class="nav side-nav" aria-label="Pantallas del equipo"><a href="index.html" title="Ronda actual" aria-label="Ronda actual"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 10 9-7 9 7v10h-6v-7H9v7H3z"/></svg><span>Ronda actual</span></a><a href="situacion-financiera.html" title="Situación financiera" aria-label="Situación financiera"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="12" width="4" height="8" rx="1"/><rect x="10" y="7" width="4" height="13" rx="1"/><rect x="17" y="3" width="4" height="17" rx="1"/></svg><span>Situación financiera</span></a><a href="recursos-humanos.html" title="Recursos humanos" aria-label="Recursos humanos"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="7" r="3"/><path d="M2 21v-3a7 7 0 0 1 14 0v3zM16 4a3 3 0 0 1 0 6m2 4a5 5 0 0 1 4 5v2"/></svg><span>Recursos humanos</span></a><a href="perfil.html" aria-current="page" title="Perfil" aria-label="Perfil"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="7" r="4"/><path d="M4 22v-3a8 8 0 0 1 16 0v3z"/></svg><span>Perfil</span></a><div class="sidebar-bottom"><span>TEMPORADA DE RESISTENCIA</span><b>18 rondas · 6 carreras</b></div></nav><button type="button" class="menu-backdrop" id="menu-backdrop" aria-label="Cerrar menú" tabindex="-1"></button>
+  <h1 class="page-title"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="7" r="4"/><path d="M4 22v-3a8 8 0 0 1 16 0v3z"/></svg>Perfil</h1><div class="rolebar"><div class="vista" role="group" aria-label="Cambiar de vista"><button id="vAlu" aria-pressed="true">Alumno</button><button id="vPro" aria-pressed="false">Profesor</button><button id="vAdm" aria-pressed="false">Admin</button></div></div>
   <div class="who" id="who" style="margin:16px 0 12px"></div>
   <main id="app"></main>
 </div>
@@ -128,11 +118,11 @@ label input,label select{color:var(--ink)}
     var CICLOS = ['DAM', 'DAW', 'ASIX'], CLASES = [1, 2], MAX = 3, MIN = 2;
     var groups = [{ id: 1, n: 'Grupo Alfa', t: null, coche: '' }, { id: 2, n: 'Grupo Beta', t: null, coche: '' }, { id: 3, n: 'Grupo Gamma', t: null, coche: '' }, { id: 4, n: 'Grupo Delta', t: null, coche: '' }, { id: 5, n: 'Grupo Épsilon', t: null, coche: '' }];
     var S = [
-        [1, 'Marta Puig', 'DAM', 1, 1], [2, 'Jordi Serra', 'DAM', 1, 1], [3, 'Laia Ferrer', 'DAM', 1, 1],
+        [1, 'Marta Puig', 'DAM', 1, 1], [2, 'Youssef El Amrani', 'DAM', 1, 1], [3, 'Salma Benali', 'DAM', 1, 1],
         [4, 'Pau Roca', 'DAM', 2, 2], [5, 'Núria Vidal', 'DAM', 2, 2],
-        [6, 'Àlex Mora', 'DAW', 1, 3], [7, 'Clara Soler', 'DAW', 1, 3],
-        [8, 'Hugo Ruiz', 'DAW', 2, 4], [9, 'Sara León', 'DAW', 2, 4], [10, 'Dani Costa', 'DAW', 2, 4],
-        [11, 'Eva Molina', 'ASIX', 1, 5], [12, 'Marc Gil', 'ASIX', 1, 5], [13, 'Irene Vega', 'ASIX', 2, null]
+        [6, 'Arjun Patel', 'DAW', 1, 3], [7, 'Clara Soler', 'DAW', 1, 3],
+        [8, 'Diego Mamani', 'DAW', 2, 4], [9, 'Valeria Quispe', 'DAW', 2, 4], [10, 'Dani Costa', 'DAW', 2, 4],
+        [11, 'Mariana Rodríguez', 'ASIX', 1, 5], [12, 'Marc Gil', 'ASIX', 1, 5], [13, 'Irene Vega', 'ASIX', 2, null], [14, 'Samuel Diop', 'ASIX', 2, 5]
     ];
     var students = S.map(function (r, i) {
         var first = r[1].split(' ')[0].normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
@@ -142,9 +132,10 @@ label input,label select{color:var(--ink)}
     function $(s) { return document.querySelector(s); }
     var app = $('#app'), dlg = $('#dlg'), frm = $('#frm');
     function fv(f, k) { var _a; return String((_a = f.get(k)) !== null && _a !== void 0 ? _a : ''); }
+    var FOTOS_PREVIEW=["assets/usuario-01.webp","assets/usuario-02.webp","assets/usuario-03.webp","assets/usuario-04.webp","assets/usuario-05.webp","assets/usuario-06.webp","assets/usuario-07.webp","assets/usuario-08.webp","assets/usuario-09.webp","assets/usuario-10.webp","assets/usuario-11.webp","assets/usuario-12.webp","assets/usuario-13.webp","assets/usuario-14.webp","assets/usuario-15.webp","assets/usuario-16.webp","assets/usuario-17.webp","assets/usuario-18.webp"];
     function face(seed, name, adulto) {
-        var i = adulto ? 13 + (seed - 101 + 4) % 4 : (seed - 1) % 13;
-        return '<i class="portrait" aria-hidden="true" style="background-position:' + (i % 5 * 25) + '% ' + (Math.floor(i / 5) * 100 / 3) + '%"></i>';
+        var id=adulto?14+(seed-101+4)%4:seed===14?18:(seed-1)%13+1;
+        return '<img src="'+FOTOS_PREVIEW[id-1]+'" alt="">';
     }
     function esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
     function ini(n) { return n.split(' ').map(function (w) { return w[0]; }).slice(0, 2).join('').toUpperCase(); }
@@ -186,8 +177,7 @@ label input,label select{color:var(--ink)}
         }
         else {
             var nombre = role === 'admin' ? 'Administrador' : 'Ana Martínez';
-            u.innerHTML = '<span><b>' + nombre + '</b><small>' + (role === 'admin' ? 'Administración' : 'Profesorado') + '</small></span>' + face(role === 'admin' ? 104 : 101, nombre, true);
-            u.setAttribute('aria-label', nombre);
+            u.innerHTML = '<span><b>' + nombre + '</b><small>' + (role === 'admin' ? 'Administración' : 'Profesora') + '</small></span>' + face(role === 'admin' ? 104 : 101, nombre, true);
             u.hidden = false;
         }
         var w = $('#who');
@@ -208,14 +198,14 @@ label input,label select{color:var(--ink)}
         var g = gById(s.grupo), mem = g ? members(g.id) : [];
         app.innerHTML = intro('Hola, ' + esc(s.nombre.split(' ')[0]) + '. Aquí ves tus datos y con quién trabajas.') + '<div class="grid g2">' +
             '<section class="card" aria-labelledby="pt"><div class="prof"><div class="avatar b-' + s.ciclo + '">' + face(s.id, s.nombre) + '</div>' +
-            '<div><h2 id="pt">' + esc(s.nombre) + '</h2><div>' + (g ? '<span class="badge b-c">' + esc(g.n) + '</span>' : '') + clb(s.clase) + '</div></div></div>' +
-            '<dl><dt>Clase</dt><dd>Clase ' + s.clase + '</dd>' +
+            '<div><h2 id="pt">' + esc(s.nombre) + '</h2><div>' + (g ? '<span class="badge b-c">' + esc(g.n) + '</span>' : '') + '</div></div></div>' +
+            '<dl>' +
             '<dt>Correo</dt><dd>' + esc(s.email) + '</dd><dt>Teléfono</dt><dd>' + esc(s.tel) + '</dd>' +
             '<dt>Alta</dt><dd>' + fmt(s.alta) + '</dd></dl>' +
             '<div class="row" style="justify-content:flex-start;margin-top:16px"><button class="btn ghost" data-a="editme">Editar mis datos</button></div></section>' +
             '<section class="card" aria-labelledby="gt"><h2 id="gt">Mi grupo de trabajo</h2>' +
             (g ? '<p style="margin:0 0 12px"><b>' + esc(g.n) + '</b> · ' + mem.length + ' alumnos</p><ul class="members">' +
-                mem.map(function (m) { return '<li class="' + (m.id === s.id ? 'me' : '') + '"><span class="avatar b-' + m.ciclo + '">' + face(m.id, m.nombre) + '</span><span>' + esc(m.nombre) + (m.id === s.id ? ' (tú)' : '') + '<small>Clase ' + m.clase + '</small></span></li>'; }).join('') + '</ul>'
+                mem.map(function (m) { return '<li class="' + (m.id === s.id ? 'me' : '') + '"><span class="avatar b-' + m.ciclo + '">' + face(m.id, m.nombre) + '</span><span>' + esc(m.nombre) + (m.id === s.id ? ' (tú)' : '') + '</span></li>'; }).join('') + '</ul>'
                 : '<p class="empty">Todavía no tienes grupo. El profesor te asignará uno.</p>') +
             '</section></div>' +
             '<section class="card" style="margin-top:16px" aria-labelledby="rt"><h2 id="rt">Escudería de Resistencia</h2>' +
@@ -240,40 +230,36 @@ label input,label select{color:var(--ink)}
             CICLOS.map(function (c) { return '<div class="stat"><b>' + students.filter(function (s) { return s.ciclo === c; }).length + '</b><span>' + c + '</span></div>'; }).join('') +
             '<div class="stat"><b>' + groups.length + '</b><span>grupos</span></div>' +
             '<div class="stat"><b>' + sinG + '</b><span>sin grupo</span></div></div>';
-        app.innerHTML = intro('Desde aquí gestionas a los alumnos, los grupos de trabajo y consultas las carreras.') + alerts() + profCard() + stats + tabs + (tab === 'alumnos' ? tblAlumnos() : tab === 'carreras' ? tblCarreras() : tblGrupos());
+        app.innerHTML = intro('Desde aquí gestionas a los alumnos y sus grupos. Pulsa un grupo de la lista para ver quién está dentro.') + alerts() + profCard() + stats + tabs + (tab === 'alumnos' ? tblAlumnos() : tab === 'carreras' ? tblCarreras() : tblGrupos());
     }
     function profCard() {
-        return '<section class="card pgrid" aria-labelledby="pp"><div class="prof" style="margin:0"><div class="avatar b-c">' + face(101, 'Ana', true) + '</div><div><h2 id="pp">Ana Martínez</h2><div style="color:var(--muted)">Profesora · ana.martinez@centro.cat</div></div></div>' +
-            '<div><h2>Grupos de trabajo</h2><p style="color:var(--muted)">Consulta y gestiona los equipos de alumnos.</p><button class="btn ghost sm" data-tab="grupos">Ver grupos</button></div></section>';
+        return '<section class="card pgrid" aria-labelledby="pp"><div class="prof" style="margin:0"><div class="avatar b-c">' + face(101, 'Ana', true) + '</div><div><h2 id="pp">Ana Martínez</h2><div style="color:var(--muted)">Profesora · ana.martinez@centro.cat</div></div></div>' + '<div><h2>Grupos de trabajo</h2><p style="color:var(--muted)">Consulta y gestiona los equipos de alumnos.</p><button class="btn ghost sm" data-tab="grupos">Ver grupos</button></div></section>';
     }
     function tblAlumnos() {
         var list = students.filter(function (s) {
-            return (!fCiclo || s.ciclo === fCiclo) && (!fClase || String(s.clase) === fClase) && (!fQ || (s.nombre + ' ' + s.email).toLowerCase().indexOf(fQ.toLowerCase()) > -1);
+            return (!fCiclo || s.ciclo === fCiclo) && (!fQ || (s.nombre + ' ' + s.email).toLowerCase().indexOf(fQ.toLowerCase()) > -1);
         });
         var tools = '<div class="tools"><input class="grow" id="q" type="search" placeholder="Buscar por nombre o correo" aria-label="Buscar" value="' + esc(fQ) + '">' +
             '<select id="fc" aria-label="Filtrar por ciclo"><option value="">Todos los ciclos</option>' + CICLOS.map(function (c) { return '<option' + (c === fCiclo ? ' selected' : '') + '>' + c + '</option>'; }).join('') + '</select>' +
-            '<select id="fk" aria-label="Filtrar por clase"><option value="">Todas las clases</option>' + CLASES.map(function (k) { return '<option value="' + k + '"' + (String(k) === fClase ? ' selected' : '') + '>Clase ' + k + '</option>'; }).join('') + '</select>' +
             '<button class="btn" data-a="newS">Añadir alumno</button></div>';
         var rows = list.map(function (s) {
             var g = gById(s.grupo);
-            return '<tr><td><div style="display:flex;gap:10px;align-items:center"><span class="avatar" style="width:36px;height:36px">' + face(s.id, s.nombre) + '</span><span><b>' + esc(s.nombre) + '</b><br><small style="color:var(--muted)">' + esc(s.email) + '</small></span></div></td><td>' + cb(s.ciclo) + '</td><td>' + clb(s.clase) + '</td><td><select data-asg="' + s.id + '" aria-label="Grupo de trabajo de ' + esc(s.nombre) + '">' + groupOpts(s.grupo, s.id) + '</select></td>' +
+            return '<tr><td><div style="display:flex;gap:10px;align-items:center"><span class="avatar" style="width:36px;height:36px">' + face(s.id,s.nombre) + '</span><span><b>' + esc(s.nombre) + '</b><br><small style="color:var(--muted)">' + esc(s.email) + '</small></span></div></td><td>' + cb(s.ciclo) + '</td><td><select data-asg="' + s.id + '" aria-label="Grupo de trabajo de ' + esc(s.nombre) + '">' + groupOpts(s.grupo, s.id) + '</select></td>' +
                 '<td class="act"><button class="btn ghost sm" data-a="editS" data-id="' + s.id + '">Editar</button> <button class="btn danger sm" data-a="delS" data-id="' + s.id + '">Eliminar</button></td></tr>';
         }).join('');
         return '<section class="card" aria-labelledby="at"><h2 id="at">Todos los alumnos (' + list.length + ')</h2>' + tools +
-            (list.length ? '<div class="tablewrap"><table><thead><tr><th>Alumno</th><th>Ciclo</th><th>Clase</th><th>Grupo de trabajo</th><th></th></tr></thead><tbody>' + rows + '</tbody></table></div>' : '<p class="empty">Ningún alumno coincide con los filtros.</p>') + '</section>';
+            (list.length ? '<div class="tablewrap"><table><thead><tr><th>Alumno</th><th>Ciclo</th><th>Grupo de trabajo</th><th></th></tr></thead><tbody>' + rows + '</tbody></table></div>' : '<p class="empty">Ningún alumno coincide con los filtros.</p>') + '</section>';
     }
     function tblCarreras() {
-        var rows = RONDAS.map(function (r, i) {
-            return '<tr><td>' + (i + 1) + '</td><td><b>' + esc(r[0]) + '</b></td><td>' + esc(r[1]) + '</td></tr>';
-        }).join('');
-        return '<section class="card"><h2>Carreras de la temporada</h2><p class="hint">6 carreras de resistencia distribuidas en una temporada de 18 rondas.</p><div class="tablewrap"><table><thead><tr><th>Ronda</th><th>Carrera o fase</th><th>Tramo</th></tr></thead><tbody>' + rows + '</tbody></table></div></section>';
+        var rows = RONDAS.map(function (r,i) { return '<tr><td>'+(i+1)+'</td><td><b>'+esc(r[0])+'</b></td><td>'+esc(r[1])+'</td></tr>'; }).join('');
+        return '<section class="card"><h2>Carreras de la temporada</h2><p>6 carreras · 18 rondas</p><div class="tablewrap"><table><thead><tr><th>Ronda</th><th>Carrera o fase</th><th>Tramo</th></tr></thead><tbody>'+rows+'</tbody></table></div></section>';
     }
     function tblGrupos() {
         var cards = groups.map(function (g) {
             var m = members(g.id), bad = m.length < MIN;
             return '<article class="card"><div style="display:flex;justify-content:space-between;gap:8px;align-items:start"><h2 style="margin:0">' + esc(g.n) + '</h2>' +
                 '<span class="badge ' + (bad ? 'b-warn' : 'b-c') + '">' + m.length + '/' + MAX + (bad ? ' incompleto' : '') + '</span></div>' +
-                (m.length ? '<ul class="members" style="margin-top:12px">' + m.map(function (s) { return '<li><span class="avatar b-' + s.ciclo + '">' + face(s.id, s.nombre) + '</span><span style="flex:1">' + esc(s.nombre) + '<small>' + esc(s.ciclo) + ' · Clase ' + s.clase + '</small></span><button class="btn danger sm" data-a="rmM" data-id="' + s.id + '" aria-label="Quitar a ' + esc(s.nombre) + ' del grupo">Quitar</button></li>'; }).join('') + '</ul>' : '<p class="empty">Grupo vacío.</p>') +
+                (m.length ? '<ul class="members" style="margin-top:12px">' + m.map(function (s) { return '<li><span class="avatar b-' + s.ciclo + '">' + face(s.id, s.nombre) + '</span><span style="flex:1">' + esc(s.nombre) + '<small>' + esc(s.ciclo) + '</small></span><button class="btn danger sm" data-a="rmM" data-id="' + s.id + '" aria-label="Quitar a ' + esc(s.nombre) + ' del grupo">Quitar</button></li>'; }).join('') + '</ul>' : '<p class="empty">Grupo vacío.</p>') +
                 '<div class="row" style="justify-content:flex-start;margin-top:12px"><button class="btn sm" data-a="addM" data-id="' + g.id + '"' + (m.length >= MAX ? ' disabled title="El grupo está completo"' : '') + '>Añadir alumno</button><button class="btn ghost sm" data-a="renG" data-id="' + g.id + '">Renombrar</button><button class="btn danger sm" data-a="delG" data-id="' + g.id + '">Eliminar</button></div></article>';
         }).join('');
         return '<div class="tools"><h2 style="margin:0" class="grow">Grupos de trabajo (de ' + MIN + ' a ' + MAX + ' alumnos)</h2><button class="btn" data-a="newG">Crear grupo</button></div>' +
@@ -310,12 +296,11 @@ label input,label select{color:var(--ink)}
             '<label>Correo<input name="email" type="email" required value="' + esc(s.email) + '"></label>' +
             '<label>Teléfono<input name="tel" inputmode="tel" value="' + esc(s.tel) + '"></label>' +
             '<label>Ciclo<select name="ciclo">' + CICLOS.map(function (c) { return '<option' + (c === s.ciclo ? ' selected' : '') + '>' + c + '</option>'; }).join('') + '</select></label>' +
-            '<label>Clase<select name="clase">' + CLASES.map(function (k) { return '<option value="' + k + '"' + (k === s.clase ? ' selected' : '') + '>Clase ' + k + '</option>'; }).join('') + '</select></label>' +
             '<label>Grupo de trabajo<select name="grupo">' + groupOpts(s.grupo, s.id) + '</select></label>' + actions(isNew ? 'Añadir alumno' : 'Guardar cambios'), function (f) {
             var gid = fv(f, 'grupo') ? Number(fv(f, 'grupo')) : null;
             if (gid && members(gid).filter(function (m) { return !s.id || m.id !== s.id; }).length >= MAX)
                 return err('Ese grupo ya tiene ' + MAX + ' alumnos.');
-            var d = { nombre: fv(f, 'nombre').trim(), email: fv(f, 'email').trim(), tel: fv(f, 'tel').trim(), ciclo: fv(f, 'ciclo'), clase: Number(fv(f, 'clase')), grupo: gid };
+            var d = { nombre: fv(f, 'nombre').trim(), email: fv(f, 'email').trim(), tel: fv(f, 'tel').trim(), ciclo: fv(f, 'ciclo'), clase: s.clase, grupo: gid };
             if (isNew) {
                 students.push({ ...d, id: nextS++, alta: new Date().toISOString().slice(0, 10) });
                 toast('Alumno añadido');
@@ -330,7 +315,7 @@ label input,label select{color:var(--ink)}
         var s = sById(meId);
         open('<h2>Editar mis datos</h2><label>Correo<input name="email" type="email" required value="' + esc(s.email) + '"></label>' +
             '<label>Teléfono<input name="tel" inputmode="tel" value="' + esc(s.tel) + '"></label>' +
-            '<p style="margin:0;color:var(--muted);font-size:.9rem">El ciclo, la clase y el grupo solo los cambia el profesor.</p>' + actions('Guardar cambios'), function (f) { s.email = fv(f, 'email').trim(); s.tel = fv(f, 'tel').trim(); toast('Datos guardados'); });
+            '<p style="margin:0;color:var(--muted);font-size:.9rem">El ciclo y el grupo solo los cambia el profesor.</p>' + actions('Guardar cambios'), function (f) { s.email = fv(f, 'email').trim(); s.tel = fv(f, 'tel').trim(); toast('Datos guardados'); });
     }
     function addMember(gid) {
         var g = gById(gid), c = students.filter(function (s) { return s.grupo !== gid; }).sort(function (a, b) { return (a.grupo ? 1 : 0) - (b.grupo ? 1 : 0); });
@@ -338,7 +323,7 @@ label input,label select{color:var(--ink)}
             toast('No hay más alumnos para añadir');
             return;
         }
-        open('<h2>Añadir alumno a ' + esc(g.n) + '</h2><label>Alumno<select name="s">' + c.map(function (s) { var o = gById(s.grupo); return '<option value="' + s.id + '">' + esc(s.nombre) + ' · ' + s.ciclo + ' Clase ' + s.clase + (o ? ' (se moverá de ' + esc(o.n) + ')' : ' (sin grupo)') + '</option>'; }).join('') + '</select></label>' + actions('Añadir al grupo'), function (f) {
+        open('<h2>Añadir alumno a ' + esc(g.n) + '</h2><label>Alumno<select name="s">' + c.map(function (s) { var o = gById(s.grupo); return '<option value="' + s.id + '">' + esc(s.nombre) + ' · ' + s.ciclo + (o ? ' (se moverá de ' + esc(o.n) + ')' : ' (sin grupo)') + '</option>'; }).join('') + '</select></label>' + actions('Añadir al grupo'), function (f) {
             if (members(gid).length >= MAX)
                 return err('El grupo ya tiene ' + MAX + ' alumnos.');
             sById(Number(fv(f, 's'))).grupo = gid;
@@ -432,42 +417,21 @@ label input,label select{color:var(--ink)}
     /* ---------- ADMIN: simulador GT ---------- */
     var TUT = [{ id: 1, n: 'Ana Martínez', e: 'ana.martinez@centro.cat', c: 'DAM, DAW' }, { id: 2, n: 'Carlos Ibáñez', e: 'carlos.ibanez@centro.cat', c: 'ASIX' }, { id: 3, n: 'Rosa Pons', e: 'rosa.pons@centro.cat', c: 'DAW, ASIX' }];
     var COCHES = ['Porsche 911 GT3 R', 'Ferrari 296 GT3', 'Mercedes-AMG GT3', 'BMW M4 GT3', 'Audi R8 LMS GT3', 'Lamborghini Huracán GT3'];
-    var RONDAS = [
-        ["Entrega de la escudería","Pretemporada"],
-        ["Test oficial","Pretemporada"],
-        ["6 Horas de Prometeo","Tramo 1 · 0 a 3 h"],
-        ["6 Horas de Prometeo","Tramo 2 · 3 a 6 h"],
-        ["12 Horas Quantum Race","Tramo 1 · 0 a 6 h"],
-        ["12 Horas Quantum Race","Tramo 2 · 6 a 12 h"],
-        ["6 Horas de las Ardenas","Tramo 1 · 0 a 3 h"],
-        ["6 Horas de las Ardenas","Tramo 2 · 3 a 6 h"],
-        ["Junta de patrocinadores","Junta"],
-        ["8 Horas de Eifel","Tramo 1 · 0 a 4 h"],
-        ["8 Horas de Eifel","Tramo 2 · 4 a 8 h"],
-        ["10 Horas del Atardecer","Tramo 1 · 0 a 5 h"],
-        ["10 Horas del Atardecer","Tramo 2 · 5 a 10 h"],
-        ["24 Horas del Mare Nostrum","Preparación de la final"],
-        ["24 Horas del Mare Nostrum","Tramo 1 · 0 a 8 h"],
-        ["24 Horas del Mare Nostrum","Tramo 2 · 8 a 16 h"],
-        ["24 Horas del Mare Nostrum","Tramo 3 · 16 a 24 h"],
-        ["Cierre del ejercicio","Cierre"]
-    ];
+    var RONDAS = [["Entrega de la escudería", "Declara tu estrategia y puja por pilotos"], ["Test oficial", "Llegan patrocinadores y fichajes"], ["6 Horas de Prometeo", "Tramo 1 · 0 a 3 h"], ["6 Horas de Prometeo", "Tramo 2 · 3 a 6 h"], ["12 Horas Quantum Race", "Tramo 1 · 0 a 6 h"], ["12 Horas Quantum Race", "Tramo 2 · 6 a 12 h"], ["6 Horas de las Ardenas", "Tramo 1 · 0 a 3 h"], ["6 Horas de las Ardenas", "Tramo 2 · 3 a 6 h"], ["Junta de patrocinadores", "Revisa el plan y el mercado de verano"], ["8 Horas de Eifel", "Tramo 1 · 0 a 4 h"], ["8 Horas de Eifel", "Tramo 2 · 4 a 8 h"], ["10 Horas del Atardecer", "Tramo 1 · 0 a 5 h"], ["10 Horas del Atardecer", "Tramo 2 · 5 a 10 h"], ["24 Horas del Mare Nostrum", "Preparación de la final"], ["24 Horas del Mare Nostrum", "Tramo 1 · 0 a 8 h"], ["24 Horas del Mare Nostrum", "Tramo 2 · 8 a 16 h"], ["24 Horas del Mare Nostrum", "Tramo 3 · 16 a 24 h"], ["Cierre del ejercicio", "Memoria y defensa ante el consejo"]];
     var PART = [], nextP = 1, nextT = 10, aTab = 'partidas';
     groups.forEach(function (g, i) { g.t = TUT[i % 3].id; g.coche = COCHES[i % COCHES.length]; });
     function addDays(d, n) { var x = new Date(d + 'T12:00:00'); x.setDate(x.getDate() + n); return x.toISOString().slice(0, 10); }
-    function gen(d) {
-        return RONDAS.map(function (r, i) { return { n: i + 1, f: addDays(d.inicio, i * d.cada), nombre: r[0], tramo: r[1] }; });
-    }
-    function mkPart(d) { PART.push(Object.assign({}, d, { nr: 18, id: nextP++, rondas: gen(d) })); }
-    mkPart({ nombre: 'Temporada 1', nr: 18, inicio: '2026-12-07', cada: 7, estado: 'Abierta' });
-    mkPart({ nombre: 'Temporada 2', nr: 18, inicio: '2027-01-11', cada: 14, estado: 'Borrador' });
+    function gen(d) { return RONDAS.map(function(r,i){return {n:i+1,f:addDays(d.inicio,i*d.cada),nombre:r[0],tramo:r[1]};}); }
+    function mkPart(d) { PART.push(Object.assign({}, d, { nr:18, id: nextP++, rondas: gen(d) })); }
+    mkPart({nombre:'Temporada 1',nr:18,inicio:'2026-12-07',cada:7,estado:'Abierta'});
+    mkPart({nombre:'Temporada 2',nr:18,inicio:'2027-01-11',cada:14,estado:'Borrador'});
     function pById(id) { return PART.filter(function (p) { return p.id === id; })[0]; }
     function tById(id) { return TUT.filter(function (t) { return t.id === id; })[0]; }
     function tn(id) { var t = tById(id); return t ? t.n : 'Sin tutor'; }
     function opt(a, v) { return a.map(function (x) { return `<option${x === v ? ' selected' : ''}>${x}</option>`; }).join(''); }
     var INTROS = {
-        partidas: 'Cada partida tiene las 18 rondas de la temporada. Aquí puedes configurar su nombre y sus fechas.',
-        calendario: 'Las fechas se crean al guardar una partida. Puedes cambiar el día de cada ronda, pero no su orden ni su carrera.',
+        partidas: 'Cada partida tiene 18 rondas. Configura su nombre y sus fechas.',
+        calendario: 'Puedes modificar las fechas, pero el calendario de carreras es fijo.',
         tutores: 'Los tutores son los profesores que acompañan a los equipos.',
         equipos: 'Un equipo son 2 o 3 alumnos que gestionan una escudería.'
     };
@@ -488,7 +452,7 @@ label input,label select{color:var(--ink)}
         var rows = [];
         PART.forEach(function (p) { p.rondas.forEach(function (r) { rows.push({ p: p, r: r }); }); });
         rows.sort(function (a, b) { return a.r.f < b.r.f ? -1 : a.r.f > b.r.f ? 1 : 0; });
-        var h = rows.map(function (x) { return `<tr><td><input type="date" data-cal="f" data-p="${x.p.id}" data-r="${x.r.n}" value="${x.r.f}" aria-label="Fecha de la ronda"><br><small style="color:var(--muted)">${dayName(x.r.f)}</small></td><td>${esc(x.p.nombre)}<br><small style="color:var(--muted)">Ronda ${x.r.n} de ${x.p.rondas.length}</small></td><td><b>${esc(x.r.nombre)}</b><br><small style="color:var(--muted)">${esc(x.r.tramo)}</small></td></tr>`; }).join('');
+        var h = rows.map(function (x) { return `<tr><td><input type="date" data-cal="f" data-p="${x.p.id}" data-r="${x.r.n}" value="${x.r.f}" aria-label="Fecha de la ronda"><br><small style="color:var(--muted)">${dayName(x.r.f)}</small></td><td>${esc(x.p.nombre)}<br><small style="color:var(--muted)">Ronda ${x.r.n} de ${x.p.rondas.length}</small></td><td><b>${esc(x.r.nombre)}</b><br><small>${esc(x.r.tramo)}</small></td></tr>`; }).join('');
         return `<section class="card"><h2>Calendario de rondas</h2>` + (rows.length ? `<div class="tablewrap"><table><thead><tr><th>Fecha</th><th>Partida</th><th>Carrera o fase</th></tr></thead><tbody>${h}</tbody></table></div>` : '<p class="empty">Sin rondas. Crea una partida para generar el calendario.</p>') + `</section>`;
     }
     function aTut() {
@@ -501,9 +465,9 @@ label input,label select{color:var(--ink)}
     }
     function pForm(p0) {
         var n = !p0;
-        var p = p0 || { id: 0, rondas: [], nombre: '', nr: 18, inicio: new Date().toISOString().slice(0, 10), cada: 7, estado: 'Borrador' };
+        var p=p0||{id:0,rondas:[],nombre:'',nr:18,inicio:new Date().toISOString().slice(0,10),cada:7,estado:'Borrador'};
         open(`<h2>${n ? 'Crear partida' : 'Editar partida'}</h2><label>Nombre<input name="nombre" required value="${esc(p.nombre)}"></label><label>Número de rondas<input name="nr" value="18" readonly><small class="hint">Temporada completa de 18 rondas.</small></label><label>Fecha de la primera ronda<input name="inicio" type="date" required value="${p.inicio}"></label><label>Días entre rondas<input name="cada" type="number" min="1" max="90" required value="${p.cada}"><small class="hint">Por ejemplo, 7 significa una ronda cada semana.</small></label><label>Estado<select name="estado">${opt(['Borrador', 'Abierta', 'Finalizada'], p.estado)}</select><small class="hint">Borrador: aún se está preparando. Abierta: en marcha. Finalizada: terminada.</small></label>` + actions(n ? 'Crear partida' : 'Guardar cambios'), function (f) {
-            var d = { nombre: fv(f, 'nombre').trim(), nr: 18, inicio: fv(f, 'inicio'), cada: Number(fv(f, 'cada')), estado: fv(f, 'estado') };
+            var d={nombre:fv(f,'nombre').trim(),nr:18,inicio:fv(f,'inicio'),cada:Number(fv(f,'cada')),estado:fv(f,'estado')};
             if (n) {
                 mkPart(d);
                 toast('Partida creada');
@@ -617,9 +581,10 @@ label input,label select{color:var(--ink)}
     render();
 })();
 </script>
-<script>
+
+<script src="menu.js"></script><script>
 if ('serviceWorker' in navigator && location.protocol !== 'file:') {
-  window.addEventListener('load', () => navigator.serviceWorker.register('sw.js').catch(() => {}));
+  window.addEventListener('load', function () { navigator.serviceWorker.register('sw.js').catch(function () {}); });
 }
 </script>
 </body>

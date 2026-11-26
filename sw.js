@@ -1,7 +1,7 @@
 // Service worker de E-SIMULA 24H Paddock. Sube VERSION al publicar cambios para renovar la caché.
-const VERSION = 'v9';
+const VERSION = 'v10';
 const CACHE = 'e-simula-' + VERSION;
-const CORE = ['./', 'index.html', 'perfil.html', 'situacion-financiera.html', 'recursos-humanos.html', 'theme.css', 'assets/marta.jpg', 'assets/retratos.webp', 'assets/coche.webp', 'manifest.webmanifest', 'icons/icon-192.png', 'icons/icon-512.png', 'icons/apple-touch-icon.png'];
+const CORE = ["./","index.html","perfil.html","situacion-financiera.html","recursos-humanos.html","theme.css","dashboard.css","menu.css","menu.js","manifest.webmanifest","icons/icon-192.png","icons/icon-512.png","icons/apple-touch-icon.png","icons/icon-maskable-512.png","assets/pista.webp","assets/usuario-01.webp","assets/gt.webp","assets/usuario-02.webp","assets/usuario-03.webp","assets/usuario-04.webp","assets/usuario-05.webp","assets/usuario-06.webp","assets/usuario-07.webp","assets/usuario-08.webp","assets/usuario-09.webp","assets/usuario-10.webp","assets/usuario-11.webp","assets/usuario-12.webp","assets/usuario-13.webp","assets/usuario-14.webp","assets/usuario-15.webp","assets/usuario-16.webp","assets/usuario-17.webp","assets/usuario-18.webp"];
 
 self.addEventListener('install', e => {
   e.waitUntil(caches.open(CACHE).then(c => c.addAll(CORE)).then(() => self.skipWaiting()));

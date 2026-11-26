@@ -1,99 +1,20 @@
-<!doctype html><html lang="es"><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}
-.portrait{display:block;width:100%;height:100%;border-radius:50%;background-image:url("assets/retratos.webp");background-size:500% 400%;background-repeat:no-repeat;flex:none}
-.usr .portrait{width:40px;height:40px}
+<!doctype html><html lang="es"><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#f3f4f8">
 
-.scene{background:#171e29;display:flex;align-items:center;justify-content:center}
-.scene img{width:100%;height:100%;object-fit:contain;display:block}
-</style><meta name="theme-color" content="#f3f4f8">
-<link rel="manifest" href="manifest.webmanifest">
-<link rel="icon" type="image/png" href="icons/icon-192.png">
-<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+
+
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="Paddock">
-</head><body>
 <title>E-SIMULA 24H Paddock</title>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@400;600;800&display=swap">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
 <style>
-/* E-SIMULA 24H Paddock · tema compartido por todas las pantallas (cabecera, menú, hero GT, escena, tarjetas). */
-:root{--dam:#6a3fb5;--daw:#b7660a;--asix:#0e7c74;--dam-bg:#ece5f8;--daw-bg:#fbeedb;--asix-bg:#d9f1ee;--h1:#8fbaf7;--h2:#fff2dd;--h-ink:#14204f;--h-track:rgba(20,32,79,.14);--h-done:rgba(20,32,79,.38);--h-ring:#2b3a8c;--h-chip:rgba(255,255,255,.7);--h-chipb:rgba(20,32,79,.12);--h-hill:#9fb9e6;--h-hill2:#c3d3f0;--h-stand:#e3e9f8;--h-road1:#5d647c;--h-road2:#3f455c;--bg:#f3f4f8;--surface:#fff;--ink:#1b2340;--muted:#5d6580;--line:#dfe2ec;--brand:#2b3a8c;--brand-ink:#fff;
---good:#1d7a46;--good-bg:#dff3e7;--warn:#a4331f;--warn-bg:#fbe5e0;--amber:#a85d08;--amber-bg:#fbeedb;--info:#2b3a8c;--info-bg:#e4e8fb;--track:#e6e9f3;color-scheme:light}
-*,*::before,*::after{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--ink);font:400 17px/1.5 "Bricolage Grotesque",system-ui,-apple-system,"Segoe UI",sans-serif;padding-bottom:env(safe-area-inset-bottom,0)}
-a{color:inherit}
-a:focus-visible,button:focus-visible,select:focus-visible{outline:3px solid var(--brand);outline-offset:2px}
-.wrap{max-width:1040px;margin:0 auto;padding:0 16px 32px}
-
-/* Cabecera */
-.bar{position:sticky;top:0;z-index:10;background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(10px);padding-top:env(safe-area-inset-top,0)}
-.bar::after{content:"";display:block;height:4px;background:repeating-linear-gradient(90deg,#e10600 0 16px,var(--surface) 16px 32px)}
-.bar .in{max-width:1040px;margin:0 auto;padding:10px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px}
-.brand{display:flex;align-items:center;gap:10px;text-decoration:none;min-width:0}
-.flag{flex:none;border-radius:9px;box-shadow:0 0 0 1px var(--line)}
-.brand b{display:block;font-weight:800;font-size:1rem;line-height:1.1;letter-spacing:-.01em}
-.brand small{display:block;color:var(--muted);font-size:.72rem;letter-spacing:.14em;text-transform:uppercase}
-@media (max-width:520px){.brand b{font-size:.92rem}}
-.usr{display:flex;align-items:center;gap:10px;text-decoration:none;padding:4px 6px 4px 12px;border:1px solid var(--line);border-radius:999px;background:var(--surface);flex:none}
-.usr:hover{border-color:var(--brand)}
-.usr[hidden]{display:none}
-.usr span{text-align:right;line-height:1.15;min-width:0}
-.usr b{display:block;font-size:.92rem;white-space:nowrap}
-.usr small{display:block;color:var(--muted);font-size:.78rem;white-space:nowrap}
-.usr img{width:40px;height:40px;border-radius:50%;object-fit:cover;display:block}
-@media (max-width:420px){.usr span b{max-width:96px;overflow:hidden;text-overflow:ellipsis}}
-
-/* Menú de pantallas del equipo */
-.nav{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;padding:12px 0 4px;margin:0 -16px;padding-left:16px;padding-right:16px}
-.nav::-webkit-scrollbar{display:none}
-.nav a,.nav span{flex:none;padding:8px 14px;border-radius:999px;font-size:.92rem;font-weight:600;text-decoration:none;border:1px solid var(--line);background:var(--surface);color:var(--muted)}
-.nav a[aria-current="page"]{background:var(--brand);border-color:var(--brand);color:var(--brand-ink)}
-.nav span{opacity:.55;cursor:default}
-
-.hero{position:relative;overflow:hidden;border-radius:22px;margin-top:12px;padding:24px;color:var(--h-ink);
-background:radial-gradient(circle at 84% 24%,rgba(255,255,255,.85) 0 5%,rgba(255,255,255,0) 26%),linear-gradient(180deg,var(--h1) 0%,var(--h2) 100%);box-shadow:0 10px 30px rgba(43,58,140,.18)}
-.hero::before{display:none}
-.hero>*{position:relative}
-.hgrid{display:grid;grid-template-columns:auto 1fr;gap:24px;align-items:center}
-@media (max-width:560px){.hgrid{grid-template-columns:1fr;justify-items:start;gap:16px}}
-.chips{display:flex;flex-wrap:wrap;gap:6px}
-.chip{padding:4px 12px;border-radius:999px;font-size:.82rem;font-weight:600;background:var(--h-chip);border:1px solid var(--h-chipb)}
-.chip.live{background:#fff;color:#1c2766;display:inline-flex;align-items:center;gap:6px}
-.chip.live::before{content:"";width:8px;height:8px;border-radius:50%;background:#1fbf6b;box-shadow:0 0 0 0 rgba(31,191,107,.7);animation:pulse 1.8s infinite}
-@keyframes pulse{70%{box-shadow:0 0 0 8px rgba(31,191,107,0)}100%{box-shadow:0 0 0 0 rgba(31,191,107,0)}}
-@media (prefers-reduced-motion:reduce){.chip.live::before{animation:none}.ring .v{transition:none}}
-.hero h1{margin:10px 0 2px;font-size:clamp(1.6rem,4.6vw,2.3rem);line-height:1.1;font-weight:800;letter-spacing:-.02em}
-.hero .sub{margin:0;opacity:.85}
-
-.card{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:16px 18px}
-.card h2{font-size:.82rem;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;margin:0 0 14px;font-weight:600}
-
-/* Escena GT */
-.lights{position:absolute;top:20px;right:20px;display:flex;gap:7px;padding:7px 10px;border-radius:12px;background:rgba(8,12,38,.55);border:1px solid rgba(255,255,255,.18)}
-.lights i{width:14px;height:14px;border-radius:50%;background:rgba(255,255,255,.14);animation:lon .01s forwards,lgo .01s forwards 2.6s;animation-delay:calc(var(--i)*.4s),2.6s}
-@keyframes lon{to{background:#ff2a1f;box-shadow:0 0 10px #ff2a1f}}
-@keyframes lgo{to{background:#1fe07a;box-shadow:0 0 10px #1fe07a}}
-@media (max-width:560px){.lights{top:16px;right:16px}.lights i{width:11px;height:11px}}
-.bgs{position:absolute;left:0;right:0;bottom:51px;width:100%;height:120px}
-.scene{position:relative;height:190px;margin:22px -24px -24px;overflow:hidden}
-.road{position:absolute;left:0;right:0;bottom:0;height:42px;background:linear-gradient(var(--h-road1),var(--h-road2))}
-.road::after{content:"";position:absolute;left:0;right:0;top:19px;height:4px;background:repeating-linear-gradient(90deg,#fff 0 38px,transparent 38px 80px);opacity:.75;animation:run .9s linear infinite}
-.kerb{position:absolute;left:0;right:0;bottom:42px;height:9px;background:repeating-linear-gradient(90deg,#e10600 0 26px,#fff 26px 52px);animation:run 1.1s linear infinite}
-@keyframes run{to{background-position-x:-104px}}
-.speed{position:absolute;left:0;right:46%;top:0;bottom:0;pointer-events:none}
-.speed i{position:absolute;height:3px;border-radius:3px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.95));animation:zip 1.2s linear infinite}
-.speed i:nth-child(1){top:46px;width:90px;left:12%;animation-delay:-.2s}
-.speed i:nth-child(2){top:70px;width:140px;left:30%;animation-delay:-.7s}
-.speed i:nth-child(3){top:94px;width:70px;left:6%;animation-delay:-.45s}
-@keyframes zip{from{transform:translateX(-30px);opacity:0}30%{opacity:1}to{transform:translateX(120px);opacity:0}}
-.car{position:absolute;right:3%;bottom:12px;width:min(600px,88%);height:auto;animation:bob 1.4s ease-in-out infinite;filter:drop-shadow(0 10px 18px rgba(0,0,0,.35))}
-@keyframes bob{50%{transform:translateY(-2px)}}
-.spin{transform-box:fill-box;transform-origin:center;animation:spin .45s linear infinite}
-@keyframes spin{to{transform:rotate(360deg)}}
-@media (prefers-reduced-motion:reduce){.lights i,.road::after,.kerb,.speed i,.car,.spin{animation:none}.lights i{background:#1fe07a}.speed{display:none}}
-@media (max-width:560px){.scene{height:130px;margin-left:-24px}.car{width:92%;right:3%}}
-
-
+:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}
+</style>
+<link rel="stylesheet" href="theme.css">
+<style>
 /* Diseño claro fijo: sin modo oscuro, a propósito. */
 
 
@@ -166,26 +87,36 @@ background:radial-gradient(circle at 84% 24%,rgba(255,255,255,.85) 0 5%,rgba(255
 .demo label{white-space:nowrap}
 .demo select{max-width:100%;min-width:0;font:inherit;color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:6px 8px;min-height:38px}
 </style>
+<link rel="stylesheet" href="dashboard.css">
+<style>
+.dashboard{display:grid;grid-template-columns:minmax(0,1fr) 315px;gap:17px;align-items:start}.dash-main{min-width:0;display:grid;gap:15px}.dash-right{display:grid;gap:15px;min-width:0}.kpi-row{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px}.metric{display:flex;flex-direction:column;min-width:0;gap:4px;padding:14px 12px;min-height:108px}.metric-top{display:flex;align-items:center;gap:7px;color:#343b46;font-size:11.5px;font-weight:650;line-height:1.2;min-height:26px}.metric-top .ico{width:19px;height:19px;color:#293341}.metric strong{font-size:23px;line-height:1.15;white-space:nowrap;letter-spacing:-.7px}.metric strong small{font-size:12px;font-weight:500;color:#6c7481}.metric .mbar{height:6px;border-radius:99px;background:#e7e9ee;margin-top:3px;overflow:hidden}.metric .mbar i{display:block;height:100%;border-radius:99px;background:var(--tone,#187dca)}.metric .detail{font-size:11px;color:#68727f}.race-hero{border:1px solid #151c25;border-radius:13px;background:#101722;min-height:236px;color:white;position:relative;overflow:hidden;display:grid;grid-template-columns:minmax(0,1fr) 190px;gap:16px;padding:20px;align-items:center;isolation:isolate}.race-hero:before{content:"";position:absolute;inset:0;background:radial-gradient(ellipse at 56% 30%,#46526a 0%,transparent 63%),linear-gradient(125deg,#101720,#1a2230);z-index:-2}.race-car{position:absolute;right:170px;bottom:0;width:54%;height:100%;object-fit:contain;object-position:bottom center;mask-image:linear-gradient(90deg,transparent 0%,#000 15%,#000 93%,transparent);z-index:-1}.hero-content{align-self:start;position:relative;z-index:1;text-shadow:0 2px 12px #101722,0 0 12px #101722}.hero-content .round-tag{display:flex;align-items:center;gap:8px;font-size:14px;font-weight:700;margin:0 0 8px}.round-tag i{display:inline-block;width:9px;height:9px;background:#44bc79;border-radius:50%;box-shadow:0 0 0 4px #4fc38122}.round-tag i.closed{background:#f4b84b}.hero-content h2{font-size:clamp(24px,2.1vw,34px);letter-spacing:-.7px;line-height:1.1;margin:0 0 7px;max-width:100%;color:white}.hero-content .desc{font-size:14px;color:#e3e8f0;max-width:380px;margin:0 0 12px}.race-meta{display:flex;gap:14px;align-items:center;flex-wrap:wrap;font-size:12px;color:#f1f3f7;max-width:340px}.race-meta .ico{width:17px;height:17px}.race-meta span{display:flex;align-items:center;gap:5px}.tramo-panel{border:1px solid #ffffff65;background:#131d2bbd;backdrop-filter:blur(6px);border-radius:12px;padding:15px;z-index:2;position:relative}.tramo-panel h3{font-size:16px;margin:0 0 10px;display:flex;gap:7px;align-items:center}.tramo-panel .ico{width:18px;height:18px}.tramo-panel p{margin:0 0 6px;font-size:13px}.tramo-panel .progress{height:7px;background:#ffffff50;overflow:hidden;border-radius:12px;margin:8px 0 14px}.tramo-panel .progress i{display:block;height:100%;background:#ea1b37}.tramo-panel small{display:block;color:#c8d0dd}.tramo-panel strong{font-size:15px}.dash-bottom{display:grid;grid-template-columns:1.02fr 1fr;gap:14px;align-items:start}.dash-bottom .card{min-width:0}.heading-icon{display:flex;align-items:center;gap:9px}.heading-icon .ico{width:21px;height:21px}.dash-bottom .seg{margin:0 0 8px;display:flex;flex-wrap:wrap;gap:4px;background:#edf0f4;border-radius:8px;padding:4px}.dash-bottom .seg button{min-height:27px;flex:1;min-width:0;font-size:11px;border:0;background:none;border-radius:6px;color:#5b6572;padding:6px 3px;cursor:pointer}.dash-bottom .seg button[aria-pressed=true]{background:white;box-shadow:0 1px 3px #0001;color:#151a23;font-weight:700}.dash-bottom .rank{padding:0;margin:0;list-style:none;gap:1px}.dash-bottom .rank li{display:grid;grid-template-columns:25px minmax(0,1fr) 42px 22px;gap:7px;align-items:center;padding:5px 6px;border-bottom:1px solid #edf0f4;font-size:12px}.rank li.mine{background:#fce5e7;border-radius:6px;color:#a90f22;border:1px solid #f4b8be}.rank .p{font-size:14px}.rank li.mine .p{color:#a90f22}.rank .meter{display:none}.rank .sc{font-weight:750}.hintw{font-size:11px;color:var(--muted);margin:9px 0 0}.dash-bottom .a.amber{display:none}.decision-links{display:grid;gap:8px;margin:9px 0 12px}.decision-links a{display:flex;align-items:center;gap:10px;border:1px solid #e0e3e9;border-radius:8px;padding:10px 12px;background:#f4f5f8;color:#222832;font-size:13px;font-weight:650}.decision-links a>.ico:last-child{margin-left:auto;width:16px}.close-round{width:100%;display:flex;justify-content:center;gap:8px;align-items:center;border:0;color:white;background:linear-gradient(#d8122c,#b90920);border-radius:8px;padding:12px;font-weight:750;font-size:14px}.close-round:disabled{background:#7a818d}.round-list{display:grid;gap:3px;margin:0;padding:0;list-style:none}.round-list button{display:grid;grid-template-columns:22px 22px minmax(0,1fr);gap:6px;align-items:center;text-align:left;width:100%;border:0;background:none;border-radius:7px;padding:7px 5px;color:var(--ink);font-size:12px}.round-list button:hover{background:#f1f3f7}.round-list button.current{background:#fbdcde;color:#b40e26;font-weight:750}.round-list .round-dot{width:20px;height:20px;border-radius:50%;display:grid;place-items:center;background:#e3e6ea;color:#8c96a3;font-size:10px;font-weight:800}.round-list .past .round-dot{background:#309a4d;color:white}.round-list .current .round-dot{background:#c90d27;color:#fff}.round-list .rn{font-weight:650;text-align:center}.cal-toggle{margin-top:8px;border:0;border-radius:6px;background:#f3f4f7;color:#303947;font-size:12px;padding:8px;width:100%;text-align:left;display:flex;gap:6px;align-items:center;justify-content:space-between}.upcoming{display:grid;gap:12px}.upcoming button{border:0;background:transparent;text-align:left;display:grid;grid-template-columns:91px 1fr;gap:10px;padding:0;color:var(--ink);align-items:center;width:100%}.upcoming button img{width:91px;height:65px;border-radius:7px;object-fit:cover}.upcoming button b{display:block;font-size:13px;line-height:1.25}.upcoming button small{display:block;font-size:11px;color:var(--muted);margin-top:5px}.alert-band{display:flex;align-items:center;gap:11px;padding:12px 14px;border:1px solid #efda9c;background:#fff1ce;border-radius:9px;color:#72480d;font-size:13px}.alert-band>.ico{color:#b16b00}.alert-band strong{white-space:nowrap}.alert-band span{min-width:0}.reply-list{display:grid;gap:6px}.reply-list .r{display:flex;justify-content:space-between;gap:8px;font-size:13px;padding:7px 0;border-bottom:1px solid #e7e9ef}.dash-note{font-size:11px;color:#697180;margin:0}.dash-main .kpi-row .metric:first-child strong{font-size:clamp(18px,1.7vw,23px)}.dash-right .card{padding:15px 13px}.dash-head{display:flex;align-items:start;justify-content:space-between;gap:12px}.dash-head .page-title{font-size:32px}.dash-head .page-sub{margin-bottom:2px}.dash-main .card h2{font-size:17px}.dash-main .card h3{font-size:14px}.dash-bottom .card p{font-size:12px}.section-demo{display:flex;justify-content:center;margin-top:14px}.section-demo select{border:1px solid var(--line);border-radius:7px;padding:6px;background:white;color:var(--ink)}
+@media(max-width:1350px){.dashboard{grid-template-columns:minmax(0,1fr) 280px}.kpi-row{gap:7px}.metric{padding:12px 9px}.metric-top{font-size:10.5px}.metric strong{font-size:20px}.race-hero{grid-template-columns:1fr 160px}.race-car{right:138px}.upcoming button{grid-template-columns:76px 1fr}.upcoming button img{width:76px;height:58px}}
+@media(max-width:1150px){.dashboard{grid-template-columns:minmax(0,1fr)}.dash-right{grid-template-columns:1fr 1fr}.kpi-row{grid-template-columns:repeat(5,minmax(0,1fr))}.race-car{right:130px}}
+@media(max-width:700px){.dash-head .page-title{font-size:25px}.kpi-row{grid-template-columns:repeat(2,minmax(0,1fr))}.kpi-row .metric:first-child{grid-column:1/-1}.metric{min-height:86px}.metric-top{font-size:12px}.metric strong{font-size:22px}.race-hero{min-height:345px;grid-template-columns:1fr;padding:16px;gap:8px;align-items:start}.race-car{width:100%;height:46%;bottom:104px;right:0;mask-image:linear-gradient(90deg,transparent,#000 10%,#000 90%,transparent)}.tramo-panel{align-self:end;margin-top:118px;padding:10px 12px}.tramo-panel h3{margin:0 0 3px}.tramo-panel .progress{margin:5px 0}.dash-bottom,.dash-right{grid-template-columns:1fr}.alert-band{align-items:flex-start;flex-wrap:wrap}.alert-band strong{white-space:normal}.hero-content h2{font-size:26px}.race-meta{gap:7px}.dash-right .card{padding:14px}.dash-head{display:block}}
+</style>
+<link rel="stylesheet" href="menu.css">
+<style>
+.management .kpi-four{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.management .kpi-four .metric{grid-column:auto;min-height:100px;padding:12px;background:#fafbfc;box-shadow:none}
+.management .metric strong{font-size:23px}
+.management .metric-top{font-size:12px}
+.round-close-card .deadline-label{margin:0;color:var(--muted);font-size:12px}
+.round-close-card .deadline-label small{font-size:10px}
+.round-close-card .deadline-date{font-weight:700;font-size:14px;margin:4px 0 12px}
+.round-close-card .close-round{margin:0;width:100%}
+@media(max-width:1150px){.dash-right{grid-template-columns:1fr 1fr;align-items:start}}
+@media(max-width:700px){.dash-right{grid-template-columns:1fr}.round-close-card{grid-row:1}}
+</style>
+</head><body>
 
-<header class="bar">
-  <div class="in">
-    <a class="brand" href="./" aria-label="E-SIMULA 24H Paddock, inicio">
-      <svg class="flag" viewBox="0 0 34 34" width="34" height="34" aria-hidden="true"><rect width="34" height="34" rx="9" fill="#0f1530"/><g fill="#fff"><rect x="7" y="7" width="5" height="5"/><rect x="17" y="7" width="5" height="5"/><rect x="12" y="12" width="5" height="5"/><rect x="22" y="12" width="5" height="5"/><rect x="7" y="17" width="5" height="5"/><rect x="17" y="17" width="5" height="5"/><rect x="12" y="22" width="5" height="5"/><rect x="22" y="22" width="5" height="5"/></g></svg>
-      <span><b>E-SIMULA 24H</b><small>Paddock</small></span>
-    </a>
-    <a class="usr" href="perfil.html" aria-label="Ver mi perfil y mi equipo: Marta Puig, Grupo Alfa">
-      <span><b>Marta Puig</b><small>Grupo Alfa</small></span>
-      <i class="portrait" aria-hidden="true"></i>
-    </a>
-  </div>
-</header>
+
+
+
+
+<header class="bar"><div class="in"><button type="button" class="menu-toggle" id="menu-toggle" aria-controls="main-menu" aria-expanded="true" aria-label="Plegar menú" title="Plegar menú"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button><a class="brand" href="index.html" aria-label="E-SIMULA 24H Paddock"><svg class="race-logo" width="54" height="36" viewBox="0 0 54 36" aria-hidden="true"><g fill="#fff" transform="skewX(-21)"><path d="M12 4h11v9H12zM34 4h11v9H34zM23 13h11v9H23zM12 22h11v9H12zM1 31h11v5H1z"/><path d="M45 13h11v9H45z" fill="#e82235"/></g></svg><span><b>E-SIMULA <em>24H</em></b><small>P A D D O C K</small></span></a><div class="header-right"><a class="bell" href="index.html#alerts" aria-label="Alertas"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 8a6 6 0 0 0-12 0c0 6-2 7-2 8h16c0-1-2-2-2-8M10 20h4"/></svg><i></i></a><a class="usr" href="perfil.html"><span><b>Marta Puig</b><small>Alumna · Grupo Alfa</small></span><img src="assets/usuario-01.webp" alt="" width="46" height="46"></a><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 5 7 7-7 7"/></svg></div></div></header>
 
 <div class="wrap">
-  <nav class="nav" aria-label="Pantallas del equipo">
-    <a href="./" aria-current="page">Ronda actual</a>
-    <a href="situacion-financiera.html">Situación financiera</a>
-    <a href="recursos-humanos.html">RR. HH.</a>
-  </nav>
+  <nav id="main-menu" class="nav side-nav" aria-label="Pantallas del equipo"><a href="index.html" aria-current="page" title="Ronda actual" aria-label="Ronda actual"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 10 9-7 9 7v10h-6v-7H9v7H3z"/></svg><span>Ronda actual</span></a><a href="situacion-financiera.html" title="Situación financiera" aria-label="Situación financiera"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="12" width="4" height="8" rx="1"/><rect x="10" y="7" width="4" height="13" rx="1"/><rect x="17" y="3" width="4" height="17" rx="1"/></svg><span>Situación financiera</span></a><a href="recursos-humanos.html" title="Recursos humanos" aria-label="Recursos humanos"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="7" r="3"/><path d="M2 21v-3a7 7 0 0 1 14 0v3zM16 4a3 3 0 0 1 0 6m2 4a5 5 0 0 1 4 5v2"/></svg><span>Recursos humanos</span></a><a href="perfil.html" title="Perfil" aria-label="Perfil"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="7" r="4"/><path d="M4 22v-3a8 8 0 0 1 16 0v3z"/></svg><span>Perfil</span></a><div class="sidebar-bottom"><span>TEMPORADA DE RESISTENCIA</span><b>18 rondas · 6 carreras</b></div></nav><button type="button" class="menu-backdrop" id="menu-backdrop" aria-label="Cerrar menú" tabindex="-1"></button>
   <main id="app" aria-live="polite"></main>
   <div class="demo"><label for="sel">Demo · ronda</label><select id="sel"></select></div>
 </div>
@@ -217,7 +148,6 @@ background:radial-gradient(circle at 84% 24%,rgba(255,255,255,.85) 0 5%,rgba(255
     [18, 5, 'cierre', 'Cierre del ejercicio', 'Memoria y defensa ante el consejo', 'Rendir cuentas']
   ].map(function (c) { return { r: c[0], f: c[1], t: c[2], n: c[3], s: c[4], reto: c[5], h: c[6] === undefined ? null : [c[6], c[7], c[8]] }; });
 
-  var SCENE = '<div class="scene"><img src="assets/coche.webp" alt="Coche GT de resistencia en pista"></div>';
   function $(s) { return document.querySelector(s); }
   function esc(s) { return String(s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
   function eur(n) { return n.toLocaleString('es-ES') + ' €'; }
@@ -282,53 +212,33 @@ background:radial-gradient(circle at 84% 24%,rgba(255,255,255,.85) 0 5%,rgba(255
     return h + '</ol><p class="hintw">Final = 40 % empresa + 40 % estrategia + 20 % deporte.</p></section>';
   }
 
+  var ICON = {"home": "<svg class=\"ico\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"m3 10 9-7 9 7v10h-6v-7H9v7H3z\"/></svg>", "chart": "<svg class=\"ico\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><rect x=\"3\" y=\"12\" width=\"4\" height=\"8\" rx=\"1\"/><rect x=\"10\" y=\"7\" width=\"4\" height=\"13\" rx=\"1\"/><rect x=\"17\" y=\"3\" width=\"4\" height=\"17\" rx=\"1\"/></svg>", "users": "<svg class=\"ico\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><circle cx=\"9\" cy=\"7\" r=\"3\"/><path d=\"M2 21v-3a7 7 0 0 1 14 0v3zM16 4a3 3 0 0 1 0 6m2 4a5 5 0 0 1 4 5v2\"/></svg>", "user": "<svg class=\"ico\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><circle cx=\"12\" cy=\"7\" r=\"4\"/><path d=\"M4 22v-3a8 8 0 0 1 16 0v3z\"/></svg>", "bell": "<svg class=\"ico\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M18 8a6 6 0 0 0-12 0c0 6-2 7-2 8h16c0-1-2-2-2-8M10 20h4\"/></svg>", "calendar": "<svg class=\"ico\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><rect x=\"3\" y=\"5\" width=\"18\" height=\"16\" rx=\"2\"/><path d=\"M7 2v6M17 2v6M3 11h18\"/></svg>", "trophy": "<svg class=\"ico\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M7 3h10v7a5 5 0 0 1-10 0V3ZM7 5H3v3a5 5 0 0 0 5 5m9-8h4v3a5 5 0 0 1-5 5m-4 2v5m-5 1h10\"/></svg>", "wallet": "<svg class=\"ico\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><rect x=\"3\" y=\"5\" width=\"18\" height=\"15\" rx=\"2\"/><path d=\"M3 8h18M16 12h5v5h-5a2 2 0 0 1 0-5Z\"/></svg>", "gear": "<svg class=\"ico\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><circle cx=\"12\" cy=\"12\" r=\"8\"/><circle cx=\"12\" cy=\"12\" r=\"3\"/><path d=\"M12 1v3M12 20v3M1 12h3M20 12h3M4 4l2 2m12 12 2 2M4 20l2-2M18 6l2-2\"/></svg>", "shield": "<svg class=\"ico\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M12 2 21 6v6c0 5-4 8-9 10-5-2-9-5-9-10V6zM8 12l3 3 5-6\"/></svg>", "clipboard": "<svg class=\"ico\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><rect x=\"5\" y=\"4\" width=\"14\" height=\"18\" rx=\"2\"/><rect x=\"9\" y=\"2\" width=\"6\" height=\"4\" rx=\"1\"/><path d=\"M8 11h8m-8 4h8m-8 4h5\"/></svg>", "arrow": "<svg class=\"ico\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"m9 5 7 7-7 7\"/></svg>", "clock": "<svg class=\"ico\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><circle cx=\"12\" cy=\"12\" r=\"9\"/><path d=\"M12 6v6l4 2\"/></svg>", "flag": "<svg class=\"ico\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M4 22V3m0 1c6-4 10 4 16 0v11c-6 4-10-4-16 0\"/></svg>", "alert": "<svg class=\"ico\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"m12 3 10 18H2zM12 9v5m0 3v1\"/></svg>"};
+
+  var expanded = false, closed = {};
+  try { closed=JSON.parse(localStorage.getItem('paddock-cerradas')||'{}'); } catch(e) {}
+  function metric(label,value,caption,ico,percentage,tone) {
+    return '<div class="card metric"><div class="metric-top">'+ICON[ico]+label+'</div><strong>'+value+'</strong>'+(percentage===null?'':'<div class="mbar" style="--tone:'+tone+'"><i style="width:'+percentage+'%"></i></div>')+'<span class="detail">'+caption+'</span></div>';
+  }
+  function fechaLimite(n) {
+    var d = new Date(2026, 11, 11 + (n - 1) * 7, 18);
+    return d.toLocaleDateString('es-ES', {day:'numeric',month:'long',year:'numeric'}) + ' · 18:00';
+  }
   function render(n) {
-    var c = CAL[n - 1], prev = n > 1 ? res(n - 1) : null, ant = n > 2 ? res(n - 2) : null;
-    var h = '';
-    // HERO
-    h += '<section class="hero" aria-labelledby="t"><div class="lights" aria-hidden="true"><i style="--i:0"></i><i style="--i:1"></i><i style="--i:2"></i><i style="--i:3"></i><i style="--i:4"></i></div><div class="hgrid">' +
-      '<div class="ring" role="img" aria-label="Ronda ' + c.r + ' de 18">' + ring(c.r / 18, 62) + '<div><b>' + c.r + '</b><small>de 18</small></div></div>' +
-      '<div><div class="chips"><span class="chip live">Abierta</span><span class="chip">' + TIPO[c.t] + '</span><span class="chip">' + FASE[c.f] + '</span></div>' +
-      '<h1 id="t">' + esc(c.n) + '</h1><p class="sub">' + esc(c.s) + (c.h ? ' · horas ' + c.h[0] + ' a ' + c.h[1] : '') + '</p>' +
-      '<p class="reto"><small>Reto de gestión</small>' + esc(c.reto) + '</p></div></div>';
-    if (c.h) {
-      var l = c.h[0] / c.h[2] * 100, w = (c.h[1] - c.h[0]) / c.h[2] * 100;
-      h += '<div class="race" role="img" aria-label="Este tramo cubre de la hora ' + c.h[0] + ' a la ' + c.h[1] + ' de ' + c.h[2]  + '"><div class="rail"><div class="seg" style="left:' + l + '%;width:' + w + '%"></div></div><div class="tk"><span>0 h</span><span>' + c.h[2] + ' h</span></div></div>';
-    }
-    h += '<div class="seasonbar" aria-hidden="true">' + CAL.map(function (x) { return '<i class="' + (x.r < n ? 'd' : x.r === n ? 'n' : '') + '"></i>'; }).join('') + '</div>' +
-      '<div class="dl">⏱ Cierra el viernes a las 18:00 <span style="opacity:.6;font-weight:400">(ejemplo)</span></div>' + SCENE + '</section>';
-
-    // KPIs
-    if (prev) {
-      var delNota = ant ? delta(prev.nota, ant.nota) : '<span class="dt flat">Ronda ' + (n - 1) + '</span>';
-      var delTes = ant ? delta(Math.round((prev.tes - ant.tes) / 1000), 0, false, ' k€') : '<span class="dt flat">Ronda ' + (n - 1) + '</span>';
-      var rondaPrev = CAL[n - 2];
-      var third = rondaPrev.t === 'carrera'
-        ? '<div class="card k"><small>Última carrera</small><b>' + (prev.aband ? 'Abandono' : prev.pos + '.º') + '</b><span class="dt ' + (prev.aband ? 'down' : 'flat') + '">' + esc(rondaPrev.s) + '</span></div>'
-        : '<div class="card k"><small>Última ronda</small><b>' + esc(TIPO[rondaPrev.t]) + '</b><span class="dt flat">Ronda ' + (n - 1) + '</span></div>';
-      h += '<div class="cards k3"><div class="card k"><small>Nota de gestión</small><b>' + prev.nota + '</b>' + delNota + '</div>' +
-        '<div class="card k"><small>Tesorería</small><b>' + eur(prev.tes) + '</b>' + (ant ? delTes : '<span class="dt flat">Ronda ' + (n - 1) + '</span>') + '</div>' + third + '</div>';
-    } else {
-      h += '<div class="cards"><div class="card"><p class="empty">Primera ronda: aún no hay resultados. Recibes tu escudería y empiezas de cero.</p></div></div>';
-    }
-
-    // Clasificación + Índices
-    h += '<div class="cards g2">' + clasif(n);
-    h += '<section class="card" aria-labelledby="hi"><h2 id="hi">Índices de gestión</h2>' + '<div class="a amber" style="margin-bottom:12px"><i></i>Faltan las fórmulas de cálculo: valores provisionales (50)</div>';
-    h += prev ? '<div class="gauges">' + prev.idx.map(function (x) {
-      return '<div><div class="gauge' + (x[1] < 50 ? ' low' : '') + '" role="img" aria-label="' + x[0] + ': ' + x[1] + ' de 100">' + ring(x[1] / 100, 31) + '<b>' + x[1] + '</b></div><div class="gl">' + x[0] + '</div></div>';
-    }).join('') + '</div>' : '<p class="empty">Se calculan al publicar la primera ronda.</p>';
-    h += '</section></div>';
-
-    // Alertas + Respuestas
-    var rs = resp(n);
-    h += '<div class="cards g2"><section class="card" aria-labelledby="ha"><h2 id="ha">Alertas</h2><div class="al">' +
-      alertas(c, prev).map(function (a) { return '<div class="a ' + a[0] + '"><i></i>' + esc(a[1]) + '</div>'; }).join('') + '</div></section>' +
-      '<section class="card" aria-labelledby="hr"><h2 id="hr">Respuestas a tus decisiones</h2>' +
-      (rs.length ? '<div class="resp">' + rs.map(function (x) { return '<div class="r"><span>' + esc(x[0]) + '</span><span class="pill ' + x[2] + '">' + esc(x[1]) + '</span></div>'; }).join('') + '</div>' : '<p class="empty">Llegan a partir de la ronda 2.</p>') + '</section></div>';
-
-    $('#app').innerHTML = h;
-    document.title = 'Ronda ' + c.r + ' · E-SIMULA 24H Paddock';
+    var c=CAL[n-1],prev=n>1?res(n-1):null,rs=resp(n),closedNow=!!closed[n];
+    var h='<div class="dashboard"><div class="dash-main"><div class="dash-head"><div><h1 class="page-title">'+ICON.flag+'Ronda actual</h1><p class="page-sub">Gestiona tu escudería, toma decisiones y compite a lo largo de la temporada.</p></div></div>';
+    h+='<section class="race-hero"><img class="race-car" src="assets/gt.webp" alt="GT de resistencia número 24"><div class="hero-content"><p class="round-tag"><i class="'+(closedNow?'closed':'')+'"></i>Ronda '+n+' de 18 · '+(closedNow?'Cerrada':'Abierta')+'</p><h2>'+esc(c.n)+'</h2><p class="desc">'+esc(c.reto)+'</p><div class="race-meta"><span>'+ICON.flag+FASE[c.f]+'</span>'+(c.h?'<span>'+ICON.clock+c.h[2]+' horas</span>':'')+'</div></div><div class="tramo-panel"><h3>'+ICON.flag+(c.h?'Tramo actual':TIPO[c.t])+'</h3><p>'+esc(c.s)+'</p>';
+    if(c.h){h+='<div class="progress"><i style="width:'+(c.h[1]/c.h[2]*100)+'%"></i></div><small>Duración del tramo</small><strong>'+ (c.h[1]-c.h[0])+' horas · '+c.h[0]+' a '+c.h[1]+' h</strong>';}
+    else h+='<small>Fase de la temporada</small><strong>'+FASE[c.f]+'</strong>';
+    h+='</div></section><div class="dash-bottom">'+clasif(n).replace('<h2 id="hc">Clasificación</h2>','<h2 id="hc" class="heading-icon">'+ICON.trophy+'Clasificación</h2>')+ '<section class="card management"><h2 class="heading-icon">'+ICON.gear+'Índices de gestión</h2><div class="kpi-row kpi-four">';
+    var idx=[['Índice financiero','wallet','#237bc5',3],['Capital humano','users','#2c9a6c',1],['Índice tecnológico','gear','#8851c4',0],['Calidad operativa','shield','#2c9a6c',2]];
+    idx.forEach(function(a){var v=prev?prev.idx[a[3]][1]:0;h+=metric(a[0],prev?v+' <small>/ 100</small>':'—',prev?'Valor provisional':'Sin resultados',a[1],v,a[2]);});
+    h+='</div></section></div>';
+    h+='<div class="alert-band" id="alerts">'+ICON.alert+'<strong>Alertas</strong><span>'+esc(alertas(c,prev).map(function(a){return a[1];}).join(' · '))+'</span></div><section class="card"><h2 class="heading-icon">'+ICON.clipboard+'Respuestas a tus decisiones</h2>'+(rs.length?'<div class="reply-list">'+rs.map(function(x){return '<div class="r"><span>'+esc(x[0])+'</span><span class="pill '+x[2]+'">'+esc(x[1])+'</span></div>';}).join('')+'</div>':'<p class="empty">Llegan a partir de la ronda 2.</p>')+'</section><p class="dash-note">Datos de ejemplo: los índices y la clasificación son provisionales hasta disponer del motor de cálculo.</p></div>';
+    h+='<aside class="dash-right"><section class="card"><h2 class="heading-icon">'+ICON.calendar+'Calendario de la temporada</h2><ol class="round-list">';
+    var max=expanded?18:Math.min(18,Math.max(8,n+2));
+    CAL.slice(0,max).forEach(function(x){var cls=x.r<n?'past':x.r===n?'current':'future';h+='<li><button data-round="'+x.r+'" class="'+cls+'"><span class="round-dot">'+(x.r<n?'✓':x.r===n?'▶':'›')+'</span><span class="rn">'+x.r+'</span><span>'+esc(x.n)+(expanded&&x.t==='carrera'?'<br><small style="opacity:.7">'+esc(x.s)+'</small>':'')+'</span></button></li>';});
+    h+='</ol><button class="cal-toggle" id="calendarToggle">'+(expanded?'Mostrar menos':'Ver calendario completo (18 rondas)')+ICON.arrow+'</button></section><section class="card round-close-card"><h2 class="heading-icon">'+ICON.clock+'Cierre de ronda</h2><p class="deadline-label">Fecha límite <small>(ejemplo)</small></p><p class="deadline-date">'+fechaLimite(n)+'</p><button class="close-round" id="closeRound" '+(closedNow?'disabled':'')+'>'+ICON.flag+(closedNow?'Ronda cerrada':'Cerrar ronda')+'</button></section></aside></div>';
+    $('#app').innerHTML=h;document.title='Ronda '+n+' · E-SIMULA 24H Paddock';
   }
 
   var sel = $('#sel');
@@ -338,12 +248,21 @@ background:radial-gradient(circle at 84% 24%,rgba(255,255,255,.85) 0 5%,rgba(255
   try { var q = parseInt(new URLSearchParams(location.search).get('ronda'), 10); if (q >= 1 && q <= 18) start = q; } catch (e) {}
   sel.value = String(start);
   sel.addEventListener('change', function () { try { localStorage.setItem('ronda', sel.value); } catch (e) {} render(+sel.value); });
-  $('#app').addEventListener('click', function (e) { var b = e.target.closest('[data-mode]'); if (b) { mode = b.getAttribute('data-mode'); document.getElementById('clasif').outerHTML = clasif(+sel.value); var nb = document.querySelector('[data-mode="' + mode + '"]'); if (nb) nb.focus(); } });
+  $('#app').addEventListener('click', function (e) { var b = e.target.closest('[data-mode]'); if (b) { mode = b.getAttribute('data-mode'); render(+sel.value); var nb = document.querySelector('[data-mode="' + mode + '"]'); if (nb) nb.focus(); } });
+  $('#app').addEventListener('click',function(e){
+    var b=e.target.closest('button');if(!b)return;
+    if(b.dataset.round){sel.value=b.dataset.round;try{localStorage.setItem('ronda',sel.value);}catch(e){}render(+sel.value);}
+    if(b.id==='calendarToggle'){expanded=!expanded;render(+sel.value);}
+    if(b.id==='closeRound'&&confirm('¿Cerrar esta ronda? Tus decisiones quedarán bloqueadas.')){closed[sel.value]=true;try{localStorage.setItem('paddock-cerradas',JSON.stringify(closed));}catch(e){}render(+sel.value);}
+  });
   render(start);
-  if ('serviceWorker' in navigator && location.protocol !== 'file:') {
-    window.addEventListener('load', function () { navigator.serviceWorker.register('sw.js').catch(function () {}); });
-  }
+  
 })();
 </script>
 
+<script src="menu.js"></script><script>
+if ('serviceWorker' in navigator && location.protocol !== 'file:') {
+  window.addEventListener('load', function () { navigator.serviceWorker.register('sw.js').catch(function () {}); });
+}
+</script>
 </body></html>
