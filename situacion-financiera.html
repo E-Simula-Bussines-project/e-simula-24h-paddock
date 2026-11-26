@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Situación financiera · E-SIMULA 24H Paddock</title>
+<meta name="theme-color" content="#f3f4f8">
+<meta name="color-scheme" content="light">
+<meta name="description" content="Dossier de la ronda, estados contables, informe de análisis, entorno económico y alertas.">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Paddock">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@400;600;800&display=swap">
+<link rel="stylesheet" href="theme.css">
+<style>
+h1{font-size:clamp(1.6rem,4.6vw,2.2rem);line-height:1.1;font-weight:800;letter-spacing:-.02em;margin:18px 0 8px}
+.top{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:4px}
+.pillc{padding:4px 12px;border-radius:999px;font-size:.85rem;font-weight:600;background:var(--info-bg);color:var(--info)}
+.index{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;margin:14px -16px 0;padding:0 16px}
+.index::-webkit-scrollbar{display:none}
+.index a{flex:none;padding:7px 14px;border-radius:999px;font-size:.9rem;font-weight:600;text-decoration:none;border:1px solid var(--line);background:var(--surface);color:var(--muted)}
+section.sec{margin-top:28px;scroll-margin-top:84px}
+section.sec>h2{font-size:1.25rem;letter-spacing:-.01em;margin:0 0 12px;font-weight:800;text-transform:none;color:var(--ink)}
+.cards{display:grid;gap:12px}
+.g2{grid-template-columns:1fr 1fr}
+@media (max-width:760px){.g2{grid-template-columns:1fr}}
+.card{padding:16px 18px}
+.card h3{font-size:.82rem;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;margin:0 0 12px;font-weight:600}
+.note{display:flex;gap:10px;align-items:center;padding:9px 12px;border-radius:12px;font-weight:600;font-size:.92rem;background:var(--amber-bg);color:var(--amber);margin-top:28px}
+.note i{flex:none;width:9px;height:9px;border-radius:50%;background:currentColor}
+.hint{color:var(--muted);font-size:.9rem;margin:0 0 12px}
+table{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums}
+th{font-size:.78rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:600;text-align:right;padding:0 4px 8px}
+th:first-child{text-align:left}
+td{padding:9px 4px;border-bottom:1px solid var(--line);font-size:.97rem}
+td:not(:first-child){text-align:right;white-space:nowrap}
+tr.tot td{font-weight:800;border-bottom:2px solid var(--ink)}
+tr.sub td:first-child{color:var(--muted);padding-left:16px}
+tr.grp td{padding-top:16px;font-size:.78rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:600}
+.neg{color:var(--warn)}
+.al{display:grid;gap:8px}
+.a{display:flex;gap:10px;align-items:flex-start;padding:10px 12px;border-radius:12px;font-weight:600;font-size:.95rem;line-height:1.3}
+.a i{flex:none;width:9px;height:9px;border-radius:50%;background:currentColor;margin-top:7px}
+.a small{display:block;font-weight:400;opacity:.85}
+.a.warn{background:var(--warn-bg);color:var(--warn)}.a.amber{background:var(--amber-bg);color:var(--amber)}.a.info{background:var(--info-bg);color:var(--info)}.a.good{background:var(--good-bg);color:var(--good)}
+.pill{font-size:.78rem;font-weight:600;padding:3px 10px;border-radius:99px;white-space:nowrap}
+.pill.good{background:var(--good-bg);color:var(--good)}.pill.warn{background:var(--warn-bg);color:var(--warn)}.pill.amber{background:var(--amber-bg);color:var(--amber)}
+.resp{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px}
+.r{display:flex;justify-content:space-between;gap:8px;align-items:center;padding:10px 12px;border:1px solid var(--line);border-radius:12px;font-weight:600;font-size:.95rem}
+.race b{display:block;font-size:1.25rem;line-height:1.2;margin:2px 0}
+.race p{margin:2px 0;color:var(--muted)}
+.empty{margin:0;color:var(--muted)}
+.pyg{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px}
+@media (max-width:760px){.pyg{grid-template-columns:1fr}}
+.pcol{background:var(--surface);border:1px solid var(--line);border-radius:18px;overflow:hidden}
+.phead{padding:10px 12px;background:var(--track)}
+.phead select{width:100%;font:inherit;font-weight:600;color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:8px 10px;min-height:42px}
+.pbig{padding:14px 16px 4px;text-align:right;font-size:2rem;font-weight:800;letter-spacing:-.01em;line-height:1.1;font-variant-numeric:tabular-nums}
+.presult{cursor:pointer;list-style:none;display:flex;align-items:center;justify-content:flex-end;gap:10px}
+.presult::-webkit-details-marker{display:none}
+.presult::after{content:"▾";font-size:1.3rem;color:var(--muted)}
+.pdetails[open] .presult::after{content:"▴"}
+.presult:focus-visible{outline:3px solid var(--brand);outline-offset:-3px}
+.pbig small{display:block;font-size:.75rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.pbar{display:flex;height:8px;margin:10px 16px 14px;border-radius:99px;overflow:hidden;background:var(--track)}
+.pbar i:first-child{background:#e0614b}.pbar i:last-child{background:#3dae6c}
+.pg,.pi{padding:6px 0 10px;font-variant-numeric:tabular-nums}
+.pg{background:var(--warn-bg)}.pi{background:var(--good-bg)}
+.pgh{display:flex;justify-content:space-between;gap:10px;padding:10px 16px 6px;font-size:1.1rem;font-weight:600}
+.pg .pgh{color:var(--warn)}.pi .pgh{color:var(--good)}
+.pr{display:flex;justify-content:space-between;gap:10px;padding:5px 16px;font-size:.93rem}
+.pr.g{font-weight:700;padding-top:9px}
+.pr.s{padding-left:30px;color:var(--ink);opacity:.85}
+.pr.z b,.pr.z span{opacity:.45}
+.demo{display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:8px;color:var(--muted);font-size:.85rem;margin-top:24px}
+.demo label{white-space:nowrap}
+.demo select{font:inherit;color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:6px 8px;min-height:38px;max-width:100%;min-width:0}
+#alertas{
+  margin-top:40px;
+  padding-top:24px;
+  border-top:2px solid var(--line);
+}
+</style>
+</head>
+<body>
+<header class="bar">
+  <div class="in">
+    <a class="brand" href="./" aria-label="E-SIMULA 24H Paddock, inicio">
+      <svg class="flag" viewBox="0 0 34 34" width="34" height="34" aria-hidden="true"><rect width="34" height="34" rx="9" fill="#0f1530"/><g fill="#fff"><rect x="7" y="7" width="5" height="5"/><rect x="17" y="7" width="5" height="5"/><rect x="12" y="12" width="5" height="5"/><rect x="22" y="12" width="5" height="5"/><rect x="7" y="17" width="5" height="5"/><rect x="17" y="17" width="5" height="5"/><rect x="12" y="22" width="5" height="5"/><rect x="22" y="22" width="5" height="5"/></g></svg>
+      <span><b>E-SIMULA 24H</b><small>Paddock</small></span>
+    </a>
+    <a class="usr" href="perfil.html" aria-label="Ver mi perfil y mi equipo: Marta Puig, Grupo Alfa">
+      <span><b>Marta Puig</b><small>Grupo Alfa</small></span>
+      <img src="assets/marta.jpg" alt="" width="40" height="40">
+    </a>
+  </div>
+</header>
+
+<div class="wrap">
+  <nav class="nav" aria-label="Pantallas del equipo">
+    <a href="./">Ronda actual</a>
+    <a href="situacion-financiera.html" aria-current="page">Situación financiera</a>
+    <span title="Próximamente">RR. HH.</span>
+  </nav>
+  <h1>Situación financiera</h1>
+  <div class="top" id="top"></div>
+  <nav class="index" aria-label="En esta pantalla"><a href="#dossier">Dossier</a><a href="#estados">Ingresos y gastos</a><a href="#alertas">Alertas</a></nav>
+  <main id="app" aria-live="polite"></main>
+  <div class="demo"><label for="sel">Demo · ronda</label><select id="sel"></select></div>
+</div>
+
+<script>
+"use strict";
+(function () {
+  var NOMBRES = [
+    ['Entrega de la escudería', 'pre'], ['Test oficial', 'pre'],
+    ['6 Horas de Prometeo · tramo 1', 'carrera', 'Carrera de aprendizaje', 'normal'], ['6 Horas de Prometeo · tramo 2', 'carrera', 'Carrera de aprendizaje', 'normal'],
+    ['12 Horas Quantum Race · tramo 1', 'carrera', 'Calor: fiabilidad y calidad', 'calor'], ['12 Horas Quantum Race · tramo 2', 'carrera', 'Calor: fiabilidad y calidad', 'calor'],
+    ['6 Horas de las Ardenas · tramo 1', 'carrera', 'Lluvia: gestión del riesgo', 'lluvia'], ['6 Horas de las Ardenas · tramo 2', 'carrera', 'Lluvia: gestión del riesgo', 'lluvia'],
+    ['Junta de patrocinadores', 'junta', 'Reformular la estrategia', 'normal'],
+    ['8 Horas de Eifel · tramo 1', 'carrera', 'Circuito largo: daños y seguros', 'normal'], ['8 Horas de Eifel · tramo 2', 'carrera', 'Circuito largo: daños y seguros', 'normal'],
+    ['10 Horas del Atardecer · tramo 1', 'carrera', 'Primera noche: turnos y fatiga', 'noche'], ['10 Horas del Atardecer · tramo 2', 'carrera', 'Primera noche: turnos y fatiga', 'noche'],
+    ['24 Horas del Mare Nostrum · preparación', 'prep', 'Planificar con todos los recursos', 'normal'],
+    ['24 Horas del Mare Nostrum · tramo 1', 'carrera', 'Ritmo sin castigar la mecánica', 'calor'], ['24 Horas del Mare Nostrum · tramo 2', 'carrera', 'Fatiga, errores y averías', 'noche'], ['24 Horas del Mare Nostrum · tramo 3', 'carrera', 'Arriesgar o asegurar la posición', 'normal'],
+    ['Cierre del ejercicio', 'cierre', 'Rendir cuentas', 'normal']
+  ];
+  var HORAS = { 3: [0, 3, 6], 4: [3, 6, 6], 5: [0, 6, 12], 6: [6, 12, 12], 7: [0, 3, 6], 8: [3, 6, 6], 10: [0, 4, 8], 11: [4, 8, 8], 12: [0, 5, 10], 13: [5, 10, 10], 15: [0, 8, 24], 16: [8, 16, 24], 17: [16, 24, 24] };
+  var TIPO = { pre: 'Pretemporada', carrera: 'Tramo de carrera', junta: 'Junta', prep: 'Preparación', cierre: 'Cierre' };
+
+  function $(s) { return document.querySelector(s); }
+  function esc(s) { return String(s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
+  function eur(n) { return (n < 0 ? '−' : '') + Math.abs(Math.round(n)).toLocaleString('es-ES', { useGrouping: 'always' }) + ' €'; }
+  function num(n, d) { return n.toLocaleString('es-ES', { minimumFractionDigits: d, maximumFractionDigits: d }); }
+  function rnd(seed) { var x = Math.sin(seed * 9301 + 49297) * 233280; return x - Math.floor(x); }
+
+  // ---- Datos de ejemplo (faltan las fórmulas del motor de cálculo) ----
+  function tes(r) { return 250000 + Math.round((rnd(r + 8) - .3) * 220) * 1000 + r * 8000; }
+  function ing(r) { return Math.round((420 + rnd(r + 5) * 180 + r * 12) / 5) * 5 * 1000; }
+  function cos(r) { return Math.round((380 + rnd(r + 6) * 170 + r * 9) / 5) * 5 * 1000; }
+  function estados(k) { // k = ronda cuyos estados se muestran (0 = balance de apertura)
+    var e = {};
+    e.inmov = 1100000 - 20000 * k; e.exist = 60000 + Math.round(rnd(k + 31) * 30) * 1000; e.cli = 80000 + Math.round(rnd(k + 32) * 40) * 1000; e.tes = tes(k);
+    e.activo = e.inmov + e.exist + e.cli + e.tes;
+    e.cap = 900000; e.pre = 400000 - 12000 * k; e.prov = 150000 + Math.round(rnd(k + 33) * 60) * 1000;
+    e.res = e.activo - e.cap - e.pre - e.prov; e.pn = e.cap + e.res;
+    if (k > 0) {
+      var I = ing(k), C = cos(k);
+      e.I = I; e.C = C; e.pat = Math.round(I * .55 / 1000) * 1000; e.prem = Math.round(I * .25 / 1000) * 1000; e.merch = I - e.pat - e.prem;
+      e.amort = 20000; e.finan = Math.round(e.pre * .01 / 1000) * 1000;
+      var r = C - e.amort - e.finan; e.pers = Math.round(r * .45 / 1000) * 1000; e.comp = Math.round(r * .28 / 1000) * 1000; e.id = Math.round(r * .14 / 1000) * 1000; e.rep = r - e.pers - e.comp - e.id;
+      e.rdo = I - C;
+      e.dt = tes(k) - tes(k - 1); e.inv = -Math.round(rnd(k + 40) * 25) * 1000; e.fin = -12000; e.oper = e.dt - e.inv - e.fin; e.ti = tes(k - 1);
+    }
+    return e;
+  }
+  function resp(n) {
+    if (n === 1) return [];
+    if (n === 2) return [['Nova Energía', 'Aceptado', 'good'], ['Atlas Seguros', 'Rechazado', 'warn'], ['Piloto promesa', 'Fichado', 'good']];
+    if (n === 9) return [['I+D Refrigeración', 'En curso', 'amber'], ['Nova Energía', 'En estudio', 'amber']];
+    var ok = rnd(n + 20) > .5, pay = rnd(n + 21) > .3;
+    return [['I+D Refrigeración', ok ? 'Completado' : 'En curso', ok ? 'good' : 'amber'], ['Nova Energía', pay ? 'Pago recibido' : 'Pago retenido', pay ? 'good' : 'amber']];
+  }
+  function alertas(n, e) {
+    var a = [], c = NOMBRES[n - 1];
+    if (e.tes < 300000) a.push(['warn', 'Tesorería ajustada', 'Tienes ' + eur(e.tes) + '. Vigila los pagos de la ronda.']);
+    if (e.I && e.rdo < 0) a.push(['warn', 'Pérdidas en la ronda anterior', 'Resultado de ' + eur(e.rdo) + '.']);
+    if (c[1] === 'carrera') {
+      a.push(['amber', 'Patrocinador «Nova Energía»', 'Exige terminar la carrera para pagar el bono.']);
+      if (c[3] === 'calor') a.push(['amber', 'Calor previsto', 'Más averías si la calidad operativa es baja.']);
+      if (c[3] === 'lluvia') a.push(['amber', 'Lluvia prevista', 'Manda el riesgo, no el ritmo.']);
+      if (c[3] === 'noche') a.push(['amber', 'Conducción nocturna', 'Cuida turnos y fatiga de los pilotos.']);
+    }
+    if (n === 8) a.push(['info', 'La próxima ronda es la junta', 'Cierre contable semestral.']);
+    if (n === 13) a.push(['info', 'Después viene la preparación de la final', 'Planifica presupuesto y recambios.']);
+    if (n === 17) a.push(['info', 'Última carrera', 'La siguiente ronda es el cierre del ejercicio.']);
+    if (!a.length) a.push(['good', 'Sin alertas', 'No hay avisos especiales para esta ronda.']);
+    return a;
+  }
+  var CARRERA = { 3: 1, 4: 1, 5: 1, 6: 1, 7: 1, 8: 1, 10: 1, 11: 1, 12: 1, 13: 1, 15: 1, 16: 1, 17: 1 };
+  function k1(x) { return Math.round(x / 1000) * 1000; }
+  function pygRonda(r) { // datos de ejemplo de una ronda (faltan las fórmulas)
+    var I = ing(r), C = cos(r), car = !!CARRERA[r], pre = 400000 - 12000 * r, d = {};
+    var prem = car ? k1(I * .25) : 0, pat = k1(I * (car ? .55 : .8)), merch = I - prem - pat;
+    d.cal = k1(prem * .2); d.car = k1(prem * .65); d.vr = prem - d.cal - d.car; d.pat = pat; d.merch = merch;
+    d.amort = 20000; d.inter = k1(pre * .01);
+    var R = C - d.amort - d.inter, pers = k1(R * .45), idv = k1(R * .12), comp = k1(R * (car ? .25 : .43)), rep = R - pers - idv - comp;
+    d.pil = k1(pers * .35); d.ing = k1(pers * .2); d.mec = k1(pers * .3); d.jefe = pers - d.pil - d.ing - d.mec; d.indem = 0;
+    d.proy = k1(idv * .7); d.lic = idv - d.proy;
+    d.rec = k1(comp * .6); d.taller = comp - d.rec;
+    d.reps = car ? k1(rep * .7) : 0; d.log = rep - d.reps;
+    return d;
+  }
+  var CLAVES = ['cal', 'car', 'vr', 'pat', 'merch', 'amort', 'inter', 'pil', 'ing', 'mec', 'jefe', 'indem', 'proy', 'lic', 'rec', 'taller', 'reps', 'log'];
+  function periodo(k, cod) {
+    var d = {}; CLAVES.forEach(function (c) { d[c] = 0; });
+    var desde = cod === 'temp' ? 1 : cod === 'ult' ? k : +cod.slice(1), hasta = cod === 'temp' ? k : cod === 'ult' ? k : +cod.slice(1);
+    for (var r = desde; r <= hasta; r++) { var x = pygRonda(r); CLAVES.forEach(function (c) { d[c] += x[c]; }); }
+    d.pers = d.pil + d.ing + d.mec + d.jefe + d.indem; d.idv = d.proy + d.lic; d.comp = d.rec + d.taller; d.carr = d.reps + d.log; d.fin = d.amort + d.inter;
+    d.G = d.pers + d.idv + d.comp + d.carr + d.fin; d.prem = d.cal + d.car + d.vr; d.I = d.prem + d.pat + d.merch;
+    return d;
+  }
+  var perL = 'ult', perR = 'temp';
+  function pr(l, v, cls) { return '<div class="pr ' + cls + (v === 0 ? ' z' : '') + '"><span>' + l + '</span><b style="font-weight:' + (cls === 'g' ? 700 : 400) + '">' + eur(v) + '</b></div>'; }
+  function columna(side, k, cod) {
+    var d = periodo(k, cod), res = d.I - d.G, tot = d.I + d.G;
+    var opts = [['ult', 'Última ronda (ronda ' + k + ')'], ['temp', 'Total temporada']];
+    for (var r = k; r >= 1; r--) opts.push(['r' + r, 'Ronda ' + r + ' · ' + NOMBRES[r - 1][0]]);
+    return '<div class="pcol"><div class="phead"><select data-per="' + side + '" aria-label="Periodo de la columna ' + (side === 'L' ? 'izquierda' : 'derecha') + '">' +
+      opts.map(function (o) { return '<option value="' + o[0] + '"' + (o[0] === cod ? ' selected' : '') + '>' + esc(o[1]) + '</option>'; }).join('') + '</select></div>' +
+      '<details class="pdetails"><summary class="presult pbig' + (res < 0 ? ' neg' : '') + '"><span><small>Resultado</small>' + eur(res) + '</span></summary>' +
+      '<div class="pbar" role="img" aria-label="Gastos ' + Math.round(d.G / tot * 100) + ' % e ingresos ' + Math.round(d.I / tot * 100) + ' %"><i style="width:' + d.G / tot * 100 + '%"></i><i style="width:' + d.I / tot * 100 + '%"></i></div>' +
+      '<div class="pg"><div class="pgh"><span>Gastos</span><span>' + eur(d.G) + '</span></div>' +
+      pr('Gastos de personal', d.pers, 'g') + pr('Pilotos', d.pil, 's') + pr('Ingenieros', d.ing, 's') + pr('Mecánicos', d.mec, 's') + pr('Jefe de equipo deportivo', d.jefe, 's') + pr('Indemnizaciones', d.indem, 's') +
+      pr('I+D', d.idv, 'g') + pr('Proyectos', d.proy, 's') + pr('Licencias de tecnología', d.lic, 's') +
+      pr('Compras y operaciones', d.comp, 'g') + pr('Recambios', d.rec, 's') + pr('Taller y subcontratación', d.taller, 's') +
+      pr('Carrera', d.carr, 'g') + pr('Reparaciones y averías', d.reps, 's') + pr('Logística', d.log, 's') +
+      pr('Amortización e intereses', d.fin, 'g') + pr('Amortización', d.amort, 's') + pr('Intereses', d.inter, 's') + '</div>' +
+      '<div class="pi"><div class="pgh"><span>Ingresos</span><span>' + eur(d.I) + '</span></div>' +
+      pr('Por resultados', d.prem, 'g') + pr('Calificación', d.cal, 's') + pr('Carrera', d.car, 's') + pr('Vuelta rápida', d.vr, 's') +
+      pr('Patrocinadores', d.pat, 'g') + pr('Hospitality y merchandising', d.merch, 'g') + '</div></details></div>';
+  }
+  function row(l, v, cls) { return '<tr' + (cls ? ' class="' + cls + '"' : '') + '><td>' + l + '</td><td' + (v < 0 ? ' class="neg"' : '') + '>' + eur(v) + '</td></tr>'; }
+
+  function render(n) {
+    var k = n - 1, e = estados(k), c = NOMBRES[n - 1], hr = HORAS[n], h = '';
+    $('#top').innerHTML = '<span class="pillc">' + (k ? 'Datos al cierre de la ronda ' + k : 'Balance de apertura') + '</span><span class="pillc" style="background:var(--track);color:var(--ink)">Ronda ' + n + ' abierta</span>';
+
+    // 1. Dossier de la ronda (lo que recibe el equipo al abrirse la ronda y no es otra sección)
+    var rs = resp(n);
+    h += '<section class="sec" id="dossier" aria-labelledby="t1"><h2 id="t1">Dossier de la ronda</h2><div class="cards g2">' +
+      '<div class="card race"><h3>Próxima carrera</h3><b>' + esc(c[0]) + '</b><p>' + TIPO[c[1]] + (hr ? ' · horas ' + hr[0] + ' a ' + hr[1] + ' de ' + hr[2] : '') + '</p>' + (c[2] ? '<p>Reto: ' + esc(c[2]) + '</p>' : '') + '</div>' +
+      '<div class="card"><h3>Respuestas a decisiones anteriores</h3>' + (rs.length ? '<div class="resp" style="grid-template-columns:1fr">' + rs.map(function (x) { return '<div class="r"><span>' + esc(x[0]) + '</span><span class="pill ' + x[2] + '">' + esc(x[1]) + '</span></div>'; }).join('') + '</div>' : '<p class="empty">Llegan a partir de la ronda 2.</p>') + '</div></div></section>';
+
+    // 2. Estados contables (siempre los de la ronda anterior)
+  h += '<section class="sec" id="estados" aria-labelledby="t2"><h2 id="t2">Ingresos y gastos</h2><p class="hint">Son siempre los de la ronda anterior: las decisiones de la ronda en curso se reflejan al publicarla.</p>';
+
+  if (e.I) {
+   h += '<div class="pyg">' + columna('L', k, perL) + columna('R', k, perR) + '</div>';
+  } else {
+   h += '<div class="card"><p class="empty">Los gastos e ingresos aparecerán al publicar la ronda 1.</p></div>';
+  }
+
+  h += '</section>';
+
+    // 5. Alertas
+    h += '<section class="sec" id="alertas" aria-labelledby="t5"><h2 id="t5">Alertas</h2><div class="al">' + alertas(n, e).map(function (x) { return '<div class="a ' + x[0] + '"><i></i><span>' + esc(x[1]) + '<small>' + esc(x[2]) + '</small></span></div>'; }).join('') + '</div></section>';
+
+    h += '<div class="note"><i></i>Datos de ejemplo: faltan las fórmulas de cálculo del simulador</div>';
+    $('#app').innerHTML = h;
+    document.title = 'Situación financiera · Ronda ' + n;
+  }
+
+  var sel = $('#sel');
+  sel.innerHTML = NOMBRES.map(function (c, i) { return '<option value="' + (i + 1) + '">' + (i + 1) + ' · ' + esc(c[0]) + '</option>'; }).join('');
+  var start = 5;
+  try { var st = parseInt(localStorage.getItem('ronda'), 10); if (st >= 1 && st <= 18) start = st; } catch (e) {}
+  try { var q = parseInt(new URLSearchParams(location.search).get('ronda'), 10); if (q >= 1 && q <= 18) start = q; } catch (e) {}
+  sel.value = String(start);
+  sel.addEventListener('change', function () { perL = 'ult'; perR = 'temp'; try { localStorage.setItem('ronda', sel.value); } catch (e) {} render(+sel.value); });
+  document.addEventListener('change', function (ev) {
+    var t = ev.target; if (!t.dataset || !t.dataset.per) return;
+    if (t.dataset.per === 'L') perL = t.value; else perR = t.value;
+    render(+sel.value);
+    var nb = document.querySelector('[data-per="' + t.dataset.per + '"]'); if (nb) nb.focus();
+  });
+  render(start);
+  if ('serviceWorker' in navigator && location.protocol !== 'file:') {
+    window.addEventListener('load', function () { navigator.serviceWorker.register('sw.js').catch(function () {}); });
+  }
+})();
+</script>
+</body>
+</html>
