@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Recursos humanos · E-SIMULA 24H Paddock</title>
+<meta name="theme-color" content="#f3f4f8">
+<meta name="color-scheme" content="light">
+<meta name="description" content="Gestión del personal de la escudería.">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Paddock">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@400;600;800&display=swap">
+<link rel="stylesheet" href="theme.css">
+
+<style>
+h1{font-size:clamp(1.6rem,4.6vw,2.2rem);line-height:1.1;font-weight:800;letter-spacing:-.02em;margin:18px 0 8px}
+.top{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.pillc{padding:4px 12px;border-radius:999px;font-size:.85rem;font-weight:600;background:var(--info-bg);color:var(--info)}
+.sec{margin-top:28px;scroll-margin-top:84px}
+.sec>h2{font-size:1.25rem;margin:0 0 12px;font-weight:800}
+.cards{display:grid;gap:12px;margin-top:16px;grid-template-columns:repeat(3,minmax(0,1fr))}
+.k small{display:block;color:var(--muted);font-size:.8rem;text-transform:uppercase;font-weight:600}
+.k b{display:block;font-size:clamp(1.25rem,3.5vw,1.9rem);font-weight:800}
+.staff{display:grid;gap:12px}
+.grp{border:1px solid var(--line);border-radius:16px;background:var(--surface);overflow:hidden}
+.ghead{display:flex;justify-content:space-between;gap:10px;align-items:center;padding:12px 16px;background:var(--track)}
+.ghead small,.person small{display:block;color:var(--muted)}
+.person{display:grid;grid-template-columns:56px minmax(0,1fr) auto;gap:12px;align-items:center;padding:14px 16px;border-top:1px solid var(--line)}
+.photo{width:56px;height:56px;position:relative;border-radius:50%;background:var(--info-bg);color:var(--brand);display:grid;place-items:center;font-weight:800;overflow:hidden}
+.photo img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.actions{display:flex;gap:6px;align-items:center;flex-wrap:wrap;justify-content:flex-end}
+.btn{border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:10px;padding:7px 10px;font:inherit;font-size:.85rem;font-weight:600;cursor:pointer}
+.btn.primary{background:var(--brand);border-color:var(--brand);color:var(--brand-ink)}
+.btn.warn{color:var(--warn)}
+.btn:disabled{opacity:.5;cursor:default}
+.inlineinput{width:110px;max-width:100%;font:inherit;color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:7px}
+.pill{font-size:.78rem;padding:3px 9px;border-radius:99px;background:var(--amber-bg);color:var(--amber)}
+.g2{display:grid;grid-template-columns:1.2fr 1fr;gap:12px;align-items:start}
+.g2 .person{padding:12px 0}
+.g2 .person:first-child{border-top:0}
+.g2 .person .actions{grid-column:2/-1;justify-content:flex-start}
+.resp{padding:9px 0;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;gap:8px;font-size:.9rem}
+.hint,.empty{color:var(--muted);font-size:.9rem;margin:0 0 12px}
+.a{padding:10px 12px;border-radius:12px;background:var(--amber-bg);color:var(--amber);font-size:.95rem;margin-top:8px}
+#alertas{margin-top:40px;padding-top:24px;border-top:2px solid var(--line)}
+#notice{margin-top:12px;color:var(--brand);font-size:.9rem}
+#notice:empty{display:none}
+.demo{display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:8px;color:var(--muted);font-size:.85rem;margin-top:24px}
+.demo select{font:inherit;color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:6px 8px;max-width:100%;min-width:0}
+@media(max-width:760px){.g2{grid-template-columns:1fr}.cards{grid-template-columns:1fr 1fr}.cards .k:last-child{grid-column:1/-1}}
+@media(max-width:560px){.person{grid-template-columns:56px minmax(0,1fr)}.person .actions{grid-column:1/-1;justify-content:flex-start}}
+</style>
+</head>
+<body>
+<header class="bar">
+  <div class="in">
+    <a class="brand" href="./" aria-label="E-SIMULA 24H Paddock, inicio">
+      <svg class="flag" viewBox="0 0 34 34" width="34" height="34" aria-hidden="true"><rect width="34" height="34" rx="9" fill="#0f1530"/><g fill="#fff"><rect x="7" y="7" width="5" height="5"/><rect x="17" y="7" width="5" height="5"/><rect x="12" y="12" width="5" height="5"/><rect x="22" y="12" width="5" height="5"/><rect x="7" y="17" width="5" height="5"/><rect x="17" y="17" width="5" height="5"/><rect x="12" y="22" width="5" height="5"/><rect x="22" y="22" width="5" height="5"/></g></svg>
+      <span><b>E-SIMULA 24H</b><small>Paddock</small></span>
+    </a>
+    <a class="usr" href="perfil.html" aria-label="Ver mi perfil y mi equipo: Marta Puig, Grupo Alfa">
+      <span><b>Marta Puig</b><small>Grupo Alfa</small></span>
+      <img src="assets/marta.jpg" alt="" width="40" height="40">
+    </a>
+  </div>
+</header>
+
+<div class="wrap">
+  <nav class="nav" aria-label="Pantallas del equipo">
+    <a href="./">Ronda actual</a>
+    <a href="situacion-financiera.html">Situación financiera</a>
+    <a href="recursos-humanos.html" aria-current="page">RR. HH.</a>
+  </nav>
+  <h1>Recursos humanos</h1>
+  <div class="top" id="top"></div>
+  <main id="app"></main>
+  <div id="notice" role="status"></div>
+  <div class="demo"><label for="sel">Demo · ronda</label><select id="sel"></select></div>
+</div>
+<script>
+"use strict";
+(function () {
+  var NOMBRES = [
+    'Entrega de la escudería', 'Test oficial',
+    '6 Horas de Prometeo · tramo 1', '6 Horas de Prometeo · tramo 2',
+    '12 Horas Quantum Race · tramo 1', '12 Horas Quantum Race · tramo 2',
+    '6 Horas de las Ardenas · tramo 1', '6 Horas de las Ardenas · tramo 2',
+    'Junta de patrocinadores', '8 Horas de Eifel · tramo 1', '8 Horas de Eifel · tramo 2',
+    '10 Horas del Atardecer · tramo 1', '10 Horas del Atardecer · tramo 2',
+    '24 Horas del Mare Nostrum · preparación', '24 Horas del Mare Nostrum · tramo 1',
+    '24 Horas del Mare Nostrum · tramo 2', '24 Horas del Mare Nostrum · tramo 3', 'Cierre del ejercicio'
+  ];
+  var ROLES = ['Jefe de equipo deportivo', 'Piloto', 'Ingenieros', 'Mecánicos'];
+  var LIMITES = [1, 1, 2, 3];
+  var PERSONAS = [
+    [0, 'David Martín', 0, 15000, 'male/128/1.jpg'],
+    [1, 'Álex Torres', 1, 12000, 'male/128/2.jpg'],
+    [2, 'Sara Costa', 2, 8000, 'female/128/1.jpg'],
+    [3, 'Marc Soler', 2, 8000, 'male/128/3.jpg'],
+    [4, 'Óscar López', 3, 4000, 'male/128/4.jpg'],
+    [5, 'Júlia Serra', 3, 4000, 'female/128/2.jpg'],
+    [6, 'Eric Molina', 3, 4000, 'male/128/5.jpg'],
+    [7, 'Clara Navarro', 1, 11000, 'female/128/3.jpg'],
+    [8, 'Pablo Rivas', 2, 9000, 'male/128/6.jpg'],
+    [9, 'Nora Campos', 3, 4500, 'female/128/4.jpg'],
+    [10, 'Elena Castro', 0, 16000, 'female/128/5.jpg']
+  ].map(function (p) { return {id:p[0], nombre:p[1], grupo:p[2], salario:p[3], foto:p[4]}; });
+  var decisiones = {}, editor = null;
+  try { decisiones = JSON.parse(localStorage.getItem('rrhh-decisiones') || '{}') || {}; } catch(e) {}
+  function $(s) { return document.querySelector(s); }
+  function eur(n) { return n.toLocaleString('es-ES', {useGrouping:'always'}) + ' €'; }
+  function guardar() { try { localStorage.setItem('rrhh-decisiones', JSON.stringify(decisiones)); } catch(e) {} }
+  function decision(n) {
+    if (!decisiones[n]) decisiones[n] = {salarios:{}, despidos:{}, ofertas:{}};
+    return decisiones[n];
+  }
+  function total(list) { return list.reduce(function(a,p) { return a + p.salario; },0); }
+  function plantilla(n) {
+    var list = PERSONAS.slice(0,7).map(function(p) { return Object.assign({},p); });
+    var respuestas = [];
+    for (var r=1;r<n;r++) {
+      var d = decisiones[r], rs = [];
+      if (d) {
+        list = list.filter(function(p) {
+          if (!d.despidos[p.id]) return true;
+          rs.push([p.nombre,'Despido aplicado']);
+          return false;
+        });
+        list.forEach(function(p) {
+          if (d.salarios[p.id] !== undefined) {
+            p.salario = d.salarios[p.id];
+            rs.push([p.nombre,'Salario actualizado']);
+          }
+        });
+        Object.keys(d.ofertas).forEach(function(id) {
+          var p = PERSONAS[+id], oferta = d.ofertas[id];
+          if (!p || list.some(function(x) { return x.id === p.id; })) return;
+          var hueco = list.filter(function(x) { return x.grupo === p.grupo; }).length < LIMITES[p.grupo];
+          if (hueco && oferta >= p.salario) {
+            list.push(Object.assign({},p,{salario:oferta}));
+            rs.push([p.nombre,'Fichaje aceptado']);
+          } else rs.push([p.nombre,hueco?'Oferta rechazada':'Sin plaza disponible']);
+        });
+      }
+      if (r === n-1) respuestas = rs;
+    }
+    return {list:list,respuestas:respuestas};
+  }
+  function foto(p) {
+    return '<span class="photo"><span>' + p.nombre.split(' ').map(function(x){return x[0];}).join('') + '</span><img src="https://cdn.jsdelivr.net/gh/faker-js/assets-person-portrait@main/' + p.foto + '" alt="Retrato de ' + p.nombre + '" onerror="this.remove()"></span>';
+  }
+  function persona(p,d,mercado,n) {
+    var id=p.id, h='<div class="person">'+foto(p)+'<div><b>'+p.nombre+'</b><small>'+ (mercado?ROLES[p.grupo]+' · ':'')+eur(p.salario)+' / ronda</small>';
+    if (!mercado && d.salarios[id] !== undefined) h+='<small>Nuevo salario: '+eur(d.salarios[id])+'</small>';
+    h+='</div><div class="actions">';
+    if (n===18) return h+'</div></div>';
+    if (editor && editor.id===id && editor.mercado===mercado) {
+      h+='<input class="inlineinput" type="number" id="importe" min="1" step="500" aria-label="Importe en euros" value="'+(mercado?p.salario:(d.salarios[id]===undefined?p.salario:d.salarios[id]))+'"><button class="btn primary" data-act="guardar" data-id="'+id+'">Guardar</button><button class="btn" data-act="cancelar">Cancelar</button>';
+    } else if (mercado) {
+      h+=d.ofertas[id]!==undefined?'<span class="pill">Oferta: '+eur(d.ofertas[id])+'</span><button class="btn" data-act="retirar" data-id="'+id+'">Retirar</button>':'<button class="btn primary" data-act="ofertar" data-id="'+id+'">Ofertar</button>';
+    } else if (d.despidos[id]) {
+      h+='<span class="pill">Despido pendiente</span><button class="btn" data-act="anular" data-id="'+id+'">Cancelar</button>';
+    } else {
+      h+='<button class="btn" data-act="salario" data-id="'+id+'">Salario</button><button class="btn warn" data-act="despedir" data-id="'+id+'">Despedir</button>';
+    }
+    return h+'</div></div>';
+  }
+  function render(n) {
+    var actual=plantilla(n), list=actual.list, d=decision(n);
+    $('#top').innerHTML='<span class="pillc">Ronda '+n+' abierta</span><span class="pillc" style="background:var(--track);color:var(--ink)">'+NOMBRES[n-1]+'</span>';
+    var h='<div class="cards"><div class="card k"><small>Plantilla actual</small><b>'+list.length+'</b><small>Empleados</small></div><div class="card k"><small>Gastos de personal</small><b>'+eur(total(list))+'</b><small>Por ronda</small></div><div class="card k"><small>Capital humano</small><b>50</b><small>Valor provisional</small></div></div>';
+    h+='<section class="sec" id="plantilla"><h2>Mi plantilla</h2><div class="staff">';
+    ROLES.forEach(function(rol,g) {
+      var grupo=list.filter(function(p){return p.grupo===g;});
+      h+='<div class="grp"><div class="ghead"><div><b>'+rol+'</b><small>'+grupo.length+' / '+LIMITES[g]+' plazas</small></div><b>'+eur(total(grupo))+'</b></div>';
+      h+=grupo.length?grupo.map(function(p){return persona(p,d,false,n);}).join(''):'<p class="empty" style="padding:14px;margin:0">Sin personal contratado.</p>';
+      h+='</div>';
+    });
+    h+='</div></section><section class="sec" id="mercado"><h2>Mercado de fichajes</h2><p class="hint">Los fichajes se resuelven en la ronda siguiente. Puedes sustituir a un empleado marcando su despido antes de ofertar.</p><div class="g2"><div class="card"><h2>Disponibles</h2>';
+    var disponibles=PERSONAS.filter(function(p){return !list.some(function(x){return x.id===p.id;});});
+    h+=disponibles.length?disponibles.map(function(p){return persona(p,d,true,n);}).join(''):'<p class="empty">No hay profesionales disponibles.</p>';
+    h+='</div><div class="card"><h2>Respuestas a decisiones</h2>';
+    h+=actual.respuestas.length?actual.respuestas.map(function(x){return '<div class="resp"><b>'+x[0]+'</b><span>'+x[1]+'</span></div>';}).join(''):'<p class="empty">No hay nuevas respuestas en esta ronda.</p>';
+    h+='</div></div></section><section class="sec" id="alertas"><h2>Alertas</h2><div class="a">'+(n===9?'Mercado de verano: revisa tu plantilla.':n===14?'Se acerca la final de 24 horas. Revisa el personal contratado.':n===18?'Cierre del ejercicio: no se admiten nuevas decisiones.':'Los fichajes se resuelven en la siguiente ronda.')+'</div>';
+    if(list.length<7) h+='<div class="a">Hay plazas vacantes en tu plantilla.</div>';
+    h+='<p class="hint" style="margin-top:16px">Datos de ejemplo: faltan las fórmulas de cálculo del simulador.</p></section>';
+    $('#app').innerHTML=h;
+    document.title='Recursos humanos · Ronda '+n;
+  }
+  var sel=$('#sel'), start=5;
+  sel.innerHTML=NOMBRES.map(function(n,i){return '<option value="'+(i+1)+'">'+(i+1)+' · '+n+'</option>';}).join('');
+  try { var st=parseInt(localStorage.getItem('ronda'),10); if(st>=1&&st<=18) start=st; } catch(e) {}
+  var q=parseInt(new URLSearchParams(location.search).get('ronda'),10); if(q>=1&&q<=18) start=q;
+  sel.value=String(start);
+  sel.addEventListener('change',function(){
+    editor=null; $('#notice').textContent='';
+    try { localStorage.setItem('ronda',sel.value); } catch(e) {}
+    render(+sel.value);
+  });
+  $('#app').addEventListener('click',function(ev){
+    var b=ev.target.closest('[data-act]'); if(!b||+sel.value===18) return;
+    var act=b.dataset.act,id=+b.dataset.id,d=decision(+sel.value),msg='';
+    if(act==='salario'||act==='ofertar') editor={id:id,mercado:act==='ofertar'};
+    if(act==='cancelar') editor=null;
+    if(act==='guardar'){
+      if(!editor||editor.id!==id) return;
+      var val=$('#importe').valueAsNumber;
+      if(!Number.isFinite(val)||val<=0){$('#notice').textContent='Introduce un importe válido.';return;}
+      if(editor.mercado){d.ofertas[id]=val;msg='Oferta guardada para la ronda siguiente.';}
+      else {d.salarios[id]=val;msg='Cambio de salario guardado.';}
+      editor=null;
+    }
+    if(act==='despedir'){d.despidos[id]=true;delete d.salarios[id];editor=null;msg='Despido pendiente de aplicar.';}
+    if(act==='anular'){delete d.despidos[id];msg='Despido cancelado.';}
+    if(act==='retirar'){delete d.ofertas[id];msg='Oferta retirada.';}
+    guardar();render(+sel.value);$('#notice').textContent=msg;
+  });
+  render(start);
+  if ('serviceWorker' in navigator && location.protocol !== 'file:') {
+    window.addEventListener('load',function(){navigator.serviceWorker.register('sw.js').catch(function(){});});
+  }
+})();
+</script>
+</body>
+</html>
