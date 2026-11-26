@@ -30,9 +30,7 @@ h1{font-size:clamp(1.6rem,4.6vw,2.2rem);line-height:1.1;font-weight:800;letter-s
 .grp{border:1px solid var(--line);border-radius:16px;background:var(--surface);overflow:hidden}
 .ghead{display:flex;justify-content:space-between;gap:10px;align-items:center;padding:12px 16px;background:var(--track)}
 .ghead small,.person small{display:block;color:var(--muted)}
-.person{display:grid;grid-template-columns:56px minmax(0,1fr) auto;gap:12px;align-items:center;padding:14px 16px;border-top:1px solid var(--line)}
-.photo{width:56px;height:56px;position:relative;border-radius:50%;background:var(--info-bg);color:var(--brand);display:grid;place-items:center;font-weight:800;overflow:hidden}
-.photo img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.person{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:12px;align-items:center;padding:14px 16px;border-top:1px solid var(--line)}
 .actions{display:flex;gap:6px;align-items:center;flex-wrap:wrap;justify-content:flex-end}
 .btn{border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:10px;padding:7px 10px;font:inherit;font-size:.85rem;font-weight:600;cursor:pointer}
 .btn.primary{background:var(--brand);border-color:var(--brand);color:var(--brand-ink)}
@@ -43,7 +41,7 @@ h1{font-size:clamp(1.6rem,4.6vw,2.2rem);line-height:1.1;font-weight:800;letter-s
 .g2{display:grid;grid-template-columns:1.2fr 1fr;gap:12px;align-items:start}
 .g2 .person{padding:12px 0}
 .g2 .person:first-child{border-top:0}
-.g2 .person .actions{grid-column:2/-1;justify-content:flex-start}
+.g2 .person .actions{grid-column:1/-1;justify-content:flex-start}
 .resp{padding:9px 0;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;gap:8px;font-size:.9rem}
 .hint,.empty{color:var(--muted);font-size:.9rem;margin:0 0 12px}
 .a{padding:10px 12px;border-radius:12px;background:var(--amber-bg);color:var(--amber);font-size:.95rem;margin-top:8px}
@@ -53,7 +51,7 @@ h1{font-size:clamp(1.6rem,4.6vw,2.2rem);line-height:1.1;font-weight:800;letter-s
 .demo{display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:8px;color:var(--muted);font-size:.85rem;margin-top:24px}
 .demo select{font:inherit;color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:6px 8px;max-width:100%;min-width:0}
 @media(max-width:760px){.g2{grid-template-columns:1fr}.cards{grid-template-columns:1fr 1fr}.cards .k:last-child{grid-column:1/-1}}
-@media(max-width:560px){.person{grid-template-columns:56px minmax(0,1fr)}.person .actions{grid-column:1/-1;justify-content:flex-start}}
+@media(max-width:560px){.person{grid-template-columns:1fr}.person .actions{grid-column:1/-1;justify-content:flex-start}}
 </style>
 </head>
 <body>
@@ -65,7 +63,7 @@ h1{font-size:clamp(1.6rem,4.6vw,2.2rem);line-height:1.1;font-weight:800;letter-s
     </a>
     <a class="usr" href="perfil.html" aria-label="Ver mi perfil y mi equipo: Marta Puig, Grupo Alfa">
       <span><b>Marta Puig</b><small>Grupo Alfa</small></span>
-      <img src="assets/marta.jpg" alt="" width="40" height="40">
+      <i class="portrait" aria-hidden="true"></i>
     </a>
   </div>
 </header>
@@ -98,18 +96,18 @@ h1{font-size:clamp(1.6rem,4.6vw,2.2rem);line-height:1.1;font-weight:800;letter-s
   var ROLES = ['Jefe de equipo deportivo', 'Piloto', 'Ingenieros', 'Mecánicos'];
   var LIMITES = [1, 1, 2, 3];
   var PERSONAS = [
-    [0, 'David Martín', 0, 15000, 'male/128/1.jpg'],
-    [1, 'Álex Torres', 1, 12000, 'male/128/2.jpg'],
-    [2, 'Sara Costa', 2, 8000, 'female/128/1.jpg'],
-    [3, 'Marc Soler', 2, 8000, 'male/128/3.jpg'],
-    [4, 'Óscar López', 3, 4000, 'male/128/4.jpg'],
-    [5, 'Júlia Serra', 3, 4000, 'female/128/2.jpg'],
-    [6, 'Eric Molina', 3, 4000, 'male/128/5.jpg'],
-    [7, 'Clara Navarro', 1, 11000, 'female/128/3.jpg'],
-    [8, 'Pablo Rivas', 2, 9000, 'male/128/6.jpg'],
-    [9, 'Nora Campos', 3, 4500, 'female/128/4.jpg'],
-    [10, 'Elena Castro', 0, 16000, 'female/128/5.jpg']
-  ].map(function (p) { return {id:p[0], nombre:p[1], grupo:p[2], salario:p[3], foto:p[4]}; });
+    [0, 'David Martín', 0, 15000],
+    [1, 'Álex Torres', 1, 12000],
+    [2, 'Sara Costa', 2, 8000],
+    [3, 'Marc Soler', 2, 8000],
+    [4, 'Óscar López', 3, 4000],
+    [5, 'Júlia Serra', 3, 4000],
+    [6, 'Eric Molina', 3, 4000],
+    [7, 'Clara Navarro', 1, 11000],
+    [8, 'Pablo Rivas', 2, 9000],
+    [9, 'Nora Campos', 3, 4500],
+    [10, 'Elena Castro', 0, 16000]
+  ].map(function (p) { return {id:p[0], nombre:p[1], grupo:p[2], salario:p[3]}; });
   var decisiones = {}, editor = null;
   try { decisiones = JSON.parse(localStorage.getItem('rrhh-decisiones') || '{}') || {}; } catch(e) {}
   function $(s) { return document.querySelector(s); }
@@ -151,11 +149,8 @@ h1{font-size:clamp(1.6rem,4.6vw,2.2rem);line-height:1.1;font-weight:800;letter-s
     }
     return {list:list,respuestas:respuestas};
   }
-  function foto(p) {
-    return '<span class="photo"><span>' + p.nombre.split(' ').map(function(x){return x[0];}).join('') + '</span><img src="https://cdn.jsdelivr.net/gh/faker-js/assets-person-portrait@main/' + p.foto + '" alt="Retrato de ' + p.nombre + '" onerror="this.remove()"></span>';
-  }
   function persona(p,d,mercado,n) {
-    var id=p.id, h='<div class="person">'+foto(p)+'<div><b>'+p.nombre+'</b><small>'+ (mercado?ROLES[p.grupo]+' · ':'')+eur(p.salario)+' / ronda</small>';
+    var id=p.id, h='<div class="person"><div><b>'+p.nombre+'</b><small>'+ (mercado?ROLES[p.grupo]+' · ':'')+eur(p.salario)+' / ronda</small>';
     if (!mercado && d.salarios[id] !== undefined) h+='<small>Nuevo salario: '+eur(d.salarios[id])+'</small>';
     h+='</div><div class="actions">';
     if (n===18) return h+'</div></div>';
