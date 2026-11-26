@@ -64,7 +64,7 @@ tr.grp td{padding-top:16px;font-size:.78rem;letter-spacing:.1em;text-transform:u
 .pyg{display:grid;grid-template-columns:1fr 1fr;align-items:start;gap:14px;margin-bottom:14px}
 @media (max-width:760px){.pyg{grid-template-columns:1fr}}
 .pcol{background:var(--surface);border:1px solid var(--line);border-radius:18px;overflow:hidden}
-.phead{padding:10px 12px;background:var(--track)}
+.phead{padding:12px 14px;background:var(--track);min-height:62px;display:flex;flex-direction:column;justify-content:center}.pacc{display:block;font-size:11px;color:var(--muted)}
 .phead select{width:100%;font:inherit;font-weight:600;color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:8px 10px;min-height:42px}
 .pbig{padding:14px 16px 4px;text-align:right;font-size:2rem;font-weight:800;letter-spacing:-.01em;line-height:1.1;font-variant-numeric:tabular-nums}
 .presult{cursor:pointer;list-style:none;display:flex;align-items:center;justify-content:flex-end;gap:10px}
@@ -197,10 +197,8 @@ tr.grp td{padding-top:16px;font-size:.78rem;letter-spacing:.1em;text-transform:u
   function pr(l, v, cls) { return '<div class="pr ' + cls + (v === 0 ? ' z' : '') + '"><span>' + l + '</span><b style="font-weight:' + (cls === 'g' ? 700 : 400) + '">' + eur(v) + '</b></div>'; }
   function columna(side, k, cod) {
     var d = periodo(k, cod), res = d.I - d.G, tot = d.I + d.G;
-    var opts = [['ult', 'Última ronda (ronda ' + k + ')'], ['temp', 'Total temporada']];
-    for (var r = k; r >= 1; r--) opts.push(['r' + r, 'Ronda ' + r + ' · ' + NOMBRES[r - 1][0]]);
-    return '<div class="pcol"><div class="phead"><select data-per="' + side + '" aria-label="Periodo de la columna ' + (side === 'L' ? 'izquierda' : 'derecha') + '">' +
-      opts.map(function (o) { return '<option value="' + o[0] + '"' + (o[0] === cod ? ' selected' : '') + '>' + esc(o[1]) + '</option>'; }).join('') + '</select></div>' +
+    var title = side === 'L' ? 'Última ronda (ronda ' + k + ')' : 'Final de temporada';
+    return '<div class="pcol"><div class="phead"><b>' + esc(title) + '</b>' + (side === 'R' && k < 18 ? '<small class="pacc">Acumulado hasta la ronda ' + k + '</small>' : '') + '</div>' +
       '<details class="pdetails"><summary class="presult pbig' + (res < 0 ? ' neg' : '') + '"><span><small>Resultado</small>' + eur(res) + '</span></summary>' +
       '<div class="pbar" role="img" aria-label="Gastos ' + Math.round(d.G / tot * 100) + ' % e ingresos ' + Math.round(d.I / tot * 100) + ' %"><i style="width:' + d.G / tot * 100 + '%"></i><i style="width:' + d.I / tot * 100 + '%"></i></div>' +
       '<div class="pg"><div class="pgh"><span>Gastos</span><span>' + eur(d.G) + '</span></div>' +
@@ -248,12 +246,6 @@ tr.grp td{padding-top:16px;font-size:.78rem;letter-spacing:.1em;text-transform:u
   try { var q = parseInt(new URLSearchParams(location.search).get('ronda'), 10); if (q >= 1 && q <= 18) start = q; } catch (e) {}
   sel.value = String(start);
   sel.addEventListener('change', function () { perL = 'ult'; perR = 'temp'; try { localStorage.setItem('ronda', sel.value); } catch (e) {} render(+sel.value); });
-  document.addEventListener('change', function (ev) {
-    var t = ev.target; if (!t.dataset || !t.dataset.per) return;
-    if (t.dataset.per === 'L') perL = t.value; else perR = t.value;
-    render(+sel.value);
-    var nb = document.querySelector('[data-per="' + t.dataset.per + '"]'); if (nb) nb.focus();
-  });
   render(start);
   
 })();
