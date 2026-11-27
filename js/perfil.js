@@ -487,3 +487,13 @@
         a.removeAttribute('aria-current'); }); head(); role === 'alumno' ? viewAlumno() : role === 'admin' ? viewAdmin() : viewProfe(); }
     render();
 })();
+document.querySelectorAll('#main-menu [data-tab], #main-menu [data-atab]').forEach(function (enlace) {
+    enlace.addEventListener('click', function (e) {
+        e.preventDefault();
+        const atributo = enlace.hasAttribute('data-tab') ? 'data-tab' : 'data-atab';
+        const valor = enlace.getAttribute(atributo);
+        const boton = document.querySelector('#app button[' + atributo + '="' + valor + '"]');
+        if (boton)
+            boton.click();
+    });
+});

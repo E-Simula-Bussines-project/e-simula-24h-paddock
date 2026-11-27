@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="es">
+<head><base href="../"><script src="js/sesion.js"></script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Perfil · E-SIMULA 24H Paddock</title>
+<meta name="theme-color" content="#f3f4f8">
+<meta name="color-scheme" content="light">
+
+
+
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Portal">
+
+
+
+
+<link rel="stylesheet" href="css/theme.css">
+<link rel="stylesheet" href="css/perfil.css">
+<link rel="stylesheet" href="css/layout.css">
+<link rel="stylesheet" href="css/menu.css">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+</head>
+<body data-rol="admin">
+
+<header class="bar"><div class="in"><button type="button" class="menu-toggle" id="menu-toggle" aria-controls="main-menu" aria-expanded="true" aria-label="Plegar menú" title="Plegar menú"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button><a class="brand" href="pages/admin.html" aria-label="E-SIMULA 24H Paddock"><svg class="race-logo" width="54" height="36" viewBox="0 0 54 36" aria-hidden="true"><g fill="#fff" transform="skewX(-21)"><path d="M12 4h11v9H12zM34 4h11v9H34zM23 13h11v9H23zM12 22h11v9H12zM1 31h11v5H1z"/><path d="M45 13h11v9H45z" fill="#e82235"/></g></svg><span><b>E-SIMULA <em>24H</em></b><small>P A D D O C K</small></span></a><div class="header-right"><a class="usr" id="usr" href="pages/admin.html" aria-current="page" hidden></a><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 5 7 7-7 7"/></svg></div></div></header>
+<div class="wrap">
+  <nav id="main-menu" class="nav side-nav" aria-label="Pantallas del equipo"><a href="pages/admin.html#" data-atab="partidas" title="Partidas" aria-label="Partidas" aria-current="page"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="7" r="3"/><path d="M2 21v-3a7 7 0 0 1 14 0v3zM16 4a3 3 0 0 1 0 6m2 4a5 5 0 0 1 4 5v2"/></svg><span>Partidas</span></a><a href="pages/admin.html#" data-atab="calendario" title="Calendario" aria-label="Calendario"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg><span>Calendario</span></a><a href="pages/admin.html#" data-atab="tutores" title="Tutores" aria-label="Tutores"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 22V3m0 1h15l-4 5 4 5H4"/></svg><span>Tutores</span></a><a href="pages/admin.html#" data-atab="equipos" title="Equipos" aria-label="Equipos"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h18M12 3v18"/></svg><span>Equipos</span></a><a href="pages/login.html" title="Cerrar sesión" aria-label="Cerrar sesión"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M10 4H4v16h6m4-12 4 4-4 4m-6-4h10"/></svg><span>Cerrar sesión</span></a><div class="sidebar-bottom"><span>TEMPORADA DE RESISTENCIA</span><b>18 rondas · 6 carreras</b></div></nav><button type="button" class="menu-backdrop" id="menu-backdrop" aria-label="Cerrar menú" tabindex="-1"></button>
+  <h1 class="page-title"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="7" r="4"/><path d="M4 22v-3a8 8 0 0 1 16 0v3z"/></svg>Administración</h1><div class="rolebar"><div class="vista" role="group" aria-label="Cambiar de vista"><button id="vAlu" aria-pressed="true">Alumno</button><button id="vPro" aria-pressed="false">Profesor</button><button id="vAdm" aria-pressed="false">Admin</button></div></div>
+  <div class="who" id="who" style="margin:16px 0 12px"></div>
+  <main id="app"></main>
+</div>
+
+<dialog id="dlg">
+  <form method="dialog" id="frm"></form>
+</dialog>
+<div id="toast" role="status"></div>
+
+<script src="js/perfil.js"></script>
+
+<script src="js/menu.js"></script><script src="js/pwa.js"></script></body>
+</html>

@@ -67,3 +67,6 @@ label input,label select{color:var(--ink)}
 .card{padding:20px}
 .card .prof h2{margin:0;font-size:1.4rem;color:var(--ink);letter-spacing:0;text-transform:none;font-weight:600}
 .intro{margin-top:0}
+
+body[data-rol] .rolebar,body[data-rol] .tabs{display:none!important}body[data-rol] .wrap{min-width:0}body[data-rol] .card{min-width:0}@media(max-width:700px){body[data-rol] .stats{grid-template-columns:repeat(2,minmax(0,1fr))}body[data-rol] .pgrid{grid-template-columns:1fr}body[data-rol] .groups{grid-template-columns:minmax(0,1fr)}}
+body.perfil-alumno .rolebar,body.perfil-alumno #who{display:none!important}

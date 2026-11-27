@@ -3,7 +3,7 @@
     const usuario = document.querySelector<HTMLInputElement>('#user')!;
     const password = document.querySelector<HTMLInputElement>('#pass')!;
     const error = document.querySelector<HTMLElement>('#error')!;
-    const destinos: Record<Rol, string> = { alumno: 'index.html', profesor: 'profesor.html', admin: 'admin.html' };
+    const destinos: Record<Rol, string> = { alumno: 'index.html', profesor: 'pages/profesor.html', admin: 'pages/admin.html' };
     sessionStorage.removeItem('paddock-rol');
     form.addEventListener('submit', (e: SubmitEvent) => {
         e.preventDefault();
@@ -13,6 +13,6 @@
             return;
         }
         sessionStorage.setItem('paddock-rol', rol);
-        location.href = destinos[rol as Rol];
+        location.href = new URL(destinos[rol as Rol], document.baseURI).href;
     });
 })();
