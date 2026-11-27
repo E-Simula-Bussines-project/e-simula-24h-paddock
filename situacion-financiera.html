@@ -67,15 +67,19 @@ tr.grp td{padding-top:16px;font-size:.78rem;letter-spacing:.1em;text-transform:u
 .phead{padding:12px 14px;background:var(--track);min-height:62px;display:flex;flex-direction:column;justify-content:center}.pacc{display:block;font-size:11px;color:var(--muted)}
 .phead select{width:100%;font:inherit;font-weight:600;color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:8px 10px;min-height:42px}
 .pbig{padding:14px 16px 4px;text-align:right;font-size:2rem;font-weight:800;letter-spacing:-.01em;line-height:1.1;font-variant-numeric:tabular-nums}
-.presult{cursor:pointer;list-style:none;display:flex;align-items:center;justify-content:flex-end;gap:10px}
-.presult::-webkit-details-marker{display:none}
-.presult::after{content:"▾";font-size:1.3rem;color:var(--muted)}
-.pdetails[open] .presult::after{content:"▴"}
-.presult:focus-visible{outline:3px solid var(--brand);outline-offset:-3px}
+.pdetails>summary{cursor:pointer;list-style:none;-webkit-tap-highlight-color:transparent}
+.pdetails>summary::-webkit-details-marker{display:none}
+.pdetails>summary:focus-visible{outline:3px solid var(--brand);outline-offset:-3px}
+.pgh b{display:inline-flex;align-items:center;gap:10px;font-weight:700}
+.pgh b::after{content:"";width:8px;height:8px;border-right:2px solid currentColor;border-bottom:2px solid currentColor;transform:rotate(45deg);transition:transform .2s;margin-top:-3px}
+.pdetails[open]>.pgh b::after{transform:rotate(-135deg);margin-top:3px}
+.pg,.pi{padding:0}
+.pdetails>summary.pgh{padding:14px 16px;min-height:52px;align-items:center}
+.pdetails .pbody{padding:0 0 10px}
 .pbig small{display:block;font-size:.75rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
 .pbar{display:flex;height:8px;margin:10px 16px 14px;border-radius:99px;overflow:hidden;background:var(--track)}
 .pbar i:first-child{background:#e0614b}.pbar i:last-child{background:#3dae6c}
-.pg,.pi{padding:6px 0 10px;font-variant-numeric:tabular-nums}
+.pg,.pi{font-variant-numeric:tabular-nums}
 .pg{background:var(--warn-bg)}.pi{background:var(--good-bg)}
 .pgh{display:flex;justify-content:space-between;gap:10px;padding:10px 16px 6px;font-size:1.1rem;font-weight:600}
 .pg .pgh{color:var(--warn)}.pi .pgh{color:var(--good)}
@@ -199,17 +203,17 @@ tr.grp td{padding-top:16px;font-size:.78rem;letter-spacing:.1em;text-transform:u
     var d = periodo(k, cod), res = d.I - d.G, tot = d.I + d.G;
     var title = side === 'L' ? 'Última ronda (ronda ' + k + ')' : 'Final de temporada';
     return '<div class="pcol"><div class="phead"><b>' + esc(title) + '</b>' + (side === 'R' && k < 18 ? '<small class="pacc">Acumulado hasta la ronda ' + k + '</small>' : '') + '</div>' +
-      '<details class="pdetails"><summary class="presult pbig' + (res < 0 ? ' neg' : '') + '"><span><small>Resultado</small>' + eur(res) + '</span></summary>' +
+      '<div class="pbig' + (res < 0 ? ' neg' : '') + '"><small>Resultado</small>' + eur(res) + '</div>' +
       '<div class="pbar" role="img" aria-label="Gastos ' + Math.round(d.G / tot * 100) + ' % e ingresos ' + Math.round(d.I / tot * 100) + ' %"><i style="width:' + d.G / tot * 100 + '%"></i><i style="width:' + d.I / tot * 100 + '%"></i></div>' +
-      '<div class="pg"><div class="pgh"><span>Gastos</span><span>' + eur(d.G) + '</span></div>' +
+      '<div class="pg"><details class="pdetails"><summary class="pgh"><span>Gastos</span><b>' + eur(d.G) + '</b></summary><div class="pbody">' +
       pr('Gastos de personal', d.pers, 'g') + pr('Pilotos', d.pil, 's') + pr('Ingenieros', d.ing, 's') + pr('Mecánicos', d.mec, 's') + pr('Jefe de equipo deportivo', d.jefe, 's') + pr('Indemnizaciones', d.indem, 's') +
       pr('I+D', d.idv, 'g') + pr('Proyectos', d.proy, 's') + pr('Licencias de tecnología', d.lic, 's') +
       pr('Compras y operaciones', d.comp, 'g') + pr('Recambios', d.rec, 's') + pr('Taller y subcontratación', d.taller, 's') +
       pr('Carrera', d.carr, 'g') + pr('Reparaciones y averías', d.reps, 's') + pr('Logística', d.log, 's') +
-      pr('Amortización e intereses', d.fin, 'g') + pr('Amortización', d.amort, 's') + pr('Intereses', d.inter, 's') + '</div>' +
-      '<div class="pi"><div class="pgh"><span>Ingresos</span><span>' + eur(d.I) + '</span></div>' +
+      pr('Amortización e intereses', d.fin, 'g') + pr('Amortización', d.amort, 's') + pr('Intereses', d.inter, 's') + '</div></details></div>' +
+      '<div class="pi"><details class="pdetails"><summary class="pgh"><span>Ingresos</span><b>' + eur(d.I) + '</b></summary><div class="pbody">' +
       pr('Por resultados', d.prem, 'g') + pr('Calificación', d.cal, 's') + pr('Carrera', d.car, 's') + pr('Vuelta rápida', d.vr, 's') +
-      pr('Patrocinadores', d.pat, 'g') + pr('Hospitality y merchandising', d.merch, 'g') + '</div></details></div>';
+      pr('Patrocinadores', d.pat, 'g') + pr('Hospitality y merchandising', d.merch, 'g') + '</div></details></div></div>';
   }
 
   function render(n) {
