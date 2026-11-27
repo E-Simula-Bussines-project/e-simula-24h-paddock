@@ -195,10 +195,15 @@
     }
     catch (e) { }
     sel.value = String(start);
-    sel.addEventListener('change', function () { perL = 'ult'; perR = 'temp'; try {
-        localStorage.setItem('ronda', sel.value);
-    }
-    catch (e) { } render(+sel.value); });
+    sel.addEventListener('change', function () {
+        perL = 'ult';
+        perR = 'temp';
+        try {
+            localStorage.setItem('ronda', sel.value);
+        }
+        catch (e) { }
+        render(+sel.value);
+    });
     document.addEventListener('change', function (ev) {
         var t = ev.target;
         if (!t.dataset || !t.dataset.per)

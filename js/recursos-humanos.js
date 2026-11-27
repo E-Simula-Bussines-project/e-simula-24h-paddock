@@ -13,46 +13,75 @@
     catch (e) { }
     function $(s) { return document.querySelector(s); }
     function eur(n) { return n.toLocaleString('es-ES', { useGrouping: 'always' }) + ' €'; }
-    function decision(n) { if (!decisiones[n])
-        decisiones[n] = { salarios: {}, despidos: {}, ofertas: {} }; return decisiones[n]; }
-    function guardar() { try {
-        localStorage.setItem('rrhh-decisiones', JSON.stringify(decisiones));
+    function decision(n) {
+        if (!decisiones[n])
+            decisiones[n] = { salarios: {}, despidos: {}, ofertas: {} };
+        return decisiones[n];
     }
-    catch (e) { } }
-    function total(list) { return list.reduce(function (a, p) { return a + p.salario; }, 0); }
-    function plantilla(n) { var list = PERSONAS.slice(0, 7).map(function (p) { return Object.assign({}, p); }), respuestas = []; for (var r = 1; r < n; r++) {
-        var d = decisiones[r], rs = [];
-        if (d) {
-            list = list.filter(function (p) { if (!d.despidos[p.id])
-                return true; rs.push([p.nombre, 'Despido aplicado']); return false; });
-            list.forEach(function (p) { if (d.salarios[p.id] !== undefined) {
-                p.salario = d.salarios[p.id];
-                rs.push([p.nombre, 'Salario actualizado']);
-            } });
-            Object.keys(d.ofertas).forEach(function (id) { var p = PERSONAS[+id], v = d.ofertas[id]; if (!p || list.some(function (x) { return x.id === p.id; }))
-                return; var hueco = list.filter(function (x) { return x.grupo === p.grupo; }).length < LIMITES[p.grupo]; if (hueco && v >= p.salario) {
-                list.push(Object.assign({}, p, { salario: v }));
-                rs.push([p.nombre, 'Fichaje aceptado']);
-            }
-            else
-                rs.push([p.nombre, hueco ? 'Oferta rechazada' : 'Sin plaza disponible']); });
+    function guardar() {
+        try {
+            localStorage.setItem('rrhh-decisiones', JSON.stringify(decisiones));
         }
-        if (r === n - 1)
-            respuestas = rs;
-    } return { list: list, respuestas: respuestas }; }
+        catch (e) { }
+    }
+    function total(list) { return list.reduce(function (a, p) { return a + p.salario; }, 0); }
+    function plantilla(n) {
+        var list = PERSONAS.slice(0, 7).map(function (p) { return Object.assign({}, p); }), respuestas = [];
+        for (var r = 1; r < n; r++) {
+            var d = decisiones[r], rs = [];
+            if (d) {
+                list = list.filter(function (p) {
+                    if (!d.despidos[p.id])
+                        return true;
+                    rs.push([p.nombre, 'Despido aplicado']);
+                    return false;
+                });
+                list.forEach(function (p) {
+                    if (d.salarios[p.id] !== undefined) {
+                        p.salario = d.salarios[p.id];
+                        rs.push([p.nombre, 'Salario actualizado']);
+                    }
+                });
+                Object.keys(d.ofertas).forEach(function (id) {
+                    var p = PERSONAS[+id], v = d.ofertas[id];
+                    if (!p || list.some(function (x) { return x.id === p.id; }))
+                        return;
+                    var hueco = list.filter(function (x) { return x.grupo === p.grupo; }).length < LIMITES[p.grupo];
+                    if (hueco && v >= p.salario) {
+                        list.push(Object.assign({}, p, { salario: v }));
+                        rs.push([p.nombre, 'Fichaje aceptado']);
+                    }
+                    else
+                        rs.push([p.nombre, hueco ? 'Oferta rechazada' : 'Sin plaza disponible']);
+                });
+            }
+            if (r === n - 1)
+                respuestas = rs;
+        }
+        return { list: list, respuestas: respuestas };
+    }
     function button(label, act, id, cls) { return '<button class="' + (cls || '') + '" data-act="' + act + '" data-id="' + id + '">' + label + '</button>'; }
-    function persona(p, d, mercado, n) { var id = p.id, h = '<div class="rr-person"><img class="rr-face" src="' + FOTOS[id] + '" alt="" width="64" height="64"><div class="rr-person-info"><b>' + p.nombre + '</b><small>' + OFICIOS[id] + ' · ' + eur(p.salario) + ' / ronda</small>'; if (d.salarios[id] !== undefined)
-        h += '<span class="rr-pending">Nuevo salario: ' + eur(d.salarios[id]) + '</span>'; if (d.despidos[id])
-        h += '<span class="rr-pending">Despido pendiente</span>'; if (d.ofertas[id] !== undefined)
-        h += '<span class="rr-pending">Oferta: ' + eur(d.ofertas[id]) + '</span>'; h += '</div><div class="actions">'; if (n === 18 || cerradas[n])
-        return h + '</div></div>'; if (editor && editor.id === id && editor.mercado === mercado)
-        h += '<input type="number" min="1" step="500" id="importe" value="' + (mercado ? p.salario : (d.salarios[id] || p.salario)) + '" aria-label="Importe">' + button('Guardar', 'guardar', id, 'primary') + button('Cancelar', 'cancelar', id);
-    else if (mercado)
-        h += d.ofertas[id] !== undefined ? button('Retirar', 'retirar', id) : button('Ofertar', 'ofertar', id, 'primary');
-    else if (d.despidos[id])
-        h += button('Cancelar', 'anular', id);
-    else
-        h += button('Salario', 'salario', id) + button('Despedir', 'despedir', id, 'danger'); return h + '</div></div>'; }
+    function persona(p, d, mercado, n) {
+        var id = p.id, h = '<div class="rr-person"><img class="rr-face" src="' + FOTOS[id] + '" alt="" width="64" height="64"><div class="rr-person-info"><b>' + p.nombre + '</b><small>' + OFICIOS[id] + ' · ' + eur(p.salario) + ' / ronda</small>';
+        if (d.salarios[id] !== undefined)
+            h += '<span class="rr-pending">Nuevo salario: ' + eur(d.salarios[id]) + '</span>';
+        if (d.despidos[id])
+            h += '<span class="rr-pending">Despido pendiente</span>';
+        if (d.ofertas[id] !== undefined)
+            h += '<span class="rr-pending">Oferta: ' + eur(d.ofertas[id]) + '</span>';
+        h += '</div><div class="actions">';
+        if (n === 18 || cerradas[n])
+            return h + '</div></div>';
+        if (editor && editor.id === id && editor.mercado === mercado)
+            h += '<input type="number" min="1" step="500" id="importe" value="' + (mercado ? p.salario : (d.salarios[id] || p.salario)) + '" aria-label="Importe">' + button('Guardar', 'guardar', id, 'primary') + button('Cancelar', 'cancelar', id);
+        else if (mercado)
+            h += d.ofertas[id] !== undefined ? button('Retirar', 'retirar', id) : button('Ofertar', 'ofertar', id, 'primary');
+        else if (d.despidos[id])
+            h += button('Cancelar', 'anular', id);
+        else
+            h += button('Salario', 'salario', id) + button('Despedir', 'despedir', id, 'danger');
+        return h + '</div></div>';
+    }
     function render(n) {
         var a = plantilla(n), list = a.list, d = decision(n);
         $('#top').textContent = 'Ronda ' + n + ' de 18 · ' + (cerradas[n] ? 'Cerrada' : n === 18 ? 'Cierre' : 'Abierta');
@@ -72,35 +101,53 @@
     }
     catch (e) { }
     sel.value = start;
-    sel.addEventListener('change', function () { editor = null; try {
-        localStorage.setItem('ronda', sel.value);
-    }
-    catch (e) { } $('#notice').textContent = ''; render(+sel.value); });
-    $('#app').addEventListener('click', function (e) { var b = e.target.closest('[data-act]'), n = +sel.value; if (!b || n === 18 || cerradas[n])
-        return; var act = b.dataset.act, id = +b.dataset.id, d = decision(n), msg = ''; if (act === 'salario' || act === 'ofertar')
-        editor = { id: id, mercado: act === 'ofertar' }; if (act === 'cancelar')
-        editor = null; if (act === 'guardar') {
-        var v = $('#importe').valueAsNumber;
-        if (!Number.isFinite(v) || v <= 0) {
-            $('#notice').textContent = 'Introduce un importe válido.';
+    sel.addEventListener('change', function () {
+        editor = null;
+        try {
+            localStorage.setItem('ronda', sel.value);
+        }
+        catch (e) { }
+        $('#notice').textContent = '';
+        render(+sel.value);
+    });
+    $('#app').addEventListener('click', function (e) {
+        var b = e.target.closest('[data-act]'), n = +sel.value;
+        if (!b || n === 18 || cerradas[n])
             return;
+        var act = b.dataset.act, id = +b.dataset.id, d = decision(n), msg = '';
+        if (act === 'salario' || act === 'ofertar')
+            editor = { id: id, mercado: act === 'ofertar' };
+        if (act === 'cancelar')
+            editor = null;
+        if (act === 'guardar') {
+            var v = $('#importe').valueAsNumber;
+            if (!Number.isFinite(v) || v <= 0) {
+                $('#notice').textContent = 'Introduce un importe válido.';
+                return;
+            }
+            if (editor.mercado) {
+                d.ofertas[id] = v;
+                msg = 'Oferta guardada.';
+            }
+            else {
+                d.salarios[id] = v;
+                msg = 'Salario guardado.';
+            }
+            editor = null;
         }
-        if (editor.mercado) {
-            d.ofertas[id] = v;
-            msg = 'Oferta guardada.';
+        if (act === 'despedir') {
+            d.despidos[id] = true;
+            delete d.salarios[id];
+            msg = 'Despido pendiente.';
+            editor = null;
         }
-        else {
-            d.salarios[id] = v;
-            msg = 'Salario guardado.';
-        }
-        editor = null;
-    } if (act === 'despedir') {
-        d.despidos[id] = true;
-        delete d.salarios[id];
-        msg = 'Despido pendiente.';
-        editor = null;
-    } if (act === 'anular')
-        delete d.despidos[id]; if (act === 'retirar')
-        delete d.ofertas[id]; guardar(); render(n); $('#notice').textContent = msg; });
+        if (act === 'anular')
+            delete d.despidos[id];
+        if (act === 'retirar')
+            delete d.ofertas[id];
+        guardar();
+        render(n);
+        $('#notice').textContent = msg;
+    });
     render(start);
 })();

@@ -157,17 +157,23 @@
     }
     catch (e) { }
     sel.value = String(start);
-    sel.addEventListener('change', function () { try {
-        localStorage.setItem('ronda', sel.value);
-    }
-    catch (e) { } render(+sel.value); });
-    $('#app').addEventListener('click', function (e) { var b = e.target.closest('[data-mode]'); if (b) {
-        mode = b.getAttribute('data-mode');
+    sel.addEventListener('change', function () {
+        try {
+            localStorage.setItem('ronda', sel.value);
+        }
+        catch (e) { }
         render(+sel.value);
-        var nb = document.querySelector('[data-mode="' + mode + '"]');
-        if (nb)
-            nb.focus();
-    } });
+    });
+    $('#app').addEventListener('click', function (e) {
+        var b = e.target.closest('[data-mode]');
+        if (b) {
+            mode = b.getAttribute('data-mode');
+            render(+sel.value);
+            var nb = document.querySelector('[data-mode="' + mode + '"]');
+            if (nb)
+                nb.focus();
+        }
+    });
     $('#app').addEventListener('click', function (e) {
         var b = e.target.closest('button');
         if (!b)

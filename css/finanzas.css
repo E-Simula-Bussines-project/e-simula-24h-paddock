@@ -66,3 +66,5 @@ tr.grp td{padding-top:16px;font-size:.78rem;letter-spacing:.1em;text-transform:u
 .demo{display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:8px;color:var(--muted);font-size:.85rem;margin-top:24px}
 .demo label{white-space:nowrap}
 .demo select{font:inherit;color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:6px 8px;min-height:38px;max-width:100%;min-width:0}
+
+@media (max-width:700px){.index{margin-left:-12px;margin-right:-12px;padding:0 12px}}

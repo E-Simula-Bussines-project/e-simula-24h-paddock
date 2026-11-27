@@ -481,10 +481,16 @@
         render();
         toast('Grupo actualizado', true);
     });
-    function render() { document.querySelectorAll('#main-menu [data-tab], #main-menu [data-atab]').forEach(function (a) { if (a.getAttribute('data-tab') === tab || a.getAttribute('data-atab') === aTab)
-        a.setAttribute('aria-current', 'page');
-    else
-        a.removeAttribute('aria-current'); }); head(); role === 'alumno' ? viewAlumno() : role === 'admin' ? viewAdmin() : viewProfe(); }
+    function render() {
+        document.querySelectorAll('#main-menu [data-tab], #main-menu [data-atab]').forEach(function (a) {
+            if (a.getAttribute('data-tab') === tab || a.getAttribute('data-atab') === aTab)
+                a.setAttribute('aria-current', 'page');
+            else
+                a.removeAttribute('aria-current');
+        });
+        head();
+        role === 'alumno' ? viewAlumno() : role === 'admin' ? viewAdmin() : viewProfe();
+    }
     render();
 })();
 document.querySelectorAll('#main-menu [data-tab], #main-menu [data-atab]').forEach(function (enlace) {
